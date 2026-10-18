@@ -79,8 +79,8 @@ def do_map(u):
         log.append(f"FAIL {u}: {e}")
 # generic activities: one Unsplash photo per icon category (same category -> same photo)
 CATS={"house":"cozy apartment living room","plane":"airplane window wing sky","car":"car ride city street night","luggage":"suitcase travel packing",
- "alarm-clock":"morning sunlight bedroom","phone":"phone call friends","utensils":"vietnamese street food","coffee":"vietnamese coffee phin",
- "martini":"cocktail bar night","shopping-bag":"shopping street market","landmark":"saigon city street","map-pin":"ho chi minh city"}
+ "alarm-clock":"morning sunlight bedroom","phone":"phone call friends","utensils":"pho noodle soup bowl","coffee":"vietnamese coffee phin",
+ "martini":"cocktail bar night","shopping-bag":"Ben Thanh market","landmark":"saigon city street","map-pin":"Ho Chi Minh City skyline"}
 def do_cat(c):
     k="cat:"+c
     if k in old and os.path.exists(old[k]): out[k]=old[k]; return
