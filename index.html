@@ -357,6 +357,8 @@ body.locked{position:fixed;left:0;right:0;overflow:hidden}
 #user-menu{transform-origin:22px 0}
 #user-menu button:focus:not(:focus-visible){outline:none}
 #wm h3.nm{font-size:clamp(22px,6vw,28px);line-height:1.4;font-weight:600;margin:0;white-space:nowrap}
+#wm .card:focus{outline:none}
+:root:not([data-input="keyboard"]) :is(#wm button,#user-menu button,#me):focus{outline:none}
 </style>
 </head>
 <body>
@@ -604,10 +606,15 @@ let ME=LS.get("hcmc-me",null);
 function renderMe(){const p=PPL.find(x=>x[0]===ME),b=document.getElementById("me");
  b.textContent=p?ini(p[0]):"?";b.style.background=p?p[1]:"#d9dadf";document.getElementById("myname").textContent=p?p[0]:"เลือกว่าคุณเป็นใคร";}
 const WM=document.getElementById("wm"),WMC=document.getElementById("wmc"),WMI=document.getElementById("wmi");
+// Pointer users never receive a keyboard outline from programmatic focus.
+const inputMode=e=>{document.documentElement.dataset.input=e.type==="keydown"?"keyboard":"pointer"};
+document.addEventListener("pointerdown",inputMode,true);
+document.addEventListener("keydown",e=>{if(["Tab","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key))inputMode(e)},true);
+WMC.tabIndex=-1;
 let wmStep=null,pick=null,wmClosable=false;
 function wmHTML(st){
  const x=wmClosable?'<button class="x" data-wm="close" aria-label="ปิด">×</button>':"";
- if(st==="reset")return `<h3>ล้างข้อมูลทั้งหมด?</h3><p id="reset-warning">ความคืบหน้าทั้งหมดและชื่อที่เลือกไว้ในเครื่องนี้จะถูกลบ และจะกลับไปเริ่มต้นใหม่<br>การล้างข้อมูลนี้ไม่สามารถย้อนกลับได้</p><div class="reset-actions"><button class="go cancel-reset" data-wm="close" autofocus>ยกเลิก</button><button class="go" data-wm="reset-confirm">ล้างข้อมูล</button></div>`;
+ if(st==="reset")return `<h3>ล้างข้อมูลทั้งหมด?</h3><p id="reset-warning">ความคืบหน้าทั้งหมดและชื่อที่เลือกไว้ในเครื่องนี้จะถูกลบ และจะกลับไปเริ่มต้นใหม่<br>การล้างข้อมูลนี้ไม่สามารถย้อนกลับได้</p><div class="reset-actions"><button class="go cancel-reset" data-wm="close">ยกเลิก</button><button class="go" data-wm="reset-confirm">ล้างข้อมูล</button></div>`;
  if(st==="intro")return `${WM_ART}<h3>Welcome to Vietnam Trip</h3><p>21–24 ต.ค. · แก๊ง 13 คน<br>ตาราง แผนที่ ร้านเด็ด อยู่ที่นี่หมดแล้ว</p><button class="go" data-wm="next">เริ่มเลย</button>`;
  if(st==="pick")return `${x}<h3>คุณคือใครในทริปนี้</h3><p>เลือกชื่อตัวเอง</p><div class="ppl${pick?" has":""}">${PPL.map(p=>`<button class="pp${pick===p[0]?" on":""}" data-p="${p[0]}" aria-pressed="${pick===p[0]}"><span class="av" style="background:${p[1]}">${ini(p[0])}</span>${p[0]}</button>`).join("")}</div><button class="go" data-wm="me" ${pick?"":"disabled"}>${pick?"ฉันคือ "+pick:"เลือกชื่อก่อน"}</button>`;
  if(st==="hello"){const p=PPL.find(x=>x[0]===ME);return `<div class="big" style="background:${p[1]}">${ini(p[0])}</div><h3 class="nm">ยินดีต้อนรับ ${p[0]}</h3><p>${LINE[p[2]]}</p><button class="go" data-wm="close">Enjoy your trip</button>`}
@@ -669,16 +676,16 @@ async function wmShow(st){
   if(st==="intro"&&pendingTripReset){pendingTripReset=false;applyTripReset()}
   wmStep=st;WMI.innerHTML=wmHTML(st);WMI.scrollTop=0;WMC.scrollTop=0;
   WM.classList.toggle("journey",journey);WMC.style.height="";
-  if(!WM.open){WM.classList.remove("closing","open");lockScroll();WM.showModal();sizeJourney();WMC.getBoundingClientRect();WM.classList.add("open")}
+  if(!WM.open){WM.classList.remove("closing","open");lockScroll();WM.showModal();WMC.focus({preventScroll:true});sizeJourney();WMC.getBoundingClientRect();WM.classList.add("open")}
   else sizeJourney();
   const shellEnter=replaceShell?WMC.animate([{opacity:0},{opacity:1}],{duration:180,easing:wmEase(),fill:"both"}):null;
   if(shellExit){shellExit.cancel();shellExit=null}
   // Replacing the source and creating its moving counterpart happen in one frame.
   const landing=from?avatarHandoff(from,WMI.querySelector(".big"),sourceFont):Promise.resolve();
+  WMC.focus({preventScroll:true});
+  await Promise.all([replaceShell?settle(shellEnter):enterWM(st),landing]);
   WMI.inert=false;
   const heading=WMI.querySelector("h3,.nm");if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true})}
-  WMI.inert=true;
-  await Promise.all([replaceShell?settle(shellEnter):enterWM(st),landing]);
  }finally{if(shellExit)shellExit.cancel();WMI.inert=false;wmBusy=false;if(wmDismissPending){wmDismissPending=false;wmClose()}}
 }
 function wmRefresh(){
