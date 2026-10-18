@@ -562,9 +562,9 @@ renderAll(); setInterval(tick,30000);
 /* day switch: fast staggered blur-fade reveal (only what's on screen) */
 function revealList(){const RM=matchMedia("(prefers-reduced-motion: reduce)").matches,H=innerHeight;let n=0;
  document.querySelectorAll("#plan section.block h2, #plan .item").forEach(el=>{const r=el.getBoundingClientRect();if(r.top>H)return;
-  const d=Math.min(n++*28,220);
-  el.animate(RM?[{opacity:0},{opacity:1}]:[{opacity:0,transform:"translateY(10px)",filter:"blur(6px)"},{opacity:1,transform:"none",filter:"blur(0)"}],
-   {duration:RM?160:340,delay:d,easing:"cubic-bezier(0.23,1,0.32,1)",fill:"backwards"})});}
+  const d=Math.min(n++*50,300);
+  el.animate(RM?[{opacity:0},{opacity:1}]:[{opacity:0,transform:"translateY(8px)",filter:"blur(3px)"},{opacity:1,transform:"none",filter:"blur(0)"}],
+   {duration:RM?200:450,delay:d,easing:"cubic-bezier(0.215,0.61,0.355,1)",fill:"backwards"})});}
 
 /* whole-card press: squish on pointer-down, spring back with a soft overshoot on release (interruptible, from live value) */
 (()=>{const RM=matchMedia("(prefers-reduced-motion: reduce)");let cur=null;
