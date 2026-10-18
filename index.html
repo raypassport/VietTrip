@@ -283,6 +283,19 @@ body{font-weight:400}
 b,strong{font-weight:500}
 
 html,body,button,a{touch-action:manipulation}
+
+/* timeline rail (T2): dot + line; ticked = red dot */
+.item{grid-template-columns:62px 1fr!important}
+#plan .list{position:relative}
+#plan .list::before{content:"";position:absolute;left:4px;top:0;bottom:0;width:2px;background:#e6e7eb}
+.item .t{position:relative;padding-left:18px!important}
+.item .t::before{content:"";position:absolute;left:0;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:#fff;box-shadow:0 0 0 2px #cfd1d6;transition:background-color 200ms ease,box-shadow 200ms ease}
+.item.done .t::before{background:#e5232e;box-shadow:0 0 0 2px #e5232e}
+.item.done .t{color:#9a9ca3!important}
+.grp-row>.t{padding-top:14px}.grp-row>.t::before{top:22px}
+/* ticked checkbox: neutral grey instead of red */
+.item.done .chk{border-color:#a3a5ad!important}
+.chk .fill{background:#a3a5ad!important}
 </style>
 </head>
 <body>
