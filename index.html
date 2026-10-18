@@ -141,9 +141,10 @@ section.block h2 small{display:block;font:500 11px var(--f-mono);color:var(--mut
 .item .chk{position:absolute;top:10px;right:10px;margin:0;grid-row:auto}
 .item.now .card{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}.item.now{box-shadow:none}
 /* note button */
-.item .note{position:absolute;right:8px;bottom:8px;width:32px;height:32px;border:0;border-radius:9px;background:transparent;color:var(--muted);display:grid;place-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform 120ms var(--ease-out),background-color 160ms ease}
+.item .note{position:absolute;right:8px;bottom:8px;width:32px;height:32px;border:0;border-radius:9px;background:transparent;color:var(--muted);opacity:.45;display:grid;place-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform 120ms var(--ease-out),background-color 160ms ease,opacity 160ms ease}
+.item .note:active{opacity:1}
 .item .note:active{transform:scale(.9);background:var(--accent-soft)}
-@media (hover:hover) and (pointer:fine){.item .note:hover{background:var(--accent-soft);color:var(--accent)}}
+@media (hover:hover) and (pointer:fine){.item .note:hover{background:var(--accent-soft);color:var(--accent);opacity:1}}
 /* sheet — iOS drawer curve, enters/exits along the same path */
 :root{--ease-drawer:cubic-bezier(0.32,0.72,0,1)}
 #sheet{padding:0;border:0;background:none;width:100%;height:100%;max-width:none;max-height:none;margin:0;overflow:hidden}
