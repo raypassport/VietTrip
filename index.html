@@ -16,16 +16,16 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://raypassport.github.io/VietTrip/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@500;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&display=swap">
 <style>
 /* Layout: sticky day header + tab switch; timeline of time-blocks; split-group chips filter afternoon */
 :root{
   --bg:#f3f6fb; --surface:#ffffff; --ink:#14223b; --muted:#5f6f88; --line:#dbe3ef;
   --accent:#2f7ff0; --accent-soft:#e6f0ff; --tik:#e0325b; --tik-soft:#fdecf0; --done:#9aa8bd;
   --g1:#2fbfa5; --g1s:#d7f5ef; --g2:#9b5fd6; --g2s:#efe3fb; --g3:#5aa83a; --g3s:#e2f4d8; --g4:#4a6fdc; --g4s:#dde6fd; --g5:#8b6a55; --g5s:#efe6df;
-  --f-display:"Bai Jamjuree","IBM Plex Sans Thai",system-ui,sans-serif;
-  --f-body:"IBM Plex Sans Thai",system-ui,sans-serif;
-  --f-mono:"JetBrains Mono",ui-monospace,monospace;
+  --f-display:"Mitr",sans-serif;
+  --f-body:"Mitr",sans-serif;
+  --f-mono:"Mitr",sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0d1422; --surface:#151f32; --ink:#e7eefb; --muted:#93a3bd; --line:#26334b;
@@ -173,9 +173,9 @@ section.block h2 small{display:block;font:500 11px var(--f-mono);color:var(--mut
   .place{grid-template-columns:32px 1fr} .place .links{grid-column:2}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-:root,:root[data-theme]{--ink:#18181b!important;--muted:#9a9ca3!important;--line:#ececef!important;--accent:#e5232e!important;--accent-soft:#fdeced!important;--done:#c2c4c9!important;--f-display:"IBM Plex Sans Thai",sans-serif!important}
+:root,:root[data-theme]{--ink:#18181b!important;--muted:#9a9ca3!important;--line:#ececef!important;--accent:#e5232e!important;--accent-soft:#fdeced!important;--done:#c2c4c9!important;--f-display:"Mitr",sans-serif!important}
 section.block{border-top:0!important;padding-block:14px!important}
-section.block h2{color:#18181b!important;font:700 17px "IBM Plex Sans Thai"!important}
+section.block h2{color:#18181b!important;font:700 17px "Mitr"!important}
 .item .t{font-size:12px!important}
 .item .what strong{font-size:14px!important}
 a.btn{border-radius:6px!important;font-size:10px!important;padding:5px 9px!important}
@@ -203,20 +203,20 @@ a.btn{background:#f4f4f6!important;color:#18181b!important}a.btn.tt{background:#
 /* ---- V3 header ---- */
 .bar{padding-top:16px!important;gap:12px!important}
 .hello{display:flex;align-items:center;gap:12px;width:100%}
-.hello .me{width:44px;height:44px;border-radius:50%;flex:none;display:grid;place-items:center;color:#fff;font:700 18px "Bai Jamjuree","IBM Plex Sans Thai";border:0;cursor:pointer;background:#d9dadf;padding:0;transition:transform 120ms var(--ease-out)}
+.hello .me{width:44px;height:44px;border-radius:50%;flex:none;display:grid;place-items:center;color:#fff;font:700 18px "Mitr";border:0;cursor:pointer;background:#d9dadf;padding:0;transition:transform 120ms var(--ease-out)}
 .hello .me:active{transform:scale(.94)}
 .hello .who{flex:1;min-width:0;background:none;border:0;padding:0;text-align:left;cursor:pointer;font:inherit;color:inherit}
-.hello .who small{display:block;font:500 12px "IBM Plex Sans Thai";color:#9a9ca3}
-.hello .who b{display:block;font:700 20px/1.2 "IBM Plex Sans Thai";color:#18181b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hello .who small{display:block;font:500 12px "Mitr";color:#9a9ca3}
+.hello .who b{display:block;font:700 20px/1.2 "Mitr";color:#18181b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pill{display:flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:7px 12px 7px 8px;box-shadow:0 1px 2px rgba(24,24,27,.05),0 4px 12px rgba(24,24,27,.06);flex:none}
 .pill i{width:74px;height:10px;border-radius:999px;background:#f1f1f4;overflow:hidden;display:block}
 .pill i span{display:block;height:100%;width:100%;border-radius:999px;background:#e5232e;transform-origin:left;transform:scaleX(0);transition:transform 400ms var(--ease-out)}
-.pill b{font:700 12px "JetBrains Mono";color:#18181b;font-variant-numeric:tabular-nums}.pill b em{font-style:normal;color:#9a9ca3}
+.pill b{font:700 12px "Mitr";color:#18181b;font-variant-numeric:tabular-nums}.pill b em{font-style:normal;color:#9a9ca3}
 .days button{align-items:center!important;text-align:center!important;padding:8px 0!important;min-height:0!important}
-.days button small{order:-1;font:500 11px "IBM Plex Sans Thai"!important;letter-spacing:0!important;text-transform:none!important}
-.days button b{font:700 18px "Bai Jamjuree","IBM Plex Sans Thai"!important}
+.days button small{order:-1;font:500 11px "Mitr"!important;letter-spacing:0!important;text-transform:none!important}
+.days button b{font:700 18px "Mitr"!important}
 .tabs{display:flex!important;width:100%;background:#efeff2!important;border-radius:9px!important;padding:2px!important;border:0!important}
-.tabs button{flex:1;border-radius:7px!important;box-shadow:none!important;color:#9a9ca3!important;font:600 13px "IBM Plex Sans Thai"!important;padding:7px!important}
+.tabs button{flex:1;border-radius:7px!important;box-shadow:none!important;color:#9a9ca3!important;font:600 13px "Mitr"!important;padding:7px!important}
 .tabs button[aria-selected="true"]{background:#fff!important;color:#18181b!important;box-shadow:0 1px 2px rgba(0,0,0,.08)!important}
 .bar .progress{display:none!important}
 @media (max-width:640px){.days button b{font-size:18px!important}}
@@ -232,21 +232,21 @@ a.btn{background:#f4f4f6!important;color:#18181b!important}a.btn.tt{background:#
 #wm .in{padding:28px 22px 22px;transition:opacity 200ms ease,transform 260ms var(--ease-out)}
 #wm .in.swap{opacity:0;transform:translateY(8px)}
 #wm .x{position:absolute;right:14px;top:14px;width:32px;height:32px;border-radius:50%;border:0;background:#f4f4f6;color:#18181b;font-size:18px;line-height:1;cursor:pointer;z-index:2}
-#wm h3{font:700 24px/1.2 "IBM Plex Sans Thai";color:#18181b;margin:0;text-align:center}
-#wm p{font:500 14px/1.6 "IBM Plex Sans Thai";color:#9a9ca3;text-align:center;margin:8px 0 0}
-#wm .go{display:block;width:100%;height:52px;margin-top:22px;border:0;border-radius:14px;background:#e5232e;color:#fff;font:600 16px "IBM Plex Sans Thai";cursor:pointer;transition:transform 120ms var(--ease-out),background-color 200ms ease,color 200ms ease}
+#wm h3{font:700 24px/1.2 "Mitr";color:#18181b;margin:0;text-align:center}
+#wm p{font:500 14px/1.6 "Mitr";color:#9a9ca3;text-align:center;margin:8px 0 0}
+#wm .go{display:block;width:100%;height:52px;margin-top:22px;border:0;border-radius:14px;background:#e5232e;color:#fff;font:600 16px "Mitr";cursor:pointer;transition:transform 120ms var(--ease-out),background-color 200ms ease,color 200ms ease}
 #wm .go:focus:not(:focus-visible){outline:none}#wm .go:active{transform:scale(.97)}#wm .go:disabled{background:#f1f1f4;color:#b9bbc1;cursor:default;transform:none}
 #wm .wm-art{display:block;width:200px;height:auto;margin:0 auto 18px}
 #wm .ppl{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 6px;margin-top:20px}
-#wm .pp{background:none;border:0;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;font:500 13px "IBM Plex Sans Thai";color:#18181b;transition:opacity 200ms ease}
-#wm .av{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;color:#fff;font:700 20px "Bai Jamjuree","IBM Plex Sans Thai";position:relative;transition:transform 160ms var(--ease-out),box-shadow 200ms ease}
+#wm .pp{background:none;border:0;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;font:500 13px "Mitr";color:#18181b;transition:opacity 200ms ease}
+#wm .av{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;color:#fff;font:700 20px "Mitr";position:relative;transition:transform 160ms var(--ease-out),box-shadow 200ms ease}
 #wm .pp:active .av{transform:scale(.92)}
 #wm .ppl.has .pp{opacity:.4}#wm .ppl.has .pp.on{opacity:1;color:#e5232e;font-weight:600}
 #wm .pp.on .av{box-shadow:0 0 0 3px #fff,0 0 0 5.5px #e5232e}
-#wm .big{width:104px;height:104px;font-size:40px;margin:4px auto 14px;border-radius:50%;display:grid;place-items:center;color:#fff;font-family:"Bai Jamjuree","IBM Plex Sans Thai";font-weight:700}
+#wm .big{width:104px;height:104px;font-size:40px;margin:4px auto 14px;border-radius:50%;display:grid;place-items:center;color:#fff;font-family:"Mitr";font-weight:700}
 #wm .emo{font-size:56px;line-height:1;text-align:center;margin:6px 0 14px}
-#wm .hi{font:500 13px "IBM Plex Sans Thai";color:#9a9ca3;text-align:center}
-#wm .nm{font:700 34px/1.15 "IBM Plex Sans Thai";color:#18181b;text-align:center}
+#wm .hi{font:500 13px "Mitr";color:#9a9ca3;text-align:center}
+#wm .nm{font:700 34px/1.15 "Mitr";color:#18181b;text-align:center}
 @media (prefers-reduced-motion:reduce){#wm .card{transform:translateY(-50%)!important;transition:opacity 200ms ease}#wm .in{transform:none!important}}
 
 /* ---- group accordion (aligned with item cards) ---- */
@@ -255,8 +255,8 @@ a.btn{background:#f4f4f6!important;color:#18181b!important}a.btn.tt{background:#
 .ag+.ag{border-top:1px solid #f1f1f4}
 .ah{display:flex;align-items:center;gap:10px;width:100%;padding:12px;background:none;border:0;text-align:left;cursor:pointer;font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
 .ah:active{background:#fafafb}
-.stk{display:inline-flex;flex:none}.stk i{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font:700 11px "Bai Jamjuree","IBM Plex Sans Thai";font-style:normal;border:2px solid #fff;margin-left:-8px}.stk i:first-child{margin-left:0}
-.an{flex:1;min-width:0}.an b{display:block;font:600 14px/1.3 "IBM Plex Sans Thai"}.an b em{font:600 10px "IBM Plex Sans Thai";font-style:normal;color:#e5232e;background:#fdeced;border-radius:999px;padding:1px 7px;vertical-align:2px}
+.stk{display:inline-flex;flex:none}.stk i{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font:700 11px "Mitr";font-style:normal;border:2px solid #fff;margin-left:-8px}.stk i:first-child{margin-left:0}
+.an{flex:1;min-width:0}.an b{display:block;font:600 14px/1.3 "Mitr"}.an b em{font:600 10px "Mitr";font-style:normal;color:#e5232e;background:#fdeced;border-radius:999px;padding:1px 7px;vertical-align:2px}
 .an small{display:block;font-size:12px;color:#9a9ca3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chev{color:#9a9ca3;font-size:18px;transition:transform 260ms var(--ease-out)}.ag.open .chev{transform:rotate(90deg)}
 .ab{display:grid;grid-template-rows:0fr;transition:grid-template-rows 300ms var(--ease-out)}.ag.open .ab{grid-template-rows:1fr}
@@ -267,9 +267,17 @@ a.btn{background:#f4f4f6!important;color:#18181b!important}a.btn.tt{background:#
 
 /* ---- sticky section bar (S2) ---- */
 section.block{padding-top:6px!important;gap:2px!important}
-section.block h2{margin:0 0 8px!important;padding:10px 0 0!important;font:700 15px "IBM Plex Sans Thai"!important;color:#e5232e!important;background:transparent;border-bottom:1px solid transparent;transition:background-color 200ms ease,border-color 200ms ease}
+section.block h2{margin:0 0 8px!important;padding:10px 0 0!important;font:700 15px "Mitr"!important;color:#e5232e!important;background:transparent;border-bottom:1px solid transparent;transition:background-color 200ms ease,border-color 200ms ease}
 section.block h2.stuck{background:rgba(250,250,251,.88);-webkit-backdrop-filter:blur(14px) saturate(180%);backdrop-filter:blur(14px) saturate(180%);border-bottom-color:#ececef}
 @media (prefers-reduced-transparency:reduce){section.block h2.stuck{background:#fafafb;backdrop-filter:none;-webkit-backdrop-filter:none}}
+
+body,button,input{font-family:"Mitr",sans-serif}
+.t,.pill b,.item .t{font-variant-numeric:tabular-nums}
+/* Mitr is heavy — step weights down one notch */
+.item .what strong,.an b,.sh-body .sh-w{font-weight:500!important}
+.item .t,.pill b,a.btn,.btn{font-weight:500!important}
+.days button b{font-weight:600!important}.days button small,.hello .who small{font-weight:400!important}
+.hello .who b,section.block h2,#wm h3,#wm .nm{font-weight:600!important}
 </style>
 </head>
 <body>
@@ -547,7 +555,7 @@ document.getElementById("me").addEventListener("click",openPicker);document.getE
 
 renderAll(); setInterval(tick,30000);
 
-const WM_ART=`<svg class="wm-art" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 440" font-family="Bai Jamjuree, sans-serif"> <defs> <linearGradient id="fr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dcdcd6"/></linearGradient> <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3f9be6"/><stop offset="1" stop-color="#8cc6f2"/></linearGradient> <clipPath id="win"><rect x="62" y="62" width="236" height="316" rx="96"/></clipPath> <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#3b2a1e" flood-opacity=".25"/></filter> </defs> <rect x="14" y="14" width="332" height="412" rx="150" fill="url(#fr)" stroke="#d6d4cc" stroke-width="2"/> <rect x="40" y="40" width="280" height="360" rx="120" fill="#ecebe6" stroke="#d6d4cc" stroke-width="2"/> <g clip-path="url(#win)"> <rect x="62" y="62" width="236" height="316" fill="url(#sky)"/> <g fill="#fff" opacity=".95"><ellipse cx="250" cy="250" rx="46" ry="16"/><ellipse cx="228" cy="240" rx="22" ry="16"/><ellipse cx="262" cy="236" rx="18" ry="14"/> <ellipse cx="96" cy="300" rx="40" ry="13"/><ellipse cx="112" cy="290" rx="18" ry="13"/></g> <path d="M140 378 L300 300 L300 330 L190 378Z" fill="#f4f3ef"/><path d="M140 378 L300 300" stroke="#d6d4cc" stroke-width="2"/> <rect x="62" y="62" width="236" height="40" fill="#e7e6e1"/> </g> <rect x="62" y="62" width="236" height="316" rx="96" fill="none" stroke="#cfcdc5" stroke-width="3"/> <!-- boarding card --> <g transform="rotate(-3 180 150)" filter="url(#sh)"> <rect x="122" y="92" width="118" height="148" rx="12" fill="#f6efe0" stroke="#3b2a1e" stroke-width="3"/> <text x="181" y="122" text-anchor="middle" font-size="18" font-weight="700" fill="#3b2a1e">XIN CHÀO</text> <line x1="138" y1="130" x2="224" y2="130" stroke="#3b2a1e" stroke-width="2"/> <text x="181" y="152" text-anchor="middle" font-size="15" font-weight="700" fill="#3b2a1e">BKK → SGN</text> <rect x="125" y="162" width="112" height="22" fill="#3b2a1e"/> <text x="181" y="178" text-anchor="middle" font-size="11" font-weight="700" fill="#f6efe0" letter-spacing="2">21–24 OCT</text> <circle cx="181" cy="210" r="16" fill="none" stroke="#3b2a1e" stroke-width="2.5"/><path d="M165 210h32M181 194v32M170 199q11 11 22 0M170 221q11-11 22 0" fill="none" stroke="#3b2a1e" stroke-width="2"/> <rect x="165" y="84" width="34" height="14" rx="2" fill="#efe9d8" opacity=".9" transform="rotate(4 182 91)"/> </g> <!-- flag sticker --> <g transform="rotate(-12 92 120)" filter="url(#sh)"><rect x="68" y="102" width="52" height="36" rx="5" fill="#fff"/><rect x="72" y="106" width="44" height="28" rx="3" fill="#da251d"/> <path d="M94 111l2.6 7.8h8.2l-6.6 4.8 2.5 7.8-6.7-4.8-6.7 4.8 2.5-7.8-6.6-4.8h8.2z" fill="#ffcd00"/></g> <!-- non la hat sticker --> <g transform="rotate(8 270 205)" filter="url(#sh)"><path d="M228 222 L270 176 L312 222 Q270 236 228 222Z" fill="#fff" stroke="#fff" stroke-width="8" stroke-linejoin="round"/> <path d="M228 222 L270 176 L312 222 Q270 236 228 222Z" fill="#f2d27a" stroke="#3b2a1e" stroke-width="2.5" stroke-linejoin="round"/> <path d="M249 199 Q270 206 291 199M238 211 Q270 220 302 211" fill="none" stroke="#3b2a1e" stroke-width="1.8"/></g> <!-- pho bowl sticker --> <g transform="rotate(-6 112 272)" filter="url(#sh)"><circle cx="112" cy="268" r="34" fill="#fff"/> <path d="M84 262 h56 q-4 26-28 26 q-24 0-28-26z" fill="#e0825a" stroke="#3b2a1e" stroke-width="2.5" stroke-linejoin="round"/> <path d="M90 262 q22-10 44 0" fill="#f6efe0" stroke="#3b2a1e" stroke-width="2"/><path d="M118 236 l18 22M124 234 l16 24" stroke="#3b2a1e" stroke-width="2.5" stroke-linecap="round"/> <path d="M100 248 q4-6 0-12M110 246 q4-6 0-12" fill="none" stroke="#9aa8bd" stroke-width="2" stroke-linecap="round"/></g> <!-- note card --> <g transform="rotate(4 228 318)" filter="url(#sh)"><path d="M176 280 h108 v58 l-14 14 h-94z" fill="#fff"/><path d="M284 338 l-14 14 v-14z" fill="#e7e6e1"/> <text x="230" y="304" text-anchor="middle" font-size="14" font-weight="700" fill="#3b2a1e">VIETNAM TRIP</text> <text x="230" y="322" text-anchor="middle" font-size="10" fill="#3b2a1e" letter-spacing="1">13 FRIENDS · 4 DAYS</text> <text x="230" y="340" text-anchor="middle" font-size="10" fill="#3b2a1e">HO CHI MINH CITY</text></g> <!-- scooter sticker --> <g transform="rotate(-8 112 352)" filter="url(#sh)"><rect x="80" y="330" width="66" height="44" rx="22" fill="#fff"/> <circle cx="96" cy="362" r="8" fill="#3b2a1e"/><circle cx="132" cy="362" r="8" fill="#3b2a1e"/><path d="M92 354 h22 q8-14 18-14 l4-6" fill="none" stroke="#2f7ff0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/> <path d="M100 352 q6-12 18-10" fill="#2f7ff0"/></g> <!-- round stamp --> <g transform="rotate(-14 272 372)"><circle cx="272" cy="372" r="26" fill="#3b2a1e"/><text x="272" y="370" text-anchor="middle" font-size="11" font-weight="700" fill="#f6efe0">SGN</text><text x="272" y="383" text-anchor="middle" font-size="8" fill="#f6efe0">2026</text></g> </svg>`;renderMe();
+const WM_ART=`<svg class="wm-art" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 440" font-family="Mitr, sans-serif"> <defs> <linearGradient id="fr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dcdcd6"/></linearGradient> <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3f9be6"/><stop offset="1" stop-color="#8cc6f2"/></linearGradient> <clipPath id="win"><rect x="62" y="62" width="236" height="316" rx="96"/></clipPath> <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#3b2a1e" flood-opacity=".25"/></filter> </defs> <rect x="14" y="14" width="332" height="412" rx="150" fill="url(#fr)" stroke="#d6d4cc" stroke-width="2"/> <rect x="40" y="40" width="280" height="360" rx="120" fill="#ecebe6" stroke="#d6d4cc" stroke-width="2"/> <g clip-path="url(#win)"> <rect x="62" y="62" width="236" height="316" fill="url(#sky)"/> <g fill="#fff" opacity=".95"><ellipse cx="250" cy="250" rx="46" ry="16"/><ellipse cx="228" cy="240" rx="22" ry="16"/><ellipse cx="262" cy="236" rx="18" ry="14"/> <ellipse cx="96" cy="300" rx="40" ry="13"/><ellipse cx="112" cy="290" rx="18" ry="13"/></g> <path d="M140 378 L300 300 L300 330 L190 378Z" fill="#f4f3ef"/><path d="M140 378 L300 300" stroke="#d6d4cc" stroke-width="2"/> <rect x="62" y="62" width="236" height="40" fill="#e7e6e1"/> </g> <rect x="62" y="62" width="236" height="316" rx="96" fill="none" stroke="#cfcdc5" stroke-width="3"/> <!-- boarding card --> <g transform="rotate(-3 180 150)" filter="url(#sh)"> <rect x="122" y="92" width="118" height="148" rx="12" fill="#f6efe0" stroke="#3b2a1e" stroke-width="3"/> <text x="181" y="122" text-anchor="middle" font-size="18" font-weight="700" fill="#3b2a1e">XIN CHÀO</text> <line x1="138" y1="130" x2="224" y2="130" stroke="#3b2a1e" stroke-width="2"/> <text x="181" y="152" text-anchor="middle" font-size="15" font-weight="700" fill="#3b2a1e">BKK → SGN</text> <rect x="125" y="162" width="112" height="22" fill="#3b2a1e"/> <text x="181" y="178" text-anchor="middle" font-size="11" font-weight="700" fill="#f6efe0" letter-spacing="2">21–24 OCT</text> <circle cx="181" cy="210" r="16" fill="none" stroke="#3b2a1e" stroke-width="2.5"/><path d="M165 210h32M181 194v32M170 199q11 11 22 0M170 221q11-11 22 0" fill="none" stroke="#3b2a1e" stroke-width="2"/> <rect x="165" y="84" width="34" height="14" rx="2" fill="#efe9d8" opacity=".9" transform="rotate(4 182 91)"/> </g> <!-- flag sticker --> <g transform="rotate(-12 92 120)" filter="url(#sh)"><rect x="68" y="102" width="52" height="36" rx="5" fill="#fff"/><rect x="72" y="106" width="44" height="28" rx="3" fill="#da251d"/> <path d="M94 111l2.6 7.8h8.2l-6.6 4.8 2.5 7.8-6.7-4.8-6.7 4.8 2.5-7.8-6.6-4.8h8.2z" fill="#ffcd00"/></g> <!-- non la hat sticker --> <g transform="rotate(8 270 205)" filter="url(#sh)"><path d="M228 222 L270 176 L312 222 Q270 236 228 222Z" fill="#fff" stroke="#fff" stroke-width="8" stroke-linejoin="round"/> <path d="M228 222 L270 176 L312 222 Q270 236 228 222Z" fill="#f2d27a" stroke="#3b2a1e" stroke-width="2.5" stroke-linejoin="round"/> <path d="M249 199 Q270 206 291 199M238 211 Q270 220 302 211" fill="none" stroke="#3b2a1e" stroke-width="1.8"/></g> <!-- pho bowl sticker --> <g transform="rotate(-6 112 272)" filter="url(#sh)"><circle cx="112" cy="268" r="34" fill="#fff"/> <path d="M84 262 h56 q-4 26-28 26 q-24 0-28-26z" fill="#e0825a" stroke="#3b2a1e" stroke-width="2.5" stroke-linejoin="round"/> <path d="M90 262 q22-10 44 0" fill="#f6efe0" stroke="#3b2a1e" stroke-width="2"/><path d="M118 236 l18 22M124 234 l16 24" stroke="#3b2a1e" stroke-width="2.5" stroke-linecap="round"/> <path d="M100 248 q4-6 0-12M110 246 q4-6 0-12" fill="none" stroke="#9aa8bd" stroke-width="2" stroke-linecap="round"/></g> <!-- note card --> <g transform="rotate(4 228 318)" filter="url(#sh)"><path d="M176 280 h108 v58 l-14 14 h-94z" fill="#fff"/><path d="M284 338 l-14 14 v-14z" fill="#e7e6e1"/> <text x="230" y="304" text-anchor="middle" font-size="14" font-weight="700" fill="#3b2a1e">VIETNAM TRIP</text> <text x="230" y="322" text-anchor="middle" font-size="10" fill="#3b2a1e" letter-spacing="1">13 FRIENDS · 4 DAYS</text> <text x="230" y="340" text-anchor="middle" font-size="10" fill="#3b2a1e">HO CHI MINH CITY</text></g> <!-- scooter sticker --> <g transform="rotate(-8 112 352)" filter="url(#sh)"><rect x="80" y="330" width="66" height="44" rx="22" fill="#fff"/> <circle cx="96" cy="362" r="8" fill="#3b2a1e"/><circle cx="132" cy="362" r="8" fill="#3b2a1e"/><path d="M92 354 h22 q8-14 18-14 l4-6" fill="none" stroke="#2f7ff0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/> <path d="M100 352 q6-12 18-10" fill="#2f7ff0"/></g> <!-- round stamp --> <g transform="rotate(-14 272 372)"><circle cx="272" cy="372" r="26" fill="#3b2a1e"/><text x="272" y="370" text-anchor="middle" font-size="11" font-weight="700" fill="#f6efe0">SGN</text><text x="272" y="383" text-anchor="middle" font-size="8" fill="#f6efe0">2026</text></g> </svg>`;renderMe();
 if(!LS.get("hcmc-onb",0)){wmClosable=false;wmShow("intro")}else maybeNewDay();
 
 </script>
