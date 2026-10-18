@@ -548,7 +548,7 @@ WM.addEventListener("click",e=>{
  if(p){pick=p.dataset.p;wmRefresh();return}
  if(!a)return;const v=a.dataset.wm;
  if(v==="next")wmShow("pick");
- else if(v==="me"&&pick){ME=pick;LS.set("hcmc-me",ME);renderMe();wmClosable?(LS.set("hcmc-onb",1),wmClose()):wmShow("hello")}
+ else if(v==="me"&&pick){ME=pick;LS.set("hcmc-me",ME);renderMe();wmClosable=false,wmShow("hello")}
  else if(v==="close")wmClose();
 });
 function maybeNewDay(){const t=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Ho_Chi_Minh"}).format(new Date()),i=DAYS.findIndex(d=>d.date===t),seen=LS.get("hcmc-days",[]);
