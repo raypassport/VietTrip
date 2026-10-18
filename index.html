@@ -304,6 +304,8 @@ html,body,button,a{touch-action:manipulation}
 @keyframes nowPulse{0%{transform:scale(1);opacity:.35}70%,100%{transform:scale(2.8);opacity:0}}
 .now-tag{display:none!important}
 @media (prefers-reduced-motion:reduce){.item.now .t::after{animation:none;opacity:0}}
+
+#wm .x:focus:not(:focus-visible),.sh-x:focus:not(:focus-visible),#wm .pp:focus:not(:focus-visible){outline:none}
 </style>
 </head>
 <body>
@@ -482,7 +484,7 @@ const ICN=i=>{const w=i.w,r=[[/รถ|ขึ้นรถ/,"car"],[/เครื�
 const ICO=i=>IC[ICN(i)];
 const SH=document.getElementById("sheet");
 function openSheet(id){const i=D().blocks.flatMap(b=>b.items).find(x=>x.id===id);if(!i)return;
- document.getElementById("sheet-body").innerHTML=`<div class="sh-t">${i.t}</div><div class="sh-w">${i.w}</div>${i.n?`<div class="sh-n">${i.n}</div>`:""}<div class="links">${L(i.m,i.tt,i.na)}</div>`;
+ document.getElementById("sheet-body").innerHTML=`<div><div class="sh-t">${i.t}</div><div class="sh-w">${i.w}</div></div>${i.n?`<div class="sh-n">${i.n}</div>`:""}<div class="links">${L(i.m,i.tt,i.na)}</div>`;
  SH.classList.remove("open","closing");SH.showModal();SH.getBoundingClientRect();requestAnimationFrame(()=>SH.classList.add("open"));followIn(document.getElementById("sheet-body"),140);}
 function closeSheet(){if(!SH.open||SH.classList.contains("closing"))return;SH.classList.add("closing");SH.classList.remove("open");
  const p=SH.querySelector(".panel"),done=()=>{p.removeEventListener("transitionend",done);if(SH.classList.contains("closing")){SH.classList.remove("closing");SH.close()}};
@@ -555,7 +557,7 @@ function wmHTML(st){
  const x=wmClosable?'<button class="x" data-wm="close" aria-label="ปิด">×</button>':"";
  if(st==="intro")return `${WM_ART}<h3>Welcome to Vietnam Trip</h3><p>21–24 ต.ค. · แก๊ง 13 คน<br>ตาราง แผนที่ ร้านเด็ด อยู่ที่นี่หมดแล้ว</p><button class="go" data-wm="next">เริ่มเลย</button>`;
  if(st==="pick")return `${x}<h3>คุณคือใครในทริปนี้</h3><p>เลือกชื่อตัวเอง</p><div class="ppl${pick?" has":""}">${PPL.map(p=>`<button class="pp${pick===p[0]?" on":""}" data-p="${p[0]}"><span class="av" style="background:${p[1]}">${ini(p[0])}</span>${p[0]}</button>`).join("")}</div><button class="go" data-wm="me" ${pick?"":"disabled"}>${pick?"ฉันคือ "+pick:"เลือกชื่อก่อน"}</button>`;
- if(st==="hello"){const p=PPL.find(x=>x[0]===ME);return `<div class="big" style="background:${p[1]}">${ini(p[0])}</div><div class="hi">ยินดีต้อนรับ</div><div class="nm">${p[0]}</div><p>${LINE[p[2]]}</p><button class="go" data-wm="close">Enjoy your trip ✈️</button>`}
+ if(st==="hello"){const p=PPL.find(x=>x[0]===ME);return `<div class="big" style="background:${p[1]}">${ini(p[0])}</div><div><div class="hi">ยินดีต้อนรับ</div><div class="nm">${p[0]}</div></div><p>${LINE[p[2]]}</p><button class="go" data-wm="close">Enjoy your trip ✈️</button>`}
  if(typeof st==="number"){const m=DAYMSG[st];return `<div class="emo">${m[0]}</div><h3>เข้าสู่วันที่ ${st+1} แล้ว${ME?" "+ME:""}!</h3><p>${m[1]}</p><button class="go" data-wm="close">ไปกันเลย</button>`}
 }
 function wmShow(st){
@@ -583,8 +585,9 @@ document.getElementById("me").addEventListener("click",openPicker);document.getE
 renderAll(); setInterval(tick,30000);
 /* modal content follow-through: children rise in one after another */
 function followIn(box,base){if(!box||matchMedia("(prefers-reduced-motion: reduce)").matches)return;
- [...box.children].forEach((el,i)=>el.animate([{opacity:0,transform:"translateY(14px)",filter:"blur(4px)"},{opacity:1,transform:"none",filter:"blur(0)"}],
-  {duration:520,delay:(base||90)+i*55,easing:"cubic-bezier(0.215,0.61,0.355,1)",fill:"backwards"}));}
+ const seq=[];[...box.children].forEach(el=>{if(el.matches(".ppl,.links"))[...el.children].forEach(c=>seq.push([c,30]));else seq.push([el,55])});
+ let d=base||90;seq.forEach(([el,step])=>{el.animate([{opacity:0,transform:"translateY(14px)",filter:"blur(4px)"},{opacity:1,transform:"none",filter:"blur(0)"}],
+  {duration:520,delay:d,easing:"cubic-bezier(0.215,0.61,0.355,1)",fill:"backwards"});d+=step});}
 
 /* day switch: fast staggered blur-fade reveal (only what's on screen) */
 function revealList(){const RM=matchMedia("(prefers-reduced-motion: reduce)").matches,H=innerHeight;let n=0;

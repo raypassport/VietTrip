@@ -85,13 +85,18 @@ def do_cat(c):
     k="cat:"+c
     if k in old and os.path.exists(old[k]): out[k]=old[k]; return
     try:
-        _,b=get("https://unsplash.com/napi/search/photos?"+urllib.parse.urlencode({"query":CATS[c],"per_page":1,"orientation":"squarish"}))
-        r=json.loads(b)["results"][0]; t=r["urls"]["small"]
+        t=None
+        for f in (openverse_thumb,wiki_thumb):
+            try: t=f(CATS[c])
+            except Exception: t=None
+            if t: break
+        if not t: raise Exception("no photo")
+        r={}
         _,img=get(t)
         from PIL import Image
         im=Image.open(io.BytesIO(img)).convert("RGB"); im.thumbnail((240,240))
         fn="thumbs/c-"+c+".jpg"; im.save(fn,"JPEG",quality=72,optimize=True); out[k]=fn
-        log.append(f"OK   unsplash  {c} ({r.get('user',{}).get('name','')})")
+        log.append(f"OK   stock     {c} ({r.get('user',{}).get('name','')})")
     except Exception as e: log.append(f"FAIL cat {c}: {e}")
 with ThreadPoolExecutor(8) as ex:
     list(ex.map(do_cat,CATS))
