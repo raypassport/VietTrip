@@ -220,6 +220,34 @@ a.btn{background:#f4f4f6!important;color:#18181b!important}a.btn.tt{background:#
 .tabs button[aria-selected="true"]{background:#fff!important;color:#18181b!important;box-shadow:0 1px 2px rgba(0,0,0,.08)!important}
 .bar .progress{display:none!important}
 @media (max-width:640px){.days button b{font-size:18px!important}}
+
+/* ---- welcome / new-day modal ---- */
+#wm{padding:0;border:0;background:none;width:100%;height:100%;max-width:none;max-height:none;margin:0;overflow:hidden}
+#wm::backdrop{background:transparent}
+#wm .scrim{position:fixed;inset:0;background:rgba(24,24,27,.45);opacity:0;transition:opacity 280ms ease}
+#wm .card{position:fixed;left:16px;right:16px;top:50%;margin:0 auto;max-width:400px;background:#fff;border-radius:24px;overflow:hidden;
+ transform:translateY(-50%) scale(.96);opacity:0;transition:transform 280ms var(--ease-out),opacity 220ms ease,height 340ms var(--ease-drawer)}
+#wm.open .scrim{opacity:1}#wm.open .card{transform:translateY(-50%) scale(1);opacity:1}
+#wm.closing .card{transition-duration:180ms,160ms,0ms}
+#wm .in{padding:28px 22px 22px;transition:opacity 200ms ease,transform 260ms var(--ease-out)}
+#wm .in.swap{opacity:0;transform:translateY(8px)}
+#wm .x{position:absolute;right:14px;top:14px;width:32px;height:32px;border-radius:50%;border:0;background:#f4f4f6;color:#18181b;font-size:18px;line-height:1;cursor:pointer;z-index:2}
+#wm h3{font:700 24px/1.2 "IBM Plex Sans Thai";color:#18181b;margin:0;text-align:center}
+#wm p{font:500 14px/1.6 "IBM Plex Sans Thai";color:#9a9ca3;text-align:center;margin:8px 0 0}
+#wm .go{display:block;width:100%;height:52px;margin-top:22px;border:0;border-radius:14px;background:#e5232e;color:#fff;font:600 16px "IBM Plex Sans Thai";cursor:pointer;transition:transform 120ms var(--ease-out),background-color 200ms ease,color 200ms ease}
+#wm .go:focus:not(:focus-visible){outline:none}#wm .go:active{transform:scale(.97)}#wm .go:disabled{background:#f1f1f4;color:#b9bbc1;cursor:default;transform:none}
+#wm .wm-art{display:block;width:200px;height:auto;margin:0 auto 18px}
+#wm .ppl{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 6px;margin-top:20px}
+#wm .pp{background:none;border:0;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;font:500 13px "IBM Plex Sans Thai";color:#18181b;transition:opacity 200ms ease}
+#wm .av{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;color:#fff;font:700 20px "Bai Jamjuree","IBM Plex Sans Thai";position:relative;transition:transform 160ms var(--ease-out),box-shadow 200ms ease}
+#wm .pp:active .av{transform:scale(.92)}
+#wm .ppl.has .pp{opacity:.4}#wm .ppl.has .pp.on{opacity:1;color:#e5232e;font-weight:600}
+#wm .pp.on .av{box-shadow:0 0 0 3px #fff,0 0 0 5.5px #e5232e}
+#wm .big{width:104px;height:104px;font-size:40px;margin:4px auto 14px;border-radius:50%;display:grid;place-items:center;color:#fff;font-family:"Bai Jamjuree","IBM Plex Sans Thai";font-weight:700}
+#wm .emo{font-size:56px;line-height:1;text-align:center;margin:6px 0 14px}
+#wm .hi{font:500 13px "IBM Plex Sans Thai";color:#9a9ca3;text-align:center}
+#wm .nm{font:700 34px/1.15 "IBM Plex Sans Thai";color:#18181b;text-align:center}
+@media (prefers-reduced-motion:reduce){#wm .card{transform:translateY(-50%)!important;transition:opacity 200ms ease}#wm .in{transform:none!important}}
 </style>
 </head>
 <body>
@@ -245,6 +273,7 @@ a.btn{background:#f4f4f6!important;color:#18181b!important}a.btn.tt{background:#
   </div>
 
 <main id="plan"></main>
+<dialog id="wm" aria-label="ยินดีต้อนรับ"><div class="scrim"></div><div class="card" id="wmc"><div class="in" id="wmi"></div></div></dialog>
 <dialog id="sheet" aria-labelledby="sheet-h"><div class="scrim" data-close></div>
  <div class="panel" role="document"><div class="grab"></div>
   <div class="sh-head"><h3 id="sheet-h">รายละเอียดกิจกรรม</h3><button class="sh-x" data-close aria-label="ปิด"><svg class="lucide lucide-x" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M18 6 6 18" /> <path d="m6 6 12 12" /> </svg></button></div>
@@ -470,6 +499,49 @@ document.addEventListener("click",e=>{
 // auto-open today's day if trip day
 (()=>{const t=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Ho_Chi_Minh"}).format(new Date());const i=DAYS.findIndex(d=>d.date===t);if(i>=0)cur=i})();
 renderAll(); setInterval(tick,30000);
+const WM_ART=`<svg class="wm-art" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 440" font-family="Bai Jamjuree, sans-serif"> <defs> <linearGradient id="fr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dcdcd6"/></linearGradient> <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3f9be6"/><stop offset="1" stop-color="#8cc6f2"/></linearGradient> <clipPath id="win"><rect x="62" y="62" width="236" height="316" rx="96"/></clipPath> <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#3b2a1e" flood-opacity=".25"/></filter> </defs> <rect x="14" y="14" width="332" height="412" rx="150" fill="url(#fr)" stroke="#d6d4cc" stroke-width="2"/> <rect x="40" y="40" width="280" height="360" rx="120" fill="#ecebe6" stroke="#d6d4cc" stroke-width="2"/> <g clip-path="url(#win)"> <rect x="62" y="62" width="236" height="316" fill="url(#sky)"/> <g fill="#fff" opacity=".95"><ellipse cx="250" cy="250" rx="46" ry="16"/><ellipse cx="228" cy="240" rx="22" ry="16"/><ellipse cx="262" cy="236" rx="18" ry="14"/> <ellipse cx="96" cy="300" rx="40" ry="13"/><ellipse cx="112" cy="290" rx="18" ry="13"/></g> <path d="M140 378 L300 300 L300 330 L190 378Z" fill="#f4f3ef"/><path d="M140 378 L300 300" stroke="#d6d4cc" stroke-width="2"/> <rect x="62" y="62" width="236" height="40" fill="#e7e6e1"/> </g> <rect x="62" y="62" width="236" height="316" rx="96" fill="none" stroke="#cfcdc5" stroke-width="3"/> <!-- boarding card --> <g transform="rotate(-3 180 150)" filter="url(#sh)"> <rect x="122" y="92" width="118" height="148" rx="12" fill="#f6efe0" stroke="#3b2a1e" stroke-width="3"/> <text x="181" y="122" text-anchor="middle" font-size="18" font-weight="700" fill="#3b2a1e">XIN CHÀO</text> <line x1="138" y1="130" x2="224" y2="130" stroke="#3b2a1e" stroke-width="2"/> <text x="181" y="152" text-anchor="middle" font-size="15" font-weight="700" fill="#3b2a1e">BKK → SGN</text> <rect x="125" y="162" width="112" height="22" fill="#3b2a1e"/> <text x="181" y="178" text-anchor="middle" font-size="11" font-weight="700" fill="#f6efe0" letter-spacing="2">21–24 OCT</text> <circle cx="181" cy="210" r="16" fill="none" stroke="#3b2a1e" stroke-width="2.5"/><path d="M165 210h32M181 194v32M170 199q11 11 22 0M170 221q11-11 22 0" fill="none" stroke="#3b2a1e" stroke-width="2"/> <rect x="165" y="84" width="34" height="14" rx="2" fill="#efe9d8" opacity=".9" transform="rotate(4 182 91)"/> </g> <!-- flag sticker --> <g transform="rotate(-12 92 120)" filter="url(#sh)"><rect x="68" y="102" width="52" height="36" rx="5" fill="#fff"/><rect x="72" y="106" width="44" height="28" rx="3" fill="#da251d"/> <path d="M94 111l2.6 7.8h8.2l-6.6 4.8 2.5 7.8-6.7-4.8-6.7 4.8 2.5-7.8-6.6-4.8h8.2z" fill="#ffcd00"/></g> <!-- non la hat sticker --> <g transform="rotate(8 270 205)" filter="url(#sh)"><path d="M228 222 L270 176 L312 222 Q270 236 228 222Z" fill="#fff" stroke="#fff" stroke-width="8" stroke-linejoin="round"/> <path d="M228 222 L270 176 L312 222 Q270 236 228 222Z" fill="#f2d27a" stroke="#3b2a1e" stroke-width="2.5" stroke-linejoin="round"/> <path d="M249 199 Q270 206 291 199M238 211 Q270 220 302 211" fill="none" stroke="#3b2a1e" stroke-width="1.8"/></g> <!-- pho bowl sticker --> <g transform="rotate(-6 112 272)" filter="url(#sh)"><circle cx="112" cy="268" r="34" fill="#fff"/> <path d="M84 262 h56 q-4 26-28 26 q-24 0-28-26z" fill="#e0825a" stroke="#3b2a1e" stroke-width="2.5" stroke-linejoin="round"/> <path d="M90 262 q22-10 44 0" fill="#f6efe0" stroke="#3b2a1e" stroke-width="2"/><path d="M118 236 l18 22M124 234 l16 24" stroke="#3b2a1e" stroke-width="2.5" stroke-linecap="round"/> <path d="M100 248 q4-6 0-12M110 246 q4-6 0-12" fill="none" stroke="#9aa8bd" stroke-width="2" stroke-linecap="round"/></g> <!-- note card --> <g transform="rotate(4 228 318)" filter="url(#sh)"><path d="M176 280 h108 v58 l-14 14 h-94z" fill="#fff"/><path d="M284 338 l-14 14 v-14z" fill="#e7e6e1"/> <text x="230" y="304" text-anchor="middle" font-size="14" font-weight="700" fill="#3b2a1e">VIETNAM TRIP</text> <text x="230" y="322" text-anchor="middle" font-size="10" fill="#3b2a1e" letter-spacing="1">13 FRIENDS · 4 DAYS</text> <text x="230" y="340" text-anchor="middle" font-size="10" fill="#3b2a1e">HO CHI MINH CITY</text></g> <!-- scooter sticker --> <g transform="rotate(-8 112 352)" filter="url(#sh)"><rect x="80" y="330" width="66" height="44" rx="22" fill="#fff"/> <circle cx="96" cy="362" r="8" fill="#3b2a1e"/><circle cx="132" cy="362" r="8" fill="#3b2a1e"/><path d="M92 354 h22 q8-14 18-14 l4-6" fill="none" stroke="#2f7ff0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/> <path d="M100 352 q6-12 18-10" fill="#2f7ff0"/></g> <!-- round stamp --> <g transform="rotate(-14 272 372)"><circle cx="272" cy="372" r="26" fill="#3b2a1e"/><text x="272" y="370" text-anchor="middle" font-size="11" font-weight="700" fill="#f6efe0">SGN</text><text x="272" y="383" text-anchor="middle" font-size="8" fill="#f6efe0">2026</text></g> </svg>`;
+/* ---- people + onboarding ---- */
+const PPL=[["เรจิ","#2fbfa5","lm"],["มีน","#2fbfa5","lm"],["คิน","#2fbfa5","lm"],["โอลี่","#9b5fd6","bt"],["ปราง","#9b5fd6","bt"],["แพรว","#9b5fd6","bt"],["ติว","#9b5fd6","bt"],["แบม","#5aa83a","sh"],["เต้","#4a6fdc","ch"],["โอ","#4a6fdc","ch"],["ฟร้อง","#8b6a55","fr"],["กาย","#8b6a55","fr"]];
+const LINE={lm:"สายแลนด์มาร์ก · บ่ายวันแรกเดินเก็บ 5 ที่ 🏛️",bt:"กลุ่มทำสวย · บ่ายวันแรกต่อขนตา 💅",sh:"สายช้อป · บ่ายวันแรกตะลุยช้อปปิ้ง 🛍️",ch:"กลุ่มชาริเต้ + โอ · บ่ายวันแรกเที่ยวตามใจ ✨",fr:"กลุ่มฟร้อง + กาย · บ่ายวันแรกแพลนอิสระ 🗺️"};
+const DAYMSG=[null,["☕️","วันนี้สายคาเฟ่ทั้งวัน<br>ปิดท้ายด้วยสตรีทฟู้ดกับบาร์ 🍸"],["🛕","ไหว้วัดแขก ช้อปปิ้ง<br>แล้วไปต่อที่บุ่ยเหวียน 🌙"],["🧳","วันสุดท้ายแล้ว ซื้อของฝาก กินหอย<br>แล้วบินกลับ 21:30 ✈️"]];
+const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const ini=n=>/^[เแโใไ]/.test(n)?n[1]:n[0];
+let ME=LS.get("hcmc-me",null);
+function renderMe(){const p=PPL.find(x=>x[0]===ME),b=document.getElementById("me");
+ b.textContent=p?ini(p[0]):"?";b.style.background=p?p[1]:"#d9dadf";document.getElementById("myname").textContent=p?p[0]:"เลือกว่าคุณเป็นใคร";}
+const WM=document.getElementById("wm"),WMC=document.getElementById("wmc"),WMI=document.getElementById("wmi");
+let wmStep=null,pick=null,wmClosable=false;
+function wmHTML(st){
+ const x=wmClosable?'<button class="x" data-wm="close" aria-label="ปิด">×</button>':"";
+ if(st==="intro")return `${WM_ART}<h3>Welcome to Vietnam Trip</h3><p>21–24 ต.ค. · แก๊ง 13 คน<br>ตาราง แผนที่ ร้านเด็ด อยู่ที่นี่หมดแล้ว</p><button class="go" data-wm="next">เริ่มเลย</button>`;
+ if(st==="pick")return `${x}<h3>คุณคือใครในทริปนี้</h3><p>เลือกชื่อตัวเอง</p><div class="ppl${pick?" has":""}">${PPL.map(p=>`<button class="pp${pick===p[0]?" on":""}" data-p="${p[0]}"><span class="av" style="background:${p[1]}">${ini(p[0])}</span>${p[0]}</button>`).join("")}</div><button class="go" data-wm="me" ${pick?"":"disabled"}>${pick?"ฉันคือ "+pick:"เลือกชื่อก่อน"}</button>`;
+ if(st==="hello"){const p=PPL.find(x=>x[0]===ME);return `<div class="big" style="background:${p[1]}">${ini(p[0])}</div><div class="hi">ยินดีต้อนรับ</div><div class="nm">${p[0]}</div><p>${LINE[p[2]]}</p><button class="go" data-wm="close">Enjoy your trip ✈️</button>`}
+ if(typeof st==="number"){const m=DAYMSG[st];return `<div class="emo">${m[0]}</div><h3>เข้าสู่วันที่ ${st+1} แล้ว${ME?" "+ME:""}!</h3><p>${m[1]}</p><button class="go" data-wm="close">ไปกันเลย</button>`}
+}
+function wmShow(st){
+ if(!WM.open){wmStep=st;WMI.innerHTML=wmHTML(st);WMC.style.height="";WM.classList.remove("closing","open");WM.showModal();WMC.getBoundingClientRect();requestAnimationFrame(()=>WM.classList.add("open"));return}
+ const h0=WMC.offsetHeight;WMC.style.height=h0+"px";WMI.classList.add("swap");
+ setTimeout(()=>{wmStep=st;WMI.innerHTML=wmHTML(st);WMC.style.height=WMI.offsetHeight+"px";requestAnimationFrame(()=>WMI.classList.remove("swap"));setTimeout(()=>{WMC.style.height=""},360)},140);
+}
+function wmRefresh(){const h0=WMC.offsetHeight;WMI.innerHTML=wmHTML(wmStep);WMC.style.height=h0+"px";WMC.getBoundingClientRect();WMC.style.height=WMI.offsetHeight+"px";setTimeout(()=>{WMC.style.height=""},360)}
+function wmClose(){if(!WM.open||WM.classList.contains("closing"))return;WM.classList.add("closing");WM.classList.remove("open");
+ setTimeout(()=>{WM.classList.remove("closing");WM.close();if(wmStep==="hello"){LS.set("hcmc-onb",1);maybeNewDay()}},220)}
+WM.addEventListener("cancel",e=>{e.preventDefault();if(wmClosable||typeof wmStep==="number"||wmStep==="hello")wmClose()});
+WM.addEventListener("click",e=>{
+ const a=e.target.closest("[data-wm]"),p=e.target.closest("[data-p]");
+ if(p){pick=p.dataset.p;wmRefresh();return}
+ if(!a)return;const v=a.dataset.wm;
+ if(v==="next")wmShow("pick");
+ else if(v==="me"&&pick){ME=pick;LS.set("hcmc-me",ME);renderMe();wmClosable?(LS.set("hcmc-onb",1),wmClose()):wmShow("hello")}
+ else if(v==="close")wmClose();
+});
+function maybeNewDay(){const t=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Ho_Chi_Minh"}).format(new Date()),i=DAYS.findIndex(d=>d.date===t),seen=LS.get("hcmc-days",[]);
+ if(i>0&&!seen.includes(i)){LS.set("hcmc-days",seen.concat(i));wmClosable=false;wmShow(i)}}
+function openPicker(){pick=ME;wmClosable=true;wmShow("pick")}
+document.getElementById("me").addEventListener("click",openPicker);document.getElementById("who").addEventListener("click",openPicker);
+renderMe();
+if(!LS.get("hcmc-onb",0)){wmClosable=false;wmShow("intro")}else maybeNewDay();
+
 </script>
 </body>
 </html>
