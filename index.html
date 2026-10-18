@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Saigon Day 01</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@500;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: sticky day header + tab switch; timeline of time-blocks; split-group chips filter afternoon */
+:root{
+  --bg:#f3f6fb; --surface:#ffffff; --ink:#14223b; --muted:#5f6f88; --line:#dbe3ef;
+  --accent:#2f7ff0; --accent-soft:#e6f0ff; --tik:#e0325b; --tik-soft:#fdecf0; --done:#9aa8bd;
+  --g1:#2fbfa5; --g1s:#d7f5ef; --g2:#9b5fd6; --g2s:#efe3fb; --g3:#5aa83a; --g3s:#e2f4d8; --g4:#4a6fdc; --g4s:#dde6fd; --g5:#8b6a55; --g5s:#efe6df;
+  --f-display:"Bai Jamjuree","IBM Plex Sans Thai",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans Thai",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0d1422; --surface:#151f32; --ink:#e7eefb; --muted:#93a3bd; --line:#26334b;
+  --accent:#6aa6ff; --accent-soft:#1b2c4b; --tik:#ff6b8d; --tik-soft:#3a1c27; --done:#5c6a82;
+  --g1s:#14352f; --g2s:#2b1d3d; --g3s:#1c3017; --g4s:#1b2648; --g5s:#33281f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1422; --surface:#151f32; --ink:#e7eefb; --muted:#93a3bd; --line:#26334b;
+  --accent:#6aa6ff; --accent-soft:#1b2c4b; --tik:#ff6b8d; --tik-soft:#3a1c27; --done:#5c6a82;
+  --g1s:#14352f; --g2s:#2b1d3d; --g3s:#1c3017; --g4s:#1b2648; --g5s:#33281f; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:980px;margin:0 auto}
+header{display:none}
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(40px,8vw,64px);line-height:.9;margin:0;color:var(--accent);letter-spacing:-.01em}
+.meta{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin-top:6px}
+.clock{font-family:var(--f-mono);font-size:12px;color:var(--muted);text-align:right}
+.clock b{display:block;font-size:22px;color:var(--ink);font-variant-numeric:tabular-nums}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:16px 12px}
+.days{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:100%}
+.days button{display:flex;flex-direction:column;align-items:flex-start;gap:0;border:2px solid var(--line);background:var(--surface);color:var(--muted);border-radius:14px;padding:8px 14px;cursor:pointer;text-align:left;min-height:52px}
+.days button b{font:700 20px/1.1 var(--f-display);color:var(--ink)}
+.days button small{font:500 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase}
+.days button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.days button[aria-pressed="true"] b{color:#fff}
+.tabs{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px}
+.tabs button{border:0;background:none;color:var(--muted);font:600 14px var(--f-body);padding:6px 16px;border-radius:999px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--accent);color:#fff}
+.progress{flex:1;min-width:140px;display:flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.progress i{flex:1;height:6px;border-radius:9px;background:var(--line);overflow:hidden;display:block}
+.progress i span{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+a.btn,.btn{display:inline-flex;align-items:center;gap:4px;font:700 11px var(--f-mono);letter-spacing:.06em;text-decoration:none;
+  padding:5px 10px;border-radius:7px;background:var(--accent-soft);color:var(--accent);border:1px solid transparent;white-space:nowrap}
+a.btn:hover{border-color:var(--accent)}
+a.btn.tt{background:var(--tik-soft);color:var(--tik)} a.btn.tt:hover{border-color:var(--tik)}
+.btn.na{background:transparent;color:var(--muted);border:1px dashed var(--line)}
+a.btn:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+section.block{display:grid;grid-template-columns:120px 1fr;gap:16px;padding-block:22px;border-top:1px solid var(--line)}
+section.block h2{font-family:var(--f-display);font-size:22px;margin:0;color:var(--accent);font-weight:700}
+section.block h2 small{display:block;font:500 11px var(--f-mono);color:var(--muted);letter-spacing:.06em}
+.list{display:grid;gap:8px;min-width:0}
+.item{display:grid;grid-template-columns:28px 92px 1fr auto;gap:12px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;transition:opacity .2s}
+.item .t{font-family:var(--f-mono);font-weight:700;font-size:13px;padding-top:2px;font-variant-numeric:tabular-nums}
+.item .what{min-width:0}
+.item .what strong{display:block;font-weight:600}
+.item .what span{font-size:13px;color:var(--muted)}
+.item .links{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.chk{width:22px;height:22px;border-radius:6px;border:2px solid var(--line);background:none;cursor:pointer;display:grid;place-items:center;padding:0;margin-top:1px;color:#fff}
+.item.done{opacity:.55} .item.done .what strong{text-decoration:line-through;color:var(--done)}
+.item.done .chk{background:var(--accent);border-color:var(--accent)}
+.item.now{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.now-tag{display:inline-block;font:700 10px var(--f-mono);background:var(--accent);color:#fff;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:2px}
+.deadline{color:var(--accent);font-weight:600}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 13px var(--f-body);border-radius:999px;padding:5px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+.grp{border-radius:12px;padding:12px 14px;display:grid;gap:6px;align-content:start;transition:opacity .2s}
+.grp h3{margin:0;font-size:14px;display:flex;align-items:center;gap:6px}
+.grp .who{font-size:13px;font-weight:600;border-bottom:1px solid color-mix(in srgb,var(--ink) 15%,transparent);padding-bottom:6px}
+.grp ol,.grp p{margin:0;font-size:13px;color:var(--muted)} .grp ol{padding-left:18px}
+.grp.dim{opacity:.25}
+.split-head{font-family:var(--f-mono);font-weight:700;font-size:13px;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.foot{font-size:12px;color:var(--muted);padding-top:16px;border-top:1px solid var(--line)}
+.route{display:grid;gap:0;counter-reset:s}
+.place{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px dashed var(--line)}
+.place:last-child{border-bottom:0}
+.place .n{font:700 18px var(--f-display);color:var(--accent)}
+.place strong{display:block} .place span{font-size:13px;color:var(--muted)}
+.place .links{display:flex;gap:6px}
+@media (max-width:640px){
+  .days{gap:6px} .days button{padding:7px 9px;border-radius:11px} .days button b{font-size:16px}
+  section.block{grid-template-columns:1fr;gap:10px}
+  .item{grid-template-columns:24px 1fr;row-gap:6px}
+  .item .t{grid-column:2} .item .what{grid-column:2} .item .links{grid-column:2;justify-content:flex-start}
+  .item .chk{grid-row:1/span 3}
+  .place{grid-template-columns:32px 1fr} .place .links{grid-column:2}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <div class="top">
+    <div>
+      <h1 id="h1">DAY 01</h1>
+      <div class="meta" id="meta"></div>
+    </div>
+    <div class="clock">เวลาไซ่ง่อน (GMT+7)<b id="clk">--:--</b><span id="cd"></span></div>
+  </div>
+</header>
+  <div class="bar">
+    <div class="days" id="days"></div>
+    <div class="tabs" role="tablist">
+      <button role="tab" id="tab-plan" aria-selected="true" data-v="plan">ตารางเวลา</button>
+      <button role="tab" id="tab-places" aria-selected="false" data-v="places">สถานที่ & ลิงก์</button>
+    </div>
+    <div class="progress"><i><span id="pbar"></span></i><span id="ptxt">0/0</span></div>
+    <a class="btn" id="toplink" target="_blank" rel="noopener" href="#">MAP ↗</a>
+  </div>
+
+<main id="plan"></main>
+<main id="places" hidden></main>
+<p class="foot" id="foot"></p>
+</div>
+
+<script>
+const M=q=>"https://www.google.com/maps/search/?api=1&query="+q;
+const HOME=M("16C+Phung+Khac+Khoan&query_place_id=ChIJaSr4yTUvdTER4DjtvVlCDsI");
+const AIR=M("Tan+Son+Nhat+International+Airport+International+Terminal");
+const PHO=M("Pho+Viet+Nam+14+Pham+Hong+Thai+Ho+Chi+Minh"), PHO_T="https://www.tiktok.com/@pangazius/photo/7493771739143490834";
+const BOOK=M("Ho+Chi+Minh+City+Book+Street"), BOOK_T="https://www.tiktok.com/@anthropologyoftravel/video/7440865582716636448";
+const PIZ=M("Pizza+4Ps+151B+Hai+Ba+Trung+Ho+Chi+Minh"), PIZ_T="https://www.tiktok.com/@prnsuchaa/video/7562601004097719559";
+const MOT=M("MOTLY+Kitchen+Bar+65A+Nguyen+Cu+Ho+Chi+Minh"), MOT_T="https://www.tiktok.com/@motly.kitchenbar/video/7571731787286727957";
+const DRIVE="https://www.google.com/maps/dir/?api=1&origin=Tan+Son+Nhat+International+Airport+International+Terminal&destination=16C+Phung+Khac+Khoan+Ho+Chi+Minh&travelmode=driving";
+// Day 2
+const MANMI="https://maps.app.goo.gl/KAtNuYekwxWwEcpR9?g_st=ic";
+const DOPHU=M("C%C3%A0%20Ph%C3%AA%20%C4%90%E1%BB%97%20Ph%E1%BB%A7%20B%E1%BA%A3o%20T%C3%A0ng%20Bi%E1%BB%87t%20%C4%90%E1%BB%99ng%20S%C3%A0i%20G%C3%B2n%20287/72%20Nguy%E1%BB%85n%20%C4%90%C3%ACnh%20Chi%E1%BB%83u%20Ho%20Chi%20Minh"), DOPHU_T="https://www.tiktok.com/search?q=C%C3%A0%20Ph%C3%AA%20%C4%90%E1%BB%97%20Ph%E1%BB%A7%20secret%20bunker%20Saigon";
+const INDO="https://maps.app.goo.gl/UUcjp9Wvo4q9ugr86?g_st=ic";
+const BEP=M("B%E1%BA%BFp%20M%E1%BA%B9%20%E1%BB%88n%20136%20L%C3%AA%20Th%C3%A1nh%20T%C3%B4n%20Ho%20Chi%20Minh"), BEP_T="https://www.tiktok.com/@sutikasayasit/video/7643363896799005973";
+const ART=M("Ho%20Chi%20Minh%20City%20Museum%20of%20Fine%20Arts%2097A%20Ph%C3%B3%20%C4%90%E1%BB%A9c%20Ch%C3%ADnh"), ART_T="https://www.tiktok.com/@lingdidau/video/7289128546168098050";
+const NHAM=M("Nh%C3%A2m%20Coffee%20195/10/2%20%C4%90i%E1%BB%87n%20Bi%C3%AAn%20Ph%E1%BB%A7%20B%C3%ACnh%20Th%E1%BA%A1nh%20Ho%20Chi%20Minh");
+const APT=M("The%20Cafe%20Apartments%2042%20Nguy%E1%BB%85n%20Hu%E1%BB%87%20Ho%20Chi%20Minh"), APT_T="https://www.tiktok.com/@kim_bulan4/video/7410229014691908881";
+const HTK=M("H%E1%BB%93%20Th%E1%BB%8B%20K%E1%BB%B7%20Food%20Street%20Ho%20Chi%20Minh"), HTK_T="https://www.tiktok.com/@ansapsaigon/video/7358839016889830664";
+const CHIN=M("ChinChin%20Bar%201st%20floor%2075%20H%E1%BB%93%20T%C3%B9ng%20M%E1%BA%ADu%20Ho%20Chi%20Minh");
+const TEEBAR="https://maps.app.goo.gl/MTwVyJTUfnfvJfsh6?g_st=ic", FROLIC="https://maps.app.goo.gl/qDzdq9vsWcKbMY9UA?g_st=ic";
+
+// Day 3–4 (real links only)
+const PLA_T="https://www.tiktok.com/@vyhaydi.sg/video/7536439123712691474", NHAM_T="https://www.tiktok.com/@tony_khoa/video/7484257638478335240", BV_T="https://www.tiktok.com/@phodibobuivien/video/7456325717085654280";
+const IND_T="https://www.tiktok.com/@morrididau/video/7644072376409312533", BANH_T="https://www.tiktok.com/@didausaigon/video/7319392254643162369", VIN_T="https://www.tiktok.com/@vincomcenterdongkhoi/video/7555896999074221319", VINF_T="https://www.tiktok.com/@yangho0910/video/7480032426719317255", BAM_T="https://www.tiktok.com/@bam.sgn/video/7403553625949097224", TEE_T="https://www.tiktok.com/discover/thi-bar";
+const PLA_M="https://www.google.com/maps/search/?api=1&query=ng%C3%A2m%20CAFE%20193/19%20Nam%20K%E1%BB%B3%20Kh%E1%BB%9Fi%20Ngh%C4%A9a%20Ho%20Chi%20Minh", BANH_M="https://www.google.com/maps/search/?api=1&query=B%C3%A1nh%20%C6%AF%E1%BB%9Bt%20Ban%20M%C3%AA%20Giang%20V%C6%B0%C6%A1ng%20T%C3%B4n%20Th%E1%BA%A5t%20T%C3%B9ng%20Ho%20Chi%20Minh", MARI_M="https://www.google.com/maps/search/?api=1&query=Mariamman%20Hindu%20Temple%2045%20Tr%C6%B0%C6%A1ng%20%C4%90%E1%BB%8Bnh%20Ho%20Chi%20Minh";
+const MARI_T="https://vt.tiktok.com/ZSgMmRDhD/", BV="https://maps.app.goo.gl/jkgcDc9D9Vvn7vMq5?g_st=ic", BAM="https://maps.app.goo.gl/ACyUdbvT2Wv6WkYF6?g_st=ic", VIN="https://maps.app.goo.gl/kkutkAAVDsfRsdet7?g_st=ic";
+
+const groups=[
+ {id:"lm",c:"--g1",s:"--g1s",name:"กลุ่มเก็บแลนด์มาร์ก",who:"เรจิ · มีน · คิน",list:["War Museum","Independence Palace","Notre-Dame + Post Office","Book Street"]},
+ {id:"bt",c:"--g2",s:"--g2s",name:"กลุ่มทำสวย",who:"โอลี่ · ปราง · แพรว · ติว",p:"ต่อขนตา<br>คาดว่าเสร็จประมาณ 16:00"},
+ {id:"sh",c:"--g3",s:"--g3s",name:"กลุ่มช็อปปิ้งแม่แบม",who:"แบม",p:"Shopping Route ส่วนตัว<br>กลับบ้านตามเวลานัด"},
+ {id:"ch",c:"--g4",s:"--g4s",name:"กลุ่มชาริเต้ + โอ",who:"ชาริเต้ (เต้) · โอ",p:"ชาริเต้พักที่บ้านก่อน<br>จากนั้นเที่ยวตามแพลนตัวเอง"},
+ {id:"fr",c:"--g5",s:"--g5s",name:"กลุ่มฟร้อง + กาย",who:"ฟร้อง · กาย",p:"แพลนอิสระ<br>ยังไม่ยืนยันรายละเอียด"}
+];
+
+const DAYS=[
+{n:"01",date:"2026-10-21",th:"21 ต.ค.",meta:"Ho Chi Minh City · 21 Oct 2026 · 13 people",
+ top:["ROUTE MAP ↗","https://www.google.com/maps/dir/?api=1&origin=Pho+Viet+Nam+14+Pham+Hong+Thai+Ho+Chi+Minh&destination=Ho+Chi+Minh+City+Book+Street&waypoints=War+Remnants+Museum+Ho+Chi+Minh%7CIndependence+Palace+Ho+Chi+Minh%7CNotre+Dame+Cathedral+of+Saigon%7CSaigon+Central+Post+Office&travelmode=walking"],
+ foot:"แตะช่องสี่เหลี่ยมเพื่อติ๊กว่าทำแล้ว (บันทึกไว้ในเครื่องนี้) · วันที่ 21 ต.ค. รายการที่กำลังเกิดขึ้นจะไฮไลต์อัตโนมัติ · เวลาที่ยังไม่ยืนยันไม่ได้เติมขึ้นเอง",
+ blocks:[
+ {k:"เช้า",en:"MORNING",items:[
+  {id:"fly",t:"07:30",s:450,e:555,w:"เครื่องออกจากประเทศไทย",n:""},
+  {id:"arr",t:"09:15",s:555,e:660,w:"ถึงสนามบินโฮจิมินห์",n:"รับกระเป๋า + ตรวจคนเข้าเมือง",m:AIR},
+  {id:"car",t:"11:00",s:660,e:720,w:"รถรับจากสนามบินไปบ้าน",n:"ใช้เวลาตามสภาพจราจร",m:DRIVE},
+  {id:"bag",t:"ก่อน 12:30",s:720,e:750,w:"เก็บสัมภาระให้เรียบร้อย",n:"บ้าน: 16C Phùng Khắc Khoan",m:HOME}]},
+ {k:"กลางวัน",en:"LUNCH",items:[
+  {id:"pho",t:"12:30–13:00",s:750,e:780,w:"ร้านเฝอเวียดนาม · Phở Việt Nam",n:"มื้อแรก · ล็อกร้านแล้ว · 14 Phạm Hồng Thái",m:PHO,tt:PHO_T}]},
+ {k:"บ่าย–เย็น",en:"AFTERNOON",split:true,items:[
+  {id:"merge",t:"16:00",s:960,e:1140,w:"กลุ่มทำสวย + กลุ่มชาริเต้ + โอ Merge กับกลุ่มแลนด์มาร์กที่ Book Street",n:"",m:BOOK,tt:BOOK_T},
+  {id:"call",t:"19:00",s:1140,e:1200,w:"เรียกทุกกลุ่มกลับบ้าน",n:"<span class='deadline'>20:00 ทุกคนต้องถึงบ้าน</span>",m:HOME}]},
+ {k:"ค่ำ–ดึก",en:"NIGHT",items:[
+  {id:"home",t:"20:00",s:1200,e:1260,w:"รวมตัวที่บ้าน",n:"ทุกกลุ่มกลับมาเจอกัน",m:HOME},
+  {id:"pizza",t:"21:00",s:1260,e:1350,w:"Pizza 4P's · Hai Bà Trưng",n:"สาขาที่เสนอว่าใกล้บ้าน",m:PIZ,tt:PIZ_T},
+  {id:"coffee",t:"หลังอาหาร",s:null,w:"ร้านโกปี้",n:"Placeholder · ยังไม่มีชื่อหรือพิกัด",na:true},
+  {id:"motly",t:"หลังร้านโกปี้",s:null,w:"MOTLY · Kitchen Bar",n:"65A Nguyễn Cừ · แล้วกลับบ้าน",m:MOT,tt:MOT_T}]}],
+ places:[
+ {k:"เช้า–กลางวัน",rows:[["09:15","Tan Son Nhat International Airport","สนามบินปลายทาง",AIR],["ก่อน 12:30","บ้าน · 16C Phùng Khắc Khoan","ที่พักหลัก",HOME],["12:30","ร้านเฝอเวียดนาม · Phở Việt Nam","14 Phạm Hồng Thái",PHO,PHO_T]]},
+ {k:"Landmark Route",route:true,rows:[
+  ["01","War Remnants Museum","พิพิธภัณฑ์สงคราม",M("War+Remnants+Museum+Ho+Chi+Minh"),"https://www.tiktok.com/@anjelikush/video/7378188515873492230"],
+  ["02","Independence Palace","ทำเนียบอิสรภาพ",M("Independence+Palace+Ho+Chi+Minh"),"https://www.tiktok.com/@reviewsaigon.vn/video/7449360389017554183"],
+  ["03","Notre-Dame Cathedral of Saigon","มหาวิหารน็อทร์-ดาม",M("Notre+Dame+Cathedral+of+Saigon"),"https://www.tiktok.com/@changtraiyeusaigon.vn/video/7448990486636793096"],
+  ["04","Saigon Central Post Office","ไปรษณีย์กลางไซ่ง่อน",M("Saigon+Central+Post+Office"),"https://www.tiktok.com/@baovlee/video/7284295987835702571"],
+  ["05","Ho Chi Minh City Book Street","จุดรวมกลุ่ม",BOOK,BOOK_T]]},
+ {k:"ค่ำ–ดึก",rows:[["21:00","Pizza 4P's · Hai Bà Trưng","สาขาที่เสนอว่าใกล้บ้าน",PIZ,PIZ_T],["หลังอาหาร","ร้านโกปี้","ยังไม่ทราบชื่อร้านจริง",null],["หลังโกปี้","MOTLY · Kitchen Bar","65A Nguyễn Cừ",MOT,MOT_T]]}]},
+{n:"02",date:"2026-10-22",th:"22 ต.ค.",meta:"Ho Chi Minh City · 22 Oct 2026 · 13 people · เวลาเสนอ",
+ top:["HOME MAP ↗",HOME],
+ foot:"เวลาในหน้านี้เป็นร่างเพื่อจัดลำดับ · TT SEARCH เปิดผลค้นหา ยังไม่ใช่คลิปที่ล็อกแล้ว · ร้านที่ยังไม่ทราบชื่อหรือคลิปจะไม่เติมลิงก์เดาไว้",
+ blocks:[
+ {k:"เช้า",en:"MORNING",items:[
+  {id:"d2wake",t:"08:00",s:480,e:540,w:"ตื่น · อาบน้ำแต่งตัว",n:"เวลาเสนอ · ออกจากบ้านพร้อมกัน",m:HOME},
+  {id:"d2manmi",t:"09:00",s:540,e:600,w:"ข้าวมันหมี่ · Bánh Mì 362",n:"พิกัดที่ส่งมา · รอชื่อร้าน/คลิปไทย",m:MANMI},
+  {id:"d2dophu",t:"10:00",s:600,e:660,w:"คาเฟ่หลุมหลบภัย · Cà Phê Đỗ Phủ",n:"287/72 Nguyễn Đình Chiểu",m:DOPHU,tt:DOPHU_T},
+  {id:"d2pla",t:"11:00",s:660,e:705,w:"คาเฟ่ปลา · ngâm CAFE",n:"193/19 Nam Kỳ Khởi Nghĩa",m:PLA_M,tt:PLA_T},
+  {id:"d2indo",t:"11:45",s:705,e:750,w:"คาเฟ่อินดัสลิน · INDUSLISM",n:"พิกัดที่ส่งมา · รอยืนยันชื่อสะกด",m:INDO,tt:IND_T}]},
+ {k:"กลางวัน",en:"AFTERNOON",items:[
+  {id:"d2bep",t:"12:30",s:750,e:840,w:"เบ๊บ มีซลิน · Bếp Mẹ Ỉn",n:"เสนอ 136 Lê Thánh Tôn · รอยืนยันสาขา",m:BEP,tt:BEP_T},
+  {id:"d2art",t:"14:00",s:840,e:915,w:"Ho Chi Minh City Museum of Fine Arts",n:"พิพิธภัณฑ์ศิลปะ",m:ART,tt:ART_T},
+  {id:"d2nham",t:"15:15",s:915,e:990,w:"คาเฟ่ยัยแน้ม · Nhâm Coffee",n:"195/10/2 Điện Biên Phủ",m:NHAM,tt:NHAM_T},
+  {id:"d2apt",t:"16:30",s:990,e:1050,w:"คาเฟ่อะพาร์ตเมนต์ · The Cafe Apartments",n:"42 Nguyễn Huệ",m:APT,tt:APT_T}]},
+ {k:"เย็น",en:"EVENING",items:[
+  {id:"d2walk",t:"17:30",s:1050,e:1140,w:"หาที่เที่ยวเย็น / เดินเล่น",n:"รอเลือกสถานที่จริง",na:true},
+  {id:"d2home",t:"19:00",s:1140,e:1200,w:"กลับบ้าน · นัดเจอทุกคน",n:"เวลาเสนอ · เปลี่ยนชุดก่อนออกต่อ",m:HOME}]},
+ {k:"ค่ำ–ดึก",en:"NIGHT",items:[
+  {id:"d2htk",t:"20:00",s:1200,e:1290,w:"สตรีทฟู้ด · Hồ Thị Kỷ",n:"มื้อค่ำ · ตลาดกลางคืน",m:HTK,tt:HTK_T},
+  {id:"d2chin",t:"หลังอาหาร",s:null,w:"ชินชิน · ChinChin Bar",n:"75 Hồ Tùng Mậu ชั้น 1",m:CHIN},
+  {id:"d2tee",t:"ต่อจากนั้น",s:null,w:"ตี๋บาร์",n:"ผับเกย์ · ที่ไปที่แรก",m:TEEBAR,tt:TEE_T},
+  {id:"d2frolic",t:"ต่อจากนั้น",s:null,w:"ฟรอลิค · Frolic",n:"ผับเกย์",m:FROLIC},
+  {id:"d2end",t:"ปิดท้าย",s:null,w:"กลับบ้าน",n:"เวลาเดินทางกลับรอยืนยัน",m:HOME}]}],
+ places:[
+ {k:"เช้า",route:true,rows:[["01","บ้าน · 16C Phùng Khắc Khoan","ที่พักหลัก",HOME],["02","ข้าวมันหมี่ · Bánh Mì 362","รอชื่อร้าน + TikTok ไทย",MANMI],["03","คาเฟ่หลุมหลบภัย · Đỗ Phủ","คลิปตรงรอยืนยัน",DOPHU,DOPHU_T],["04","คาเฟ่ปลา · ngâm CAFE","193/19 Nam Kỳ Khởi Nghĩa",PLA_M,PLA_T],["05","คาเฟ่อินดัสลิน · INDUSLISM","พิกัดที่ส่งมา",INDO,IND_T]]},
+ {k:"กลางวัน",route:true,rows:[["06","เบ๊บ มีซลิน · Bếp Mẹ Ỉn","สาขาเสนอ รอยืนยันกับคลิป",BEP,BEP_T],["07","Fine Arts Museum","พิพิธภัณฑ์ศิลปะ",ART,ART_T],["08","คาเฟ่ยัยแน้ม · Nhâm Coffee","195/10/2 Điện Biên Phủ",NHAM,NHAM_T],["09","คาเฟ่อะพาร์ตเมนต์ · The Cafe Apartments","42 Nguyễn Huệ",APT,APT_T]]},
+ {k:"ค่ำ–ดึก",route:true,rows:[["10","บ้าน · นัดรวม","รอเวลาล็อก",HOME],["11","สตรีทฟู้ด · Hồ Thị Kỷ","มื้อค่ำ",HTK,HTK_T],["12","ชินชิน · ChinChin Bar","75 Hồ Tùng Mậu",CHIN],["13","ตี๋บาร์","พิกัดที่ส่งมา",TEEBAR,TEE_T],["14","ฟรอลิค · Frolic","พิกัดที่ส่งมา",FROLIC]]}]},
+{n:"03",date:"2026-10-23",th:"23 ต.ค.",meta:"Ho Chi Minh City · 23 Oct 2026 · 13 people",
+ top:["HOME MAP ↗",HOME],
+ foot:"ปุ่มลิงก์แสดงเฉพาะที่มีลิงก์จริง · ย่านช้อปปิ้งยังไม่ระบุ",
+ blocks:[
+ {k:"กลางวัน",en:"LUNCH",items:[
+  {id:"d3banh",t:"12:00–13:30",s:720,e:810,w:"ร้านชั้น ๆ แหนมเนือง · Bánh Ướt Ban Mê",n:"สาขา Tôn Thất Tùng (Q1 ใกล้ตลาดเบ๊นถั่ญ)",m:BANH_M,tt:BANH_T},
+  {id:"d3temple",t:"14:00–15:00",s:840,e:900,w:"วัดแขก · Mariamman Hindu Temple",n:"ไหว้พระ · 45 Trương Định",m:MARI_M,tt:MARI_T}]},
+ {k:"บ่าย–เย็น",en:"SHOPPING",items:[
+  {id:"d3shop",t:"15:00–19:00",s:900,e:1200,w:"ไปช้อปปิ้ง",n:"ย่าน: รอระบุ"}]},
+ {k:"ค่ำ–ดึก",en:"NIGHT",items:[
+  {id:"d3home",t:"20:00",s:1200,e:1340,w:"เจอกันที่บ้าน · อาบน้ำแต่งตัว",n:"16C Phùng Khắc Khoan",m:HOME},
+  {id:"d3bv",t:"22:20–23:30",s:1340,e:1410,w:"ร่านคันหี (ร่านใหญ่) · Bùi Viện",n:"ถนนข้าวสารเวียดนาม",m:BV,tt:BV_T},
+  {id:"d3bam",t:"23:50 →",s:1430,e:1440,w:"แบมบาร์ · Bam",n:"นั่งส่องผู้ชาย",m:BAM,tt:BAM_T}]}],
+ places:[
+ {k:"กลางวัน",route:true,rows:[["01","ร้านชั้น ๆ แหนมเนือง · Bánh Ướt Ban Mê","สาขา Tôn Thất Tùng",BANH_M,BANH_T],["02","วัดแขก · Mariamman Hindu Temple","45 Trương Định",MARI_M,MARI_T],["03","ช้อปปิ้ง","ย่าน: รอระบุ",null]]},
+ {k:"ค่ำ–ดึก",route:true,rows:[["04","บ้าน · 16C Phùng Khắc Khoan","20:00 อาบน้ำแต่งตัว",HOME],["05","ร่านคันหี · Bùi Viện","ถนนข้าวสาร",BV,BV_T],["06","แบมบาร์ · Bam","",BAM,BAM_T]]}]},
+{n:"04",date:"2026-10-24",th:"24 ต.ค.",meta:"Ho Chi Minh City · 24 Oct 2026 · 13 people · บินกลับ 21:30",
+ top:["HOME MAP ↗",HOME],
+ foot:"ปุ่มลิงก์แสดงเฉพาะที่มีลิงก์จริง · บะหมี่ปูและร้านหอยยังไม่เลือกร้าน",
+ blocks:[
+ {k:"เช้า",en:"MORNING",items:[
+  {id:"d4crab",t:"09:30–10:45",s:570,e:645,w:"มื้อแรก · บะหมี่ปู",n:"ยังไม่เลือกร้าน"},
+  {id:"d4vin",t:"11:00–12:30",s:660,e:750,w:"วินมาร์ท ตึกวินคอมฯ · WinMart Vincom",n:"ซื้อของฝาก · Vincom Center Đồng Khởi",m:VIN,tt:VIN_T}]},
+ {k:"กลางวัน",en:"AFTERNOON",items:[
+  {id:"d4lunch",t:"12:30–13:30",s:750,e:810,w:"กินกลางวันที่วินคอม · Vincom Đồng Khởi",n:"ยังไม่เลือกร้าน",m:VIN,tt:VINF_T},
+  {id:"d4shell",t:"15:30–16:45",s:930,e:1005,w:"กินหอย · ซีฟู้ดก่อนกลับ",n:"ยังไม่เลือกร้าน"}]},
+ {k:"เดินทางกลับ",en:"DEPARTURE",items:[
+  {id:"d4leave",t:"18:00",s:1080,e:1140,w:"ขึ้นรถที่บ้าน",n:"16C Phùng Khắc Khoan",m:HOME},
+  {id:"d4air",t:"19:00",s:1140,e:1290,w:"ถึงสนามบิน · Tân Sơn Nhất",n:"<span class='deadline'>ต้องถึงภายใน 19:00 · บิน 21:30</span>",m:AIR}]}],
+ places:[
+ {k:"เช้า–กลางวัน",route:true,rows:[["01","บะหมี่ปู","ยังไม่เลือกร้าน",null],["02","วินมาร์ท ตึกวินคอมฯ · WinMart Vincom","ของฝาก + มื้อกลางวัน",VIN,VIN_T],["03","ร้านหอย / ซีฟู้ด","ยังไม่เลือกร้าน",null]]},
+ {k:"เดินทางกลับ",route:true,rows:[["04","บ้าน · 16C Phùng Khắc Khoan","ขึ้นรถ 18:00",HOME],["05","Tan Son Nhat International Airport","ถึง 19:00 · บิน 21:30",AIR]]}]}
+];
+const KEY="hcmc-d1-done", DKEY="hcmc-day"; let done={}, cur=0;
+try{done=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){}
+try{const v=+localStorage.getItem(DKEY);if(DAYS[v])cur=v}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(done))}catch(e){}};
+const L=(m,tt,na)=>(m?`<a class="btn" target="_blank" rel="noopener" href="${m}">MAP</a>`:"")+(tt?`<a class="btn tt" target="_blank" rel="noopener" href="${tt}">${/\/(search|discover)/.test(tt)?"TT SEARCH":"TIKTOK"}</a>`:"")+(na?`<span class="btn na">รอชื่อร้าน + พิกัด</span>`:"");
+let filt=null;
+const D=()=>DAYS[cur];
+
+function renderDays(){
+ document.getElementById("days").innerHTML=DAYS.map((d,i)=>`<button data-day="${i}" aria-pressed="${i===cur}"><b>DAY ${d.n}</b><small>${d.th}</small></button>`).join("");
+ const d=D();
+ document.getElementById("h1").textContent="DAY "+d.n;
+ document.getElementById("meta").textContent=d.meta;
+ document.getElementById("foot").textContent=d.foot;
+ const tl=document.getElementById("toplink"); tl.textContent=d.top[0]; tl.href=d.top[1];
+ document.title="Saigon Day "+d.n;
+}
+function renderPlan(){
+ const el=document.getElementById("plan");
+ el.innerHTML=D().blocks.map(b=>`<section class="block"><h2>${b.k}<small>${b.en}</small></h2><div class="list">
+  ${b.split?`<div class="split-head"><span>13:00–16:00 · แยกกลุ่ม</span><div class="chips">${groups.map(g=>`<button class="chip" data-g="${g.id}" aria-pressed="${filt===g.id}"><i class="dot" style="background:var(${g.c})"></i>${g.name.replace("กลุ่ม","")}</button>`).join("")}</div></div>
+  <div class="groups">${groups.map(g=>`<div class="grp ${filt&&filt!==g.id?"dim":""}" style="background:var(${g.s})"><h3><i class="dot" style="background:var(${g.c})"></i>${g.name}</h3><div class="who">${g.who}</div>${g.list?`<ol>${g.list.map(x=>`<li>${x}</li>`).join("")}</ol>`:`<p>${g.p}</p>`}</div>`).join("")}</div>`:""}
+  ${b.items.map(i=>`<div class="item ${done[i.id]?"done":""}" id="it-${i.id}" data-s="${i.s??""}" data-e="${i.e??""}">
+    <button class="chk" data-id="${i.id}" aria-label="ทำแล้ว: ${i.w}">${done[i.id]?"✓":""}</button>
+    <div class="t">${i.t}</div>
+    <div class="what"><strong>${i.w}</strong>${i.n?`<span>${i.n}</span>`:""}</div>
+    <div class="links">${L(i.m,i.tt,i.na)}</div></div>`).join("")}
+ </div></section>`).join("");
+ tick();
+}
+function renderPlaces(){
+ document.getElementById("places").innerHTML=D().places.map(s=>`<section class="block"><h2>${s.k}</h2><div class="route">
+  ${s.rows.map(r=>`<div class="place"><div class="n" style="${s.route?"":"font:700 12px var(--f-mono);color:var(--muted)"}">${r[0]}</div><div><strong>${r[1]}</strong><span>${r[2]}</span></div><div class="links">${L(r[3],r[4],!r[3]&&!r[4]&&cur<2)}</div></div>`).join("")}
+ </div></section>`).join("");
+}
+function renderAll(){renderDays();renderPlan();renderPlaces()}
+function progress(){
+ const all=D().blocks.flatMap(b=>b.items), n=all.filter(i=>done[i.id]).length;
+ document.getElementById("pbar").style.width=(n/all.length*100)+"%";
+ document.getElementById("ptxt").textContent=`${n}/${all.length}`;
+}
+function tick(){
+ const p=new Intl.DateTimeFormat("en-GB",{timeZone:"Asia/Ho_Chi_Minh",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date());
+ const g=t=>p.find(x=>x.type===t).value, hh=+g("hour")%24, mm=+g("minute"), day=`${g("year")}-${g("month")}-${g("day")}`;
+ document.getElementById("clk").textContent=`${String(hh).padStart(2,"0")}:${String(mm).padStart(2,"0")}`;
+ const d=D(), trip=new Date(d.date+"T00:00:00+07:00"), days=Math.ceil((trip-Date.now())/864e5);
+ document.getElementById("cd").textContent= day===d.date?`วันนี้คือ Day ${d.n}`:days>0?`อีก ${days} วันถึง Day ${d.n}`:"";
+ const now=hh*60+mm;
+ document.querySelectorAll(".item").forEach(el=>{
+  el.classList.remove("now"); el.querySelector(".now-tag")?.remove();
+  const s=+el.dataset.s,e=+el.dataset.e;
+  if(day===d.date&&el.dataset.s&&now>=s&&now<e){el.classList.add("now");el.querySelector(".what strong").insertAdjacentHTML("beforeend","<span class='now-tag'>NOW</span>")}
+ });
+ progress();
+}
+document.addEventListener("click",e=>{
+ const dy=e.target.closest(".days button"); if(dy){cur=+dy.dataset.day;filt=null;try{localStorage.setItem(DKEY,cur)}catch(_){};renderAll();window.scrollTo({top:0});return}
+ const c=e.target.closest(".chk"); if(c){const id=c.dataset.id;done[id]=!done[id];save();renderPlan();return}
+ const ch=e.target.closest(".chip"); if(ch){filt=filt===ch.dataset.g?null:ch.dataset.g;renderPlan();return}
+ const t=e.target.closest(".tabs button"); if(t){
+  document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",b===t));
+  document.getElementById("plan").hidden=t.dataset.v!=="plan"; document.getElementById("places").hidden=t.dataset.v!=="places";
+ }
+});
+// auto-open today's day if trip day
+(()=>{const t=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Ho_Chi_Minh"}).format(new Date());const i=DAYS.findIndex(d=>d.date===t);if(i>=0)cur=i})();
+renderAll(); setInterval(tick,30000);
+</script>
+</body>
+</html>
