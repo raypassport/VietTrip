@@ -87,6 +87,16 @@ section.block h2 small{display:block;font:500 11px var(--f-mono);color:var(--mut
 .grp{grid-template-rows:auto auto 1fr auto}
 .split-head{font-family:var(--f-mono);font-weight:700;font-size:13px;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
 .foot{font-size:12px;color:var(--muted);padding-top:16px;border-top:1px solid var(--line)}
+.pgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;min-width:0}
+.pcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.pimg{position:relative;aspect-ratio:4/3;background:var(--accent-soft)}
+.pimg:has(.thumb[hidden]),.pimg:empty{display:none}
+.pimg .thumb{position:absolute;inset:0;width:100%;height:100%;border-radius:0;object-fit:cover}
+.pn{display:block;font:700 11px var(--f-mono);color:var(--accent);margin-bottom:2px}
+.pbody{padding:10px;min-height:96px}
+.pcard .pbtn{margin-top:auto}.pbody strong{display:block;font-size:14px;line-height:1.35}.pbody span{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.pbtn{display:flex;gap:6px;padding:10px}.pbtn .btn{flex:1;justify-content:center;padding:7px 4px}
+@media (min-width:720px){.pgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .route{display:grid;gap:0;counter-reset:s}
 .place{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px dashed var(--line)}
 .place:last-child{border-bottom:0}
@@ -201,7 +211,7 @@ const DAYS=[
  blocks:[
  {k:"เช้า",en:"MORNING",items:[
   {id:"d2wake",t:"08:00",s:480,e:540,w:"ตื่น · อาบน้ำแต่งตัว",n:"เวลาเสนอ · ออกจากบ้านพร้อมกัน",m:HOME},
-  {id:"d2manmi",t:"09:00",s:540,e:600,w:"บั๋นหมี่ · Bánh Mì 362",n:"พิกัดที่ส่งมา · รอชื่อร้าน/คลิปไทย",m:MANMI,tt:MANMI_T},
+  {id:"d2manmi",t:"09:00",s:540,e:600,w:"บั๋นหมี่ · Bánh Mì 362",n:"Trần Cao Vân",m:MANMI,tt:MANMI_T},
   {id:"d2dophu",t:"10:00",s:600,e:660,w:"คาเฟ่หลุมหลบภัย · Cà Phê Đỗ Phủ",n:"287/72 Nguyễn Đình Chiểu",m:DOPHU,tt:DOPHU_T},
   {id:"d2pla",t:"11:00",s:660,e:705,w:"คาเฟ่ปลา · ngâm CAFE",n:"193/19 Nam Kỳ Khởi Nghĩa",m:PLA_M,tt:PLA_T},
   {id:"d2indo",t:"11:45",s:705,e:750,w:"คาเฟ่อินดัสลิน · INDUSLISM",n:"พิกัดที่ส่งมา · รอยืนยันชื่อสะกด",m:INDO,tt:IND_T}]},
@@ -220,7 +230,7 @@ const DAYS=[
   {id:"d2frolic",t:"ต่อจากนั้น",s:null,w:"ฟรอลิค · Frolic",n:"ผับเกย์",m:FROLIC,tt:FROLIC_T},
   {id:"d2end",t:"ปิดท้าย",s:null,w:"กลับบ้าน",n:"เวลาเดินทางกลับรอยืนยัน",m:HOME}]}],
  places:[
- {k:"เช้า",route:true,rows:[["01","บ้าน · 16C Phùng Khắc Khoan","ที่พักหลัก",HOME],["02","บั๋นหมี่ · Bánh Mì 362","รอชื่อร้าน + TikTok ไทย",MANMI,MANMI_T],["03","คาเฟ่หลุมหลบภัย · Đỗ Phủ","คลิปตรงรอยืนยัน",DOPHU,DOPHU_T],["04","คาเฟ่ปลา · ngâm CAFE","193/19 Nam Kỳ Khởi Nghĩa",PLA_M,PLA_T],["05","คาเฟ่อินดัสลิน · INDUSLISM","พิกัดที่ส่งมา",INDO,IND_T]]},
+ {k:"เช้า",route:true,rows:[["01","บ้าน · 16C Phùng Khắc Khoan","ที่พักหลัก",HOME],["02","บั๋นหมี่ · Bánh Mì 362","Trần Cao Vân",MANMI,MANMI_T],["03","คาเฟ่หลุมหลบภัย · Đỗ Phủ","287/72 Nguyễn Đình Chiểu",DOPHU,DOPHU_T],["04","คาเฟ่ปลา · ngâm CAFE","193/19 Nam Kỳ Khởi Nghĩa",PLA_M,PLA_T],["05","คาเฟ่อินดัสลิน · INDUSLISM","พิกัดที่ส่งมา",INDO,IND_T]]},
  {k:"กลางวัน",route:true,rows:[["06","เบ๊บ มีซลิน · Bếp Mẹ Ỉn","สาขาเสนอ รอยืนยันกับคลิป",BEP,BEP_T],["07","Fine Arts Museum","พิพิธภัณฑ์ศิลปะ",ART,ART_T],["08","คาเฟ่ยัยแน้ม · Nhâm Coffee","195/10/2 Điện Biên Phủ",NHAM,NHAM_T],["09","คาเฟ่อะพาร์ตเมนต์ · The Cafe Apartments","42 Nguyễn Huệ",APT,APT_T]]},
  {k:"ค่ำ–ดึก",route:true,rows:[["10","บ้าน · นัดรวม","รอเวลาล็อก",HOME],["11","สตรีทฟู้ด · Hồ Thị Kỷ","มื้อค่ำ",HTK,HTK_T],["12","ชินชิน · ChinChin Bar","75 Hồ Tùng Mậu",CHIN,CHIN_T],["13","ตี๋บาร์","พิกัดที่ส่งมา",TEEBAR,TEE_T],["14","ฟรอลิค · Frolic","พิกัดที่ส่งมา",FROLIC,FROLIC_T]]}]},
 {n:"03",date:"2026-10-23",th:"23 ต.ค.",meta:"Ho Chi Minh City · 23 Oct 2026 · 13 people",
@@ -294,9 +304,12 @@ function thumbs(){
  }));
 }
 function renderPlaces(){
- document.getElementById("places").innerHTML=D().places.map(s=>`<section class="block"><h2>${s.k}</h2><div class="route">
-  ${s.rows.map(r=>`<div class="place"><div class="n" style="${s.route?"":"font:700 12px var(--f-mono);color:var(--muted)"}">${r[0]}</div><div><strong>${r[1]}</strong><span>${r[2]}</span></div><div class="links">${L(r[3],r[4],!r[3]&&!r[4]&&cur<2)}</div></div>`).join("")}
+ document.getElementById("places").innerHTML=D().places.map(s=>`<section class="block"><h2>${s.k}</h2><div class="pgrid">
+  ${s.rows.map(r=>`<div class="pcard"><div class="pbody"><b class="pn">${r[0]}</b><strong>${r[1]}</strong>${r[2]?`<span>${r[2]}</span>`:""}</div>
+   ${r[4]?`<div class="pimg"><img class="thumb" alt="" loading="lazy" data-tt="${r[4]}" hidden></div>`:""}
+   <div class="pbtn">${r[3]?`<a class="btn" target="_blank" rel="noopener" href="${r[3]}">MAP</a>`:""}${r[4]?`<a class="btn tt" target="_blank" rel="noopener" href="${r[4]}">TIKTOK</a>`:""}</div></div>`).join("")}
  </div></section>`).join("");
+ thumbs();
 }
 function renderAll(){renderDays();renderPlan();renderPlaces()}
 function progress(){
