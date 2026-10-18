@@ -397,6 +397,20 @@ body.locked{position:fixed;left:0;right:0;overflow:hidden}
 /* selected day: black */
 .days button[aria-pressed="true"]{background:#18181b!important;border-color:#18181b!important}
 .days button[aria-pressed="true"] b,.days button[aria-pressed="true"] small{color:#fff!important}
+
+/* megaphone + news modal */
+.hello{gap:10px}.mega{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:#fff;color:#18181b;display:grid;place-items:center;cursor:pointer;box-shadow:0 1px 2px rgba(24,24,27,.05),0 4px 12px rgba(24,24,27,.06);transition:transform 120ms var(--ease-out)}.mega:active{transform:scale(.92)}
+#news{padding:0;border:0;background:none;width:100%;height:100%;max-width:none;max-height:none;margin:0;overflow:hidden}#news::backdrop{background:transparent}
+#news .scrim{position:fixed;inset:0;background:rgba(24,24,27,.45);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);opacity:0;transition:opacity 260ms ease}
+#news .nw{position:fixed;left:16px;right:16px;top:50%;margin:0 auto;max-width:440px;background:#fff;border-radius:24px;padding:18px 16px 16px;transform:translateY(-50%) scale(.96);opacity:0;transition:transform 280ms var(--ease-out),opacity 220ms ease}
+#news.open .scrim{opacity:1}#news.open .nw{transform:translateY(-50%) scale(1);opacity:1}
+.nw-h{display:flex;align-items:center;justify-content:space-between;margin:0 4px 12px}.nw-h h3{margin:0;font:600 20px "IBM Plex Sans Thai"}
+.nw-list{display:grid;gap:10px}.nw-list .announcement{margin:0;height:110px}
+.announcement.off{background:var(--c);cursor:default;justify-content:space-between;align-items:flex-end}
+.announcement.off::before{background:rgba(0,0,0,.08)}.announcement.off span{font-size:17px;line-height:1.25;flex:1;min-width:0}
+.announcement.off em{position:relative;font:500 11px "IBM Plex Sans Thai";font-style:normal;color:#fff;background:rgba(255,255,255,.22);border-radius:999px;padding:3px 9px;white-space:nowrap;flex:none;margin-left:10px}
+#news .announcement:not(.off) span{font-size:20px}
+.annpage{z-index:60}
 </style>
 </head>
 <body>
@@ -413,11 +427,18 @@ body.locked{position:fixed;left:0;right:0;overflow:hidden}
 </header>
   <div class="bar">
     <div class="hello"><button class="me" id="me" aria-label="เมนูผู้ใช้" aria-haspopup="menu" aria-controls="user-menu" aria-expanded="false">?</button><button class="who" id="who"><small>ยินดีต้อนรับ</small><b id="myname">เลือกว่าคุณเป็นใคร</b></button>
-      <div class="pill" aria-label="ความคืบหน้า"><i><span id="pbar"></span></i><b id="ptxt">0<em>/0</em></b></div></div>
+      <button class="mega" id="mega" aria-label="ประกาศ"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></button><div class="pill" aria-label="ความคืบหน้า"><i><span id="pbar"></span></i><b id="ptxt">0<em>/0</em></b></div></div>
     <div class="days" id="days"></div>
   </div>
 
 <main id="plan"></main>
+<dialog id="news" aria-label="ประกาศ"><div class="scrim" data-news="close"></div><div class="nw">
+ <div class="nw-h"><h3>ประกาศ</h3><button class="sh-x" data-news="close" aria-label="ปิด"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+ <div class="nw-list">
+  <div class="announcement" role="button" tabindex="0" data-ann="open"><span>ประกาศสำคัญ<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span></div>
+  <div class="announcement off" style="--c:#3f7f95"><span>เอกสารและสิ่งที่ต้องทำ</span><em>เร็วๆ นี้</em></div>
+  <div class="announcement off" style="--c:#c96f3b"><span>ข้อควรระวังในการเที่ยวเวียดนาม</span><em>เร็วๆ นี้</em></div>
+ </div></div></dialog>
 <section id="annpage" class="annpage" aria-hidden="true" aria-labelledby="ann-h">
  <div class="ap-hero"><button class="ap-back" data-ann="close" aria-label="กลับ"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button><h1 id="ann-h">ประกาศสำคัญ</h1></div>
  <div class="ap-body">
@@ -603,7 +624,7 @@ function closeSheet(){if(!SH.open||SH.classList.contains("closing"))return;SH.cl
 SH.addEventListener("cancel",e=>{e.preventDefault();closeSheet()});
 function renderPlan(){
  const el=document.getElementById("plan");
- el.innerHTML=(D().date==="2026-10-21"?`<div class="announcement" role="button" tabindex="0" data-ann="open"><span>ประกาศสำคัญ<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span></div>`:"")+D().blocks.map(b=>`<section class="block"><h2>${/^(เช้า|กลางวัน|บ่าย|เย็น|ค่ำ)/.test(b.k)?"ช่วง":""}${b.k}</h2><div class="list">
+ el.innerHTML=(false?`<div class="announcement"><span>ประกาศสำคัญ<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span></div>`:"")+D().blocks.map(b=>`<section class="block"><h2>${/^(เช้า|กลางวัน|บ่าย|เย็น|ค่ำ)/.test(b.k)?"ช่วง":""}${b.k}</h2><div class="list">
   ${b.split?`<div class="item grp-row"><div class="t">13:00–<br>16:00</div><div class="acc">${groups.map(g=>{const mem=PPL.filter(p=>p[2]===g.id),mine=ME&&mem.some(p=>p[0]===ME),open=openG===g.id;
    return `<div class="ag${open?" open":""}"><button class="ah" data-g="${g.id}" aria-expanded="${open}"><span class="stk">${mem.map(p=>`<i style="background:${p[1]}">${ini(p[0])}</i>`).join("")}</span><span class="an"><b>${g.name}${mine?' <em>คุณ</em>':""}</b><small>${mem.map(p=>p[0]).join(" · ")}</small></span><span class="chev">›</span></button>
    <div class="ab"><div class="abi">${g.list?`<ol>${g.list.map(x=>`<li>${x}</li>`).join("")}</ol>`:`<p>${g.p}</p>`}${g.cta?`<a class="btn acta" target="_blank" rel="noopener" href="${g.cta[1]}">${g.cta[0]} ↗</a>`:""}</div></div></div>`}).join("")}</div></div>`:""}
@@ -817,9 +838,17 @@ avatarButton.addEventListener("click",openUserMenu);document.getElementById("who
 window.addEventListener("resize",()=>{if(WM.open&&!wmBusy&&!WM.classList.contains("closing"))sizeJourney();if(userMenu.matches(":popover-open"))userMenu.hidePopover()});
 
 renderAll(); setInterval(tick,30000);
+/* news modal */
+(()=>{const N=document.getElementById("news");
+ const open=()=>{lockScroll();N.showModal();N.getBoundingClientRect();requestAnimationFrame(()=>N.classList.add("open"))};
+ const close=()=>{if(!N.open)return;N.classList.remove("open");setTimeout(()=>{N.close();unlockScroll()},220)};
+ document.getElementById("mega").addEventListener("click",open);
+ N.addEventListener("click",e=>{if(e.target.closest("[data-news=close]"))close()});
+ N.addEventListener("cancel",e=>{e.preventDefault();close()});})();
+
 /* announcement page open/close */
 (()=>{const P=document.getElementById("annpage");
- const open=()=>{lockScroll();P.scrollTop=0;P.classList.add("open");P.setAttribute("aria-hidden","false");history.pushState({ann:1},"")};
+ const open=()=>{const N=document.getElementById("news");if(N&&N.open){N.classList.remove("open");N.close();unlockScroll()}lockScroll();P.scrollTop=0;P.classList.add("open");P.setAttribute("aria-hidden","false");history.pushState({ann:1},"")};
  const close=(fromPop)=>{if(!P.classList.contains("open"))return;P.classList.remove("open");P.setAttribute("aria-hidden","true");unlockScroll();if(!fromPop&&history.state&&history.state.ann)history.back()};
  document.addEventListener("click",e=>{const a=e.target.closest("[data-ann]");if(!a)return;a.dataset.ann==="open"?open():close()});
  document.addEventListener("keydown",e=>{if(e.key==="Escape")close();if((e.key==="Enter"||e.key===" ")&&e.target.matches(".announcement")){e.preventDefault();open()}});
