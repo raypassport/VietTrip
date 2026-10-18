@@ -315,6 +315,7 @@ html,body,button,a{touch-action:manipulation}
 body.locked{position:fixed;left:0;right:0;overflow:hidden}
 
 /* First-visit motion and avatar actions */
+:root{--ease-in-out:cubic-bezier(0.77,0,0.175,1)}
 #wm .card{max-height:calc(100dvh - 32px);overflow:auto}
 #wm .in{transition:opacity 140ms ease,transform 180ms var(--ease-out),filter 140ms ease}
 #wm .in.swap{transform:translateY(-8px);filter:blur(3px)}
@@ -598,12 +599,25 @@ function enterWM(st){
  targets.forEach((el,i)=>el.animate([{opacity:0,transform:"translateY(8px)",filter:"blur(2px)"},{opacity:1,transform:"none",filter:"blur(0)"}],{duration:300,delay:Math.min(i*40,200),easing:"cubic-bezier(.23,1,.32,1)",fill:"backwards"}));
  if(st==="intro")WMI.querySelectorAll(".wm-art > g[transform]").forEach((el,i)=>el.animate([{opacity:0},{opacity:1}],{duration:250,delay:60+i*45,fill:"backwards"}));
 }
+// One visible avatar throughout each handoff; only composite properties animate.
+function avatarHandoff(from,dest,sourceFont){
+ const to=dest.getBoundingClientRect(),person=PPL.find(p=>p[0]===ME);
+ if(!motionOK()||!from||!person||!to.width)return Promise.resolve();
+ const fly=document.createElement("div"),glyph=document.createElement("span");
+ fly.className="avatar-flight";fly.setAttribute("aria-hidden","true");glyph.textContent=ini(ME);fly.append(glyph);
+ Object.assign(fly.style,{left:from.left+"px",top:from.top+"px",width:from.width+"px",height:from.height+"px",background:person[1],fontSize:sourceFont+"px"});
+ WM.append(fly);const prior=dest.style.visibility;dest.style.visibility="hidden";
+ const scale=to.width/from.width,fontScale=parseFloat(getComputedStyle(dest).fontSize)/(sourceFont*scale);
+ const easing=getComputedStyle(document.documentElement).getPropertyValue("--ease-in-out").trim();
+ const animation=fly.animate([{transform:"translate(0,0) scale(1)"},{transform:`translate(${to.left-from.left}px,${to.top-from.top}px) scale(${scale})`}],{duration:280,easing,fill:"forwards"});
+ const textAnimation=glyph.animate([{transform:"scale(1)"},{transform:`scale(${fontScale})`}],{duration:280,easing,fill:"forwards"});
+ // Resizing invalidates the measured destination: reveal the live avatar immediately.
+ const cancel=()=>animation.cancel();window.addEventListener("resize",cancel,{once:true});
+ return animation.finished.catch(()=>{}).finally(()=>{dest.style.visibility=prior;fly.remove();textAnimation.cancel();window.removeEventListener("resize",cancel)});
+}
 function welcomeFlight(from){
  const dest=WMI.querySelector(".big");if(!from||!dest||!motionOK())return;
- const r=dest.getBoundingClientRect();r.y+=(WMC.getBoundingClientRect().height-WMI.offsetHeight)/2;const p=PPL.find(x=>x[0]===ME),fly=document.createElement("div");
- fly.className="avatar-flight";fly.textContent=ini(ME);Object.assign(fly.style,{left:from.left+"px",top:from.top+"px",width:from.width+"px",height:from.height+"px",background:p[1]});WM.append(fly);dest.style.visibility="hidden";
- const animation=fly.animate([{transform:"translate(0,0) scale(1)",fontSize:"20px"},{transform:`translate(${r.left-from.left}px,${r.top-from.top}px) scale(${r.width/from.width})`,fontSize:(40*from.width/r.width)+"px"}],{duration:460,easing:"cubic-bezier(.22,1,.36,1)",fill:"forwards"});
- animation.finished.then(()=>{dest.style.visibility="";fly.remove()});
+ avatarHandoff(from,dest,20);
 }
 function wmShow(st){
  if(wmBusy)return;
@@ -613,16 +627,28 @@ function wmShow(st){
  wmBusy=true;
  const from=st==="hello"?WMI.querySelector(".pp.on .av")?.getBoundingClientRect():null;
  const h0=WMC.offsetHeight;WMC.style.height=h0+"px";WMI.classList.add("swap");
- setTimeout(()=>{wmStep=st;WMI.innerHTML=wmHTML(st);WMC.style.height=WMI.offsetHeight+"px";WMI.classList.remove("swap");enterWM(st);welcomeFlight(from);
- setTimeout(()=>{WMC.style.height="";wmBusy=false;WMI.querySelector(st==="pick"?".pp.on,.pp":".go")?.focus({preventScroll:true})},480)},motionOK()?140:0);
+ setTimeout(()=>{wmStep=st;WMI.innerHTML=wmHTML(st);if(st==="hello")WMC.style.transitionProperty="transform,opacity";WMC.style.height=WMI.offsetHeight+"px";WMI.classList.remove("swap");enterWM(st);welcomeFlight(from);
+ setTimeout(()=>{WMC.style.height="";WMC.style.transitionProperty="";wmBusy=false;WMI.querySelector(st==="pick"?".pp.on,.pp":".go")?.focus({preventScroll:true})},480)},motionOK()?140:0);
 }
 function wmRefresh(){
  WMI.querySelectorAll(".pp").forEach(p=>{const on=p.dataset.p===pick;p.classList.toggle("on",on);p.setAttribute("aria-pressed",on)});
  WMI.querySelector(".ppl").classList.toggle("has",!!pick);
  const go=WMI.querySelector(".go");go.disabled=!pick;go.textContent=pick?"ฉันคือ "+pick:"เลือกชื่อก่อน";
 }
-function wmClose(){if(wmBusy||!WM.open||WM.classList.contains("closing"))return;WM.classList.add("closing");WM.classList.remove("open");
- setTimeout(()=>{WM.classList.remove("closing");WM.close();unlockScroll();document.getElementById("me").focus({preventScroll:true});if(wmStep==="hello"){LS.set("hcmc-onb",1);renderPlan();if(motionOK())document.getElementById("me").animate([{transform:"scale(1)"},{transform:"scale(1.15)"},{transform:"scale(1)"}],{duration:380});maybeNewDay()}},motionOK()?220:0)}
+async function wmClose(){
+ if(wmBusy||!WM.open||WM.classList.contains("closing"))return;
+ const success=wmStep==="hello",source=success?WMI.querySelector(".big"):null;
+ const from=source?.getBoundingClientRect(),home=document.getElementById("me");
+ // Measure before the modal begins shrinking; the clone lives outside its card.
+ const landing=source&&motionOK()?avatarHandoff(from,home,parseFloat(getComputedStyle(source).fontSize)):null;
+ if(landing)source.style.visibility="hidden";
+ WM.classList.add("closing");WM.classList.remove("open");
+ await (landing||new Promise(resolve=>setTimeout(resolve,motionOK()?220:0)));
+ WM.classList.remove("closing");WM.close();unlockScroll();
+ if(source)source.style.visibility="";
+ home.focus({preventScroll:true});
+ if(success){LS.set("hcmc-onb",1);renderPlan();maybeNewDay()}
+}
 WM.addEventListener("cancel",e=>{e.preventDefault();if(wmClosable||typeof wmStep==="number"||wmStep==="hello")wmClose()});
 WM.addEventListener("click",e=>{
  if(wmBusy||WM.classList.contains("closing"))return;
