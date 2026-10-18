@@ -311,6 +311,25 @@ html,body,button,a{touch-action:manipulation}
 #wm .scrim,#sheet .scrim{-webkit-backdrop-filter:blur(10px) saturate(120%);backdrop-filter:blur(10px) saturate(120%)}
 @media (prefers-reduced-transparency:reduce){#wm .scrim,#sheet .scrim{backdrop-filter:none;-webkit-backdrop-filter:none}}
 body.locked{position:fixed;left:0;right:0;overflow:hidden}
+
+/* First-visit motion and avatar actions */
+#wm .card{max-height:calc(100dvh - 32px);overflow:auto}
+#wm .in{transition:opacity 140ms ease,transform 180ms var(--ease-out),filter 140ms ease}
+#wm .in.swap{transform:translateY(-8px);filter:blur(3px)}
+#wm .pp{min-height:76px}
+#wm .ppl.has .pp{opacity:.6}
+#wm .ppl.has .pp.on{opacity:1}
+#wm .av{transition:transform 280ms var(--ease-out),box-shadow 200ms ease}
+#wm .pp.on .av{transform:scale(1.06)}
+#wm .pp:active .av{transform:scale(.92)}
+.avatar-flight{position:fixed;z-index:3;display:grid;place-items:center;border-radius:50%;color:white;font:600 20px "IBM Plex Sans Thai",sans-serif;pointer-events:none;transform-origin:0 0}
+.wm-spark{position:absolute;left:50%;top:48px;color:#e5232e;pointer-events:none;font-size:17px}
+#user-menu{position:fixed;inset:auto;margin:0;padding:6px;width:230px;max-width:calc(100vw - 32px);background:#fff;border:1px solid #ececef;border-radius:16px;box-shadow:0 10px 40px #18181b24;color:#18181b}
+#user-menu button{display:block;width:100%;text-align:left;border:0;background:transparent;color:inherit;padding:13px 12px;border-radius:10px;font:500 14px "IBM Plex Sans Thai",sans-serif;cursor:pointer}
+#user-menu button:hover,#user-menu button:focus-visible{background:#f4f4f6}
+#user-menu button:last-child{color:#e5232e;border-top:1px solid #ececef;border-radius:0 0 10px 10px}
+@media(prefers-reduced-motion:reduce){#wm .pp.on .av{transform:none}}
+
 </style>
 </head>
 <body>
@@ -326,12 +345,13 @@ body.locked{position:fixed;left:0;right:0;overflow:hidden}
   </div>
 </header>
   <div class="bar">
-    <div class="hello"><button class="me" id="me" aria-label="เปลี่ยนคน">?</button><button class="who" id="who"><small>ยินดีต้อนรับ</small><b id="myname">เลือกว่าคุณเป็นใคร</b></button>
+    <div class="hello"><button class="me" id="me" aria-label="เมนูผู้ใช้" aria-haspopup="menu" aria-controls="user-menu" aria-expanded="false">?</button><button class="who" id="who"><small>ยินดีต้อนรับ</small><b id="myname">เลือกว่าคุณเป็นใคร</b></button>
       <div class="pill" aria-label="ความคืบหน้า"><i><span id="pbar"></span></i><b id="ptxt">0<em>/0</em></b></div></div>
     <div class="days" id="days"></div>
   </div>
 
 <main id="plan"></main>
+<div id="user-menu" popover="auto" role="menu" aria-label="เมนูผู้ใช้"><button role="menuitem" id="switch-user"></button><button role="menuitem" id="reset-user">ล้างข้อมูล</button></div>
 <dialog id="wm" aria-label="ยินดีต้อนรับ"><div class="scrim"></div><div class="card" id="wmc"><div class="in" id="wmi"></div></div></dialog>
 <dialog id="sheet" aria-labelledby="sheet-h"><div class="scrim" data-close></div>
  <div class="panel" role="document"><div class="grab"></div>
@@ -561,20 +581,47 @@ let wmStep=null,pick=null,wmClosable=false;
 function wmHTML(st){
  const x=wmClosable?'<button class="x" data-wm="close" aria-label="ปิด">×</button>':"";
  if(st==="intro")return `${WM_ART}<h3>Welcome to Vietnam Trip</h3><p>21–24 ต.ค. · แก๊ง 13 คน<br>ตาราง แผนที่ ร้านเด็ด อยู่ที่นี่หมดแล้ว</p><button class="go" data-wm="next">เริ่มเลย</button>`;
- if(st==="pick")return `${x}<h3>คุณคือใครในทริปนี้</h3><p>เลือกชื่อตัวเอง</p><div class="ppl${pick?" has":""}">${PPL.map(p=>`<button class="pp${pick===p[0]?" on":""}" data-p="${p[0]}"><span class="av" style="background:${p[1]}">${ini(p[0])}</span>${p[0]}</button>`).join("")}</div><button class="go" data-wm="me" ${pick?"":"disabled"}>${pick?"ฉันคือ "+pick:"เลือกชื่อก่อน"}</button>`;
+ if(st==="pick")return `${x}<h3>คุณคือใครในทริปนี้</h3><p>เลือกชื่อตัวเอง</p><div class="ppl${pick?" has":""}">${PPL.map(p=>`<button class="pp${pick===p[0]?" on":""}" data-p="${p[0]}" aria-pressed="${pick===p[0]}"><span class="av" style="background:${p[1]}">${ini(p[0])}</span>${p[0]}</button>`).join("")}</div><button class="go" data-wm="me" ${pick?"":"disabled"}>${pick?"ฉันคือ "+pick:"เลือกชื่อก่อน"}</button>`;
  if(st==="hello"){const p=PPL.find(x=>x[0]===ME);return `<div class="big" style="background:${p[1]}">${ini(p[0])}</div><div><div class="hi">ยินดีต้อนรับ</div><div class="nm">${p[0]}</div></div><p>${LINE[p[2]]}</p><button class="go" data-wm="close">Enjoy your trip ✈️</button>`}
  if(typeof st==="number"){const m=DAYMSG[st];return `<div class="emo">${m[0]}</div><h3>เข้าสู่วันที่ ${st+1} แล้ว${ME?" "+ME:""}!</h3><p>${m[1]}</p><button class="go" data-wm="close">ไปกันเลย</button>`}
 }
-function wmShow(st){
- if(!WM.open){wmStep=st;WMI.innerHTML=wmHTML(st);WMC.style.height="";WM.classList.remove("closing","open");lockScroll();WM.showModal();WMC.getBoundingClientRect();requestAnimationFrame(()=>WM.classList.add("open"));return}
- const h0=WMC.offsetHeight;WMC.style.height=h0+"px";WMI.classList.add("swap");
- setTimeout(()=>{wmStep=st;WMI.innerHTML=wmHTML(st);WMC.style.height=WMI.offsetHeight+"px";requestAnimationFrame(()=>WMI.classList.remove("swap"));setTimeout(()=>{WMC.style.height=""},360)},140);
+const motionOK=()=>!matchMedia("(prefers-reduced-motion: reduce)").matches;
+let wmBusy=false;
+function enterWM(st){
+ if(!motionOK())return;
+ const targets=st==="pick"?[...WMI.querySelectorAll("h3,p"),...WMI.querySelectorAll(".pp"),WMI.querySelector(".go")]:[...WMI.children].filter(el=>!el.matches(".x,.big"));
+ targets.forEach((el,i)=>el.animate([{opacity:0,transform:"translateY(8px)",filter:"blur(2px)"},{opacity:1,transform:"none",filter:"blur(0)"}],{duration:300,delay:Math.min(i*40,200),easing:"cubic-bezier(.23,1,.32,1)",fill:"backwards"}));
+ if(st==="intro")WMI.querySelectorAll(".wm-art > g[transform]").forEach((el,i)=>el.animate([{opacity:0},{opacity:1}],{duration:250,delay:60+i*45,fill:"backwards"}));
 }
-function wmRefresh(){const h0=WMC.offsetHeight;WMI.innerHTML=wmHTML(wmStep);WMC.style.height=h0+"px";WMC.getBoundingClientRect();WMC.style.height=WMI.offsetHeight+"px";setTimeout(()=>{WMC.style.height=""},360)}
-function wmClose(){if(!WM.open||WM.classList.contains("closing"))return;WM.classList.add("closing");WM.classList.remove("open");
- setTimeout(()=>{WM.classList.remove("closing");WM.close();unlockScroll();if(wmStep==="hello"){LS.set("hcmc-onb",1);maybeNewDay()}},220)}
+function welcomeFlight(from){
+ const dest=WMI.querySelector(".big");if(!from||!dest||!motionOK())return;
+ const r=dest.getBoundingClientRect();r.y+=(WMC.getBoundingClientRect().height-WMI.offsetHeight)/2;const p=PPL.find(x=>x[0]===ME),fly=document.createElement("div");
+ fly.className="avatar-flight";fly.textContent=ini(ME);Object.assign(fly.style,{left:from.left+"px",top:from.top+"px",width:from.width+"px",height:from.height+"px",background:p[1]});WM.append(fly);dest.style.visibility="hidden";
+ const animation=fly.animate([{transform:"translate(0,0) scale(1)",fontSize:"20px"},{transform:`translate(${r.left-from.left}px,${r.top-from.top}px) scale(${r.width/from.width})`,fontSize:(40*from.width/r.width)+"px"}],{duration:460,easing:"cubic-bezier(.22,1,.36,1)",fill:"forwards"});
+ animation.finished.then(()=>{dest.style.visibility="";fly.remove();for(let i=0;i<3;i++){const spark=document.createElement("span");spark.className="wm-spark";spark.textContent="✦";WMI.append(spark);spark.animate([{opacity:0,transform:"translate(0,0) scale(.4)"},{opacity:1,offset:.25},{opacity:0,transform:`translate(${(i-1)*65}px,${i===1?-30:20}px) scale(1)`}],{duration:420}).finished.then(()=>spark.remove())}});
+}
+function wmShow(st){
+ if(wmBusy)return;
+ WM.setAttribute("aria-label",st==="pick"?"เลือกผู้ร่วมทริป":"ยินดีต้อนรับ");
+ if(!WM.open){wmStep=st;WMI.innerHTML=wmHTML(st);WMC.style.height="";WM.classList.remove("closing","open");lockScroll();WM.showModal();WMC.getBoundingClientRect();requestAnimationFrame(()=>{WM.classList.add("open");enterWM(st)});return}
+ wmBusy=true;
+ const from=st==="hello"?WMI.querySelector(".pp.on .av")?.getBoundingClientRect():null;
+ const h0=WMC.offsetHeight;WMC.style.height=h0+"px";WMI.classList.add("swap");
+ setTimeout(()=>{wmStep=st;WMI.innerHTML=wmHTML(st);WMC.style.height=WMI.offsetHeight+"px";WMI.classList.remove("swap");enterWM(st);welcomeFlight(from);
+ setTimeout(()=>{WMC.style.height="";wmBusy=false;WMI.querySelector(st==="pick"?".pp.on,.pp":".go")?.focus({preventScroll:true})},480)},motionOK()?140:0);
+}
+function wmRefresh(){
+ const focus=WMI.querySelector(`[data-p="${pick}"]`);
+ WMI.querySelectorAll(".pp").forEach(p=>{const on=p.dataset.p===pick;p.classList.toggle("on",on);p.setAttribute("aria-pressed",on)});
+ WMI.querySelector(".ppl").classList.toggle("has",!!pick);
+ const go=WMI.querySelector(".go");go.disabled=!pick;go.textContent=pick?"ฉันคือ "+pick:"เลือกชื่อก่อน";
+ if(motionOK())focus.querySelector(".av").animate([{transform:"scale(.92)"},{transform:"scale(1.1)",offset:.65},{transform:"scale(1.06)"}],{duration:280});
+}
+function wmClose(){if(wmBusy||!WM.open||WM.classList.contains("closing"))return;WM.classList.add("closing");WM.classList.remove("open");
+ setTimeout(()=>{WM.classList.remove("closing");WM.close();unlockScroll();document.getElementById("me").focus({preventScroll:true});if(wmStep==="hello"){LS.set("hcmc-onb",1);renderPlan();if(motionOK())document.getElementById("me").animate([{transform:"scale(1)"},{transform:"scale(1.15)"},{transform:"scale(1)"}],{duration:380});maybeNewDay()}},motionOK()?220:0)}
 WM.addEventListener("cancel",e=>{e.preventDefault();if(wmClosable||typeof wmStep==="number"||wmStep==="hello")wmClose()});
 WM.addEventListener("click",e=>{
+ if(wmBusy||WM.classList.contains("closing"))return;
  const a=e.target.closest("[data-wm]"),p=e.target.closest("[data-p]");
  if(p){pick=p.dataset.p;wmRefresh();return}
  if(!a)return;const v=a.dataset.wm;
@@ -585,7 +632,24 @@ WM.addEventListener("click",e=>{
 function maybeNewDay(){const t=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Ho_Chi_Minh"}).format(new Date()),i=DAYS.findIndex(d=>d.date===t),seen=LS.get("hcmc-days",[]);
  if(i>0&&!seen.includes(i)){LS.set("hcmc-days",seen.concat(i));wmClosable=false;wmShow(i)}}
 function openPicker(){pick=ME;wmClosable=true;wmShow("pick")}
-document.getElementById("me").addEventListener("click",openPicker);document.getElementById("who").addEventListener("click",openPicker);
+const userMenu=document.getElementById("user-menu"),avatarButton=document.getElementById("me");
+function openUserMenu(){
+ if(userMenu.matches(":popover-open")){userMenu.hidePopover();return}
+ document.getElementById("switch-user").textContent=ME?"ฉันไม่ใช่ "+ME:"เลือกว่าคุณเป็นใคร";
+ const r=avatarButton.getBoundingClientRect();userMenu.style.left=Math.max(16,Math.min(r.left,innerWidth-246))+"px";userMenu.style.top=(r.bottom+8)+"px";
+ userMenu.showPopover();document.getElementById("switch-user").focus({preventScroll:true});
+ if(motionOK())userMenu.animate([{opacity:0,transform:"translateY(-5px) scale(.97)"},{opacity:1,transform:"none"}],{duration:180,easing:"ease-out"});
+}
+userMenu.addEventListener("toggle",()=>{const open=userMenu.matches(":popover-open");avatarButton.setAttribute("aria-expanded",open);if(!open&&!WM.open)avatarButton.focus({preventScroll:true})});
+userMenu.addEventListener("keydown",e=>{const buttons=[...userMenu.querySelectorAll("button")],i=buttons.indexOf(document.activeElement);if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();buttons[(i+(e.key==="ArrowDown"?1:-1)+buttons.length)%buttons.length].focus()}if(e.key==="Home"||e.key==="End"){e.preventDefault();buttons[e.key==="Home"?0:buttons.length-1].focus()}});
+document.getElementById("switch-user").addEventListener("click",()=>{userMenu.hidePopover();pick=null;wmClosable=true;wmShow("pick")});
+document.getElementById("reset-user").addEventListener("click",()=>{
+ userMenu.hidePopover();
+ [KEY,DKEY,"hcmc-me","hcmc-onb","hcmc-days"].forEach(k=>{try{localStorage.removeItem(k)}catch(_){}});
+ done={};cur=0;ME=null;pick=null;filt=null;openG=null;renderMe();renderAll();wmClosable=false;wmShow("intro");
+});
+avatarButton.addEventListener("click",openUserMenu);document.getElementById("who").addEventListener("click",openUserMenu);
+window.addEventListener("resize",()=>{if(userMenu.matches(":popover-open"))userMenu.hidePopover()});
 
 renderAll(); setInterval(tick,30000);
 /* lock page scroll while any modal is open (iOS-safe) */
