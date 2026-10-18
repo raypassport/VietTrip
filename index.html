@@ -173,6 +173,53 @@ section.block h2 small{display:block;font:500 11px var(--f-mono);color:var(--mut
   .place{grid-template-columns:32px 1fr} .place .links{grid-column:2}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+:root,:root[data-theme]{--ink:#18181b!important;--muted:#9a9ca3!important;--line:#ececef!important;--accent:#e5232e!important;--accent-soft:#fdeced!important;--done:#c2c4c9!important;--f-display:"IBM Plex Sans Thai",sans-serif!important}
+section.block{border-top:0!important;padding-block:14px!important}
+section.block h2{color:#18181b!important;font:700 17px "IBM Plex Sans Thai"!important}
+.item .t{font-size:12px!important}
+.item .what strong{font-size:14px!important}
+a.btn{border-radius:6px!important;font-size:10px!important;padding:5px 9px!important}
+.chk{border-radius:50%!important;border-color:#d9dadf!important}.chk .fill{border-radius:50%!important}
+.item .th{border-radius:10px!important}
+.tabs{border:0!important}
+.days button{border-radius:12px!important}
+.progress i{height:3px!important;background:#ececef!important}
+.grp{background:#fff!important;border-radius:12px!important}.grp .cta{border-color:#18181b!important;color:#18181b!important;background:transparent!important;border-radius:6px!important}
+.chip{border:0!important;background:#f4f4f6!important}.chip[aria-pressed="true"]{background:#18181b!important;color:#fff!important}
+.pcard{border-radius:12px!important}
+.sh-body .links .btn{padding:13px!important;border-radius:8px!important;font-size:12px!important}
+#sheet .panel{backdrop-filter:none!important}
+:root,:root[data-theme]{--bg:#fafafb!important;--surface:#ffffff!important}
+body,.bar{background:#fafafb!important}
+.days button{background:#fff!important;border:1px solid #ececef!important}.days button b{color:#18181b!important}.days button small{color:#9a9ca3!important}
+.days button[aria-pressed="true"]{background:#e5232e!important;border-color:#e5232e!important}.days button[aria-pressed="true"] b,.days button[aria-pressed="true"] small{color:#fff!important}
+.tabs{background:transparent!important;border-bottom:1px solid #ececef!important;border-radius:0!important;padding:0!important}.tabs button{border-radius:0!important;background:none!important;color:#9a9ca3!important}
+.tabs button[aria-selected="true"]{color:#18181b!important;box-shadow:inset 0 -2px 0 #e5232e!important;background:none!important}
+.item .card,.pcard{background:#fff!important;border:0!important;box-shadow:0 1px 2px rgba(24,24,27,.04),0 4px 14px rgba(24,24,27,.04)}.item .th{background:#f4f4f6!important;color:#b9bbc1!important}
+.item .t{color:#18181b!important}.pn{color:#9a9ca3!important}
+a.btn{background:#f4f4f6!important;color:#18181b!important}a.btn.tt{background:#e5232e!important;color:#fff!important}
+#sheet .panel{background:#fff!important}.sh-body .sh-n{background:#f4f4f6!important}
+
+/* ---- V3 header ---- */
+.bar{padding-top:16px!important;gap:12px!important}
+.hello{display:flex;align-items:center;gap:12px;width:100%}
+.hello .me{width:44px;height:44px;border-radius:50%;flex:none;display:grid;place-items:center;color:#fff;font:700 18px "Bai Jamjuree","IBM Plex Sans Thai";border:0;cursor:pointer;background:#d9dadf;padding:0;transition:transform 120ms var(--ease-out)}
+.hello .me:active{transform:scale(.94)}
+.hello .who{flex:1;min-width:0;background:none;border:0;padding:0;text-align:left;cursor:pointer;font:inherit;color:inherit}
+.hello .who small{display:block;font:500 12px "IBM Plex Sans Thai";color:#9a9ca3}
+.hello .who b{display:block;font:700 20px/1.2 "IBM Plex Sans Thai";color:#18181b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pill{display:flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:7px 12px 7px 8px;box-shadow:0 1px 2px rgba(24,24,27,.05),0 4px 12px rgba(24,24,27,.06);flex:none}
+.pill i{width:74px;height:10px;border-radius:999px;background:#f1f1f4;overflow:hidden;display:block}
+.pill i span{display:block;height:100%;width:100%;border-radius:999px;background:#e5232e;transform-origin:left;transform:scaleX(0);transition:transform 400ms var(--ease-out)}
+.pill b{font:700 12px "JetBrains Mono";color:#18181b;font-variant-numeric:tabular-nums}.pill b em{font-style:normal;color:#9a9ca3}
+.days button{align-items:center!important;text-align:center!important;padding:8px 0!important;min-height:0!important}
+.days button small{order:-1;font:500 11px "IBM Plex Sans Thai"!important;letter-spacing:0!important;text-transform:none!important}
+.days button b{font:700 18px "Bai Jamjuree","IBM Plex Sans Thai"!important}
+.tabs{display:flex!important;width:100%;background:#efeff2!important;border-radius:9px!important;padding:2px!important;border:0!important}
+.tabs button{flex:1;border-radius:7px!important;box-shadow:none!important;color:#9a9ca3!important;font:600 13px "IBM Plex Sans Thai"!important;padding:7px!important}
+.tabs button[aria-selected="true"]{background:#fff!important;color:#18181b!important;box-shadow:0 1px 2px rgba(0,0,0,.08)!important}
+.bar .progress{display:none!important}
+@media (max-width:640px){.days button b{font-size:18px!important}}
 </style>
 </head>
 <body>
@@ -188,12 +235,13 @@ section.block h2 small{display:block;font:500 11px var(--f-mono);color:var(--mut
   </div>
 </header>
   <div class="bar">
+    <div class="hello"><button class="me" id="me" aria-label="เปลี่ยนคน">?</button><button class="who" id="who"><small>ยินดีต้อนรับ</small><b id="myname">เลือกว่าคุณเป็นใคร</b></button>
+      <div class="pill" aria-label="ความคืบหน้า"><i><span id="pbar"></span></i><b id="ptxt">0<em>/0</em></b></div></div>
     <div class="days" id="days"></div>
     <div class="tabs" role="tablist">
       <button role="tab" id="tab-plan" aria-selected="true" data-v="plan">ตารางเวลา</button>
-      <button role="tab" id="tab-places" aria-selected="false" data-v="places">สถานที่ & ลิงก์</button>
+      <button role="tab" id="tab-places" aria-selected="false" data-v="places">สถานที่</button>
     </div>
-    <div class="progress"><i><span id="pbar"></span></i><span id="ptxt">0/0</span></div>
   </div>
 
 <main id="plan"></main>
@@ -242,7 +290,7 @@ const groups=[
 ];
 
 const DAYS=[
-{n:"01",date:"2026-10-21",th:"21 ต.ค.",meta:"Ho Chi Minh City · 21 Oct 2026 · 13 people",
+{n:"01",wd:"พ.",date:"2026-10-21",th:"21 ต.ค.",meta:"Ho Chi Minh City · 21 Oct 2026 · 13 people",
  top:["ROUTE MAP ↗","https://www.google.com/maps/dir/?api=1&origin=Pho+Viet+Nam+14+Pham+Hong+Thai+Ho+Chi+Minh&destination=Ho+Chi+Minh+City+Book+Street&waypoints=War+Remnants+Museum+Ho+Chi+Minh%7CIndependence+Palace+Ho+Chi+Minh%7CNotre+Dame+Cathedral+of+Saigon%7CSaigon+Central+Post+Office&travelmode=walking"],
  foot:"แตะช่องสี่เหลี่ยมเพื่อติ๊กว่าทำแล้ว (บันทึกไว้ในเครื่องนี้) · วันที่ 21 ต.ค. รายการที่กำลังเกิดขึ้นจะไฮไลต์อัตโนมัติ · เวลาที่ยังไม่ยืนยันไม่ได้เติมขึ้นเอง",
  blocks:[
@@ -270,7 +318,7 @@ const DAYS=[
   ["04","Saigon Central Post Office","ไปรษณีย์กลางไซ่ง่อน",M("Saigon+Central+Post+Office"),"https://www.tiktok.com/@baovlee/video/7284295987835702571","13:00–16:00"],
   ["05","Ho Chi Minh City Book Street","จุดรวมกลุ่ม",BOOK,BOOK_T]]},
  {k:"ค่ำ–ดึก",rows:[["21:00","Pizza 4P's · Hai Bà Trưng","สาขาที่เสนอว่าใกล้บ้าน",PIZ,PIZ_T],["หลังอาหาร","ร้านโกปี้","ยังไม่ทราบชื่อร้านจริง",null,null,"หลังอาหาร"],["หลังโกปี้","MOTLY · Kitchen Bar","65A Nguyễn Cừ",MOT,MOT_T]]}]},
-{n:"02",date:"2026-10-22",th:"22 ต.ค.",meta:"Ho Chi Minh City · 22 Oct 2026 · 13 people · เวลาเสนอ",
+{n:"02",wd:"พฤ.",date:"2026-10-22",th:"22 ต.ค.",meta:"Ho Chi Minh City · 22 Oct 2026 · 13 people · เวลาเสนอ",
  top:["HOME MAP ↗",HOME],
  foot:"เวลาในหน้านี้เป็นร่างเพื่อจัดลำดับ · TT SEARCH เปิดผลค้นหา ยังไม่ใช่คลิปที่ล็อกแล้ว · ร้านที่ยังไม่ทราบชื่อหรือคลิปจะไม่เติมลิงก์เดาไว้",
  blocks:[
@@ -298,7 +346,7 @@ const DAYS=[
  {k:"เช้า",route:true,rows:[["01","บ้าน · 16C Phùng Khắc Khoan","ที่พักหลัก",HOME],["02","บั๋นหมี่ · Bánh Mì 362","Trần Cao Vân",MANMI,MANMI_T],["03","คาเฟ่หลุมหลบภัย · Đỗ Phủ","287/72 Nguyễn Đình Chiểu",DOPHU,DOPHU_T],["04","คาเฟ่ปลา · ngâm CAFE","193/19 Nam Kỳ Khởi Nghĩa",PLA_M,PLA_T],["05","คาเฟ่อินดัสลิน · INDUSLISM","พิกัดที่ส่งมา",INDO,IND_T]]},
  {k:"กลางวัน",route:true,rows:[["06","เบ๊บ มีซลิน · Bếp Mẹ Ỉn","สาขาเสนอ รอยืนยันกับคลิป",BEP,BEP_T],["07","Fine Arts Museum","พิพิธภัณฑ์ศิลปะ",ART,ART_T],["08","คาเฟ่ยัยแน้ม · Nhâm Coffee","195/10/2 Điện Biên Phủ",NHAM,NHAM_T],["09","คาเฟ่อะพาร์ตเมนต์ · The Cafe Apartments","42 Nguyễn Huệ",APT,APT_T]]},
  {k:"ค่ำ–ดึก",route:true,rows:[["10","บ้าน · นัดรวม","รอเวลาล็อก",HOME],["11","สตรีทฟู้ด · Hồ Thị Kỷ","มื้อค่ำ",HTK,HTK_T],["12","ชินชิน · ChinChin Bar","75 Hồ Tùng Mậu",CHIN,CHIN_T],["13","ตี๋บาร์","พิกัดที่ส่งมา",TEEBAR,TEE_T],["14","ฟรอลิค · Frolic","พิกัดที่ส่งมา",FROLIC,FROLIC_T]]}]},
-{n:"03",date:"2026-10-23",th:"23 ต.ค.",meta:"Ho Chi Minh City · 23 Oct 2026 · 13 people",
+{n:"03",wd:"ศ.",date:"2026-10-23",th:"23 ต.ค.",meta:"Ho Chi Minh City · 23 Oct 2026 · 13 people",
  top:["HOME MAP ↗",HOME],
  foot:"ปุ่มลิงก์แสดงเฉพาะที่มีลิงก์จริง · ย่านช้อปปิ้งยังไม่ระบุ",
  blocks:[
@@ -314,7 +362,7 @@ const DAYS=[
  places:[
  {k:"กลางวัน",route:true,rows:[["01","ร้านชั้น ๆ แหนมเนือง · Bánh Ướt Ban Mê","สาขา Tôn Thất Tùng",BANH_M,BANH_T],["02","วัดแขก · Mariamman Hindu Temple","45 Trương Định",MARI_M,MARI_T],["03","ช้อปปิ้ง","ย่าน: รอระบุ",null,null,"15:00–19:00"]]},
  {k:"ค่ำ–ดึก",route:true,rows:[["04","บ้าน · 16C Phùng Khắc Khoan","20:00 อาบน้ำแต่งตัว",HOME],["05","ร่านคันหี · Bùi Viện","ถนนข้าวสาร",BV,BV_T],["06","แบมบาร์ · Bam","",BAM,BAM_T]]}]},
-{n:"04",date:"2026-10-24",th:"24 ต.ค.",meta:"Ho Chi Minh City · 24 Oct 2026 · 13 people · บินกลับ 21:30",
+{n:"04",wd:"ส.",date:"2026-10-24",th:"24 ต.ค.",meta:"Ho Chi Minh City · 24 Oct 2026 · 13 people · บินกลับ 21:30",
  top:["HOME MAP ↗",HOME],
  foot:"ปุ่มลิงก์แสดงเฉพาะที่มีลิงก์จริง · บะหมี่ปูและร้านหอยยังไม่เลือกร้าน",
  blocks:[
@@ -340,7 +388,7 @@ let filt=null;
 const D=()=>DAYS[cur];
 
 function renderDays(){
- document.getElementById("days").innerHTML=DAYS.map((d,i)=>`<button data-day="${i}" aria-pressed="${i===cur}"><b>DAY ${d.n}</b><small>${d.th}</small></button>`).join("");
+ document.getElementById("days").innerHTML=DAYS.map((d,i)=>`<button data-day="${i}" aria-pressed="${i===cur}" aria-label="วันที่ ${+d.n} · ${d.th}"><small>${d.wd}</small><b>${+d.date.slice(8)}</b></button>`).join("");
  const d=D();
  document.getElementById("h1").textContent="DAY "+d.n;
  document.getElementById("meta").textContent=d.meta;
@@ -392,7 +440,7 @@ function renderAll(){renderDays();renderPlan();renderPlaces()}
 function progress(){
  const all=D().blocks.flatMap(b=>b.items), n=all.filter(i=>done[i.id]).length;
  document.getElementById("pbar").style.transform=`scaleX(${n/all.length})`;
- document.getElementById("ptxt").textContent=`${n}/${all.length}`;
+ document.getElementById("ptxt").innerHTML=`${n}<em>/${all.length}</em>`;
 }
 function tick(){
  const p=new Intl.DateTimeFormat("en-GB",{timeZone:"Asia/Ho_Chi_Minh",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date());
