@@ -362,6 +362,15 @@ body.locked{position:fixed;left:0;right:0;overflow:hidden}
 #wm .scrim{z-index:0}
 #wm .card{z-index:2}
 .wm-morph{position:fixed;z-index:1;background:#fff;pointer-events:none;border-radius:24px}
+
+/* completion stickers: stamped over the thumbnail corner */
+.item .card{overflow:visible}
+.stk{position:absolute;left:38px;top:36px;width:66px;height:54px;z-index:3;pointer-events:none;transform:rotate(var(--r));filter:drop-shadow(0 2px 2px rgba(24,24,27,.22))}
+.stk svg{display:block;width:100%;height:100%}
+
+.eod{display:flex;flex-direction:column;align-items:center;gap:6px;padding:28px 0 48px;color:#b9bbc1;font-size:13px;opacity:0;transform:translateY(12px) scale(.98);transition:opacity 500ms ease,transform 600ms var(--spring)}
+.eod.in{opacity:1;transform:none}.eod i{width:6px;height:6px;border-radius:50%;background:#d9dadf}
+@media (prefers-reduced-motion:reduce){.eod{transform:none;transition:opacity 200ms ease}}
 </style>
 </head>
 <body>
