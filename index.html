@@ -326,7 +326,7 @@ const groups=[
  {id:"lm",c:"--g1",s:"--g1s",cta:["เปิดใน Google Maps","https://www.google.com/maps/dir/?api=1&origin=Pho+Viet+Nam+14+Pham+Hong+Thai+Ho+Chi+Minh&destination=Ho+Chi+Minh+City+Book+Street&waypoints=War+Remnants+Museum+Ho+Chi+Minh%7CIndependence+Palace+Ho+Chi+Minh%7CNotre+Dame+Cathedral+of+Saigon%7CSaigon+Central+Post+Office&travelmode=walking"],name:"กลุ่มเก็บแลนด์มาร์ก",who:"เรจิ · มีน · คิน",list:["War Museum","Independence Palace","Notre-Dame + Post Office","Book Street"]},
  {id:"bt",c:"--g2",s:"--g2s",name:"กลุ่มทำสวย",who:"โอลี่ · ปราง · แพรว · ติว",p:"ต่อขนตา<br>คาดว่าเสร็จประมาณ 16:00"},
  {id:"sh",c:"--g3",s:"--g3s",name:"กลุ่มช็อปปิ้งแม่แบม",who:"แบม",p:"Shopping Route ส่วนตัว<br>กลับบ้านตามเวลานัด"},
- {id:"ch",c:"--g4",s:"--g4s",name:"กลุ่มชาริเต้ + โอ",who:"ชาริเต้ (เต้) · โอ",p:"ชาริเต้พักที่บ้านก่อน<br>จากนั้นเที่ยวตามแพลนตัวเอง"},
+ {id:"ch",c:"--g4",s:"--g4s",name:"กลุ่มนอนพักและนวด",who:"ชาริเต้ (เต้) · โอ",p:"ชาริเต้พักที่บ้านก่อน<br>จากนั้นเที่ยวตามแพลนตัวเอง"},
  {id:"fr",c:"--g5",s:"--g5s",name:"กลุ่มฟร้อง + กาย",who:"ฟร้อง · กาย",p:"แพลนอิสระ<br>ยังไม่ยืนยันรายละเอียด"}
 ];
 
@@ -343,7 +343,7 @@ const DAYS=[
  {k:"กลางวัน",en:"LUNCH",items:[
   {id:"pho",t:"12:30–13:00",s:750,e:780,w:"ร้านเฝอเวียดนาม · Phở Việt Nam",n:"มื้อแรก · ล็อกร้านแล้ว · 14 Phạm Hồng Thái",m:PHO,tt:PHO_T}]},
  {k:"บ่าย–เย็น",en:"AFTERNOON",split:true,items:[
-  {id:"merge",t:"16:00",s:960,e:1140,w:"กลุ่มทำสวย + กลุ่มชาริเต้ + โอ Merge กับกลุ่มแลนด์มาร์กที่ Book Street",n:"",m:BOOK,tt:BOOK_T},
+  {id:"merge",t:"16:00",s:960,e:1140,w:"กลุ่มทำสวย + กลุ่มนอนพักและนวด Merge กับกลุ่มแลนด์มาร์กที่ Book Street",n:"",m:BOOK,tt:BOOK_T},
   {id:"call",t:"19:00",s:1140,e:1200,w:"เรียกทุกกลุ่มกลับบ้าน",n:"<span class='deadline'>20:00 ทุกคนต้องถึงบ้าน</span>",m:HOME}]},
  {k:"ค่ำ–ดึก",en:"NIGHT",items:[
   {id:"home",t:"20:00",s:1200,e:1260,w:"รวมตัวที่บ้าน",n:"ทุกกลุ่มกลับมาเจอกัน",m:HOME},
@@ -501,7 +501,7 @@ document.addEventListener("click",e=>{
 
 /* ---- people + onboarding ---- */
 const PPL=[["เรจิ","#2fbfa5","lm"],["มีน","#2fbfa5","lm"],["คิน","#2fbfa5","lm"],["โอลี่","#9b5fd6","bt"],["ปราง","#9b5fd6","bt"],["แพรว","#9b5fd6","bt"],["ติว","#9b5fd6","bt"],["แบม","#5aa83a","sh"],["เต้","#4a6fdc","ch"],["โอ","#4a6fdc","ch"],["ฟร้อง","#8b6a55","fr"],["กาย","#8b6a55","fr"]];
-const LINE={lm:"สายแลนด์มาร์ก · บ่ายวันแรกเดินเก็บ 5 ที่ 🏛️",bt:"กลุ่มทำสวย · บ่ายวันแรกต่อขนตา 💅",sh:"สายช้อป · บ่ายวันแรกตะลุยช้อปปิ้ง 🛍️",ch:"กลุ่มชาริเต้ + โอ · บ่ายวันแรกเที่ยวตามใจ ✨",fr:"กลุ่มฟร้อง + กาย · บ่ายวันแรกแพลนอิสระ 🗺️"};
+const LINE={lm:"สายแลนด์มาร์ก · บ่ายวันแรกเดินเก็บ 5 ที่ 🏛️",bt:"กลุ่มทำสวย · บ่ายวันแรกต่อขนตา 💅",sh:"สายช้อป · บ่ายวันแรกตะลุยช้อปปิ้ง 🛍️",ch:"กลุ่มนอนพักและนวด · บ่ายวันแรกพักผ่อน นวดสบายๆ 💆",fr:"กลุ่มฟร้อง + กาย · บ่ายวันแรกแพลนอิสระ 🗺️"};
 const DAYMSG=[null,["☕️","วันนี้สายคาเฟ่ทั้งวัน<br>ปิดท้ายด้วยสตรีทฟู้ดกับบาร์ 🍸"],["🛕","ไหว้วัดแขก ช้อปปิ้ง<br>แล้วไปต่อที่บุ่ยเหวียน 🌙"],["🧳","วันสุดท้ายแล้ว ซื้อของฝาก กินหอย<br>แล้วบินกลับ 21:30 ✈️"]];
 const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const ini=n=>/^[เแโใไ]/.test(n)?n[1]:n[0];
