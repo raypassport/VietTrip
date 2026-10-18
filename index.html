@@ -373,9 +373,9 @@ body.locked{position:fixed;left:0;right:0;overflow:hidden}
 @media (prefers-reduced-motion:reduce){.eod{transform:none;transition:opacity 200ms ease}}
 
 /* day-1 announcement banner */
-.announcement{position:relative;height:150px;margin:14px 0 4px;border-radius:16px;overflow:hidden;background:#ddd url(assets/day-21-announcement.jpg) center 35%/cover;display:flex;align-items:flex-end;padding:16px}
-.announcement::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.1)}
-.announcement span{position:relative;color:#fff;font:600 22px "IBM Plex Sans Thai",sans-serif;text-shadow:0 1px 8px rgba(0,0,0,.35)}
+.announcement{position:relative;height:170px;margin:14px 0 4px;border-radius:16px;overflow:hidden;background:#ddd url(assets/day-21-announcement.jpg) center 80%/cover;display:flex;align-items:flex-end;justify-content:flex-end;padding:16px;cursor:pointer}
+.announcement::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.2)}
+.announcement span{position:relative;display:flex;align-items:center;gap:2px;color:#fff;font:600 22px/1 "IBM Plex Sans Thai",sans-serif;text-shadow:0 1px 8px rgba(0,0,0,.35)}.announcement span svg{flex:none;margin-right:-4px}
 </style>
 </head>
 <body>
@@ -570,7 +570,7 @@ function closeSheet(){if(!SH.open||SH.classList.contains("closing"))return;SH.cl
 SH.addEventListener("cancel",e=>{e.preventDefault();closeSheet()});
 function renderPlan(){
  const el=document.getElementById("plan");
- el.innerHTML=(D().date==="2026-10-21"?`<div class="announcement" role="note"><span>ประกาศสำคัญ</span></div>`:"")+D().blocks.map(b=>`<section class="block"><h2>${/^(เช้า|กลางวัน|บ่าย|เย็น|ค่ำ)/.test(b.k)?"ช่วง":""}${b.k}</h2><div class="list">
+ el.innerHTML=(D().date==="2026-10-21"?`<div class="announcement" role="note"><span>ประกาศสำคัญ<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span></div>`:"")+D().blocks.map(b=>`<section class="block"><h2>${/^(เช้า|กลางวัน|บ่าย|เย็น|ค่ำ)/.test(b.k)?"ช่วง":""}${b.k}</h2><div class="list">
   ${b.split?`<div class="item grp-row"><div class="t">13:00–<br>16:00</div><div class="acc">${groups.map(g=>{const mem=PPL.filter(p=>p[2]===g.id),mine=ME&&mem.some(p=>p[0]===ME),open=openG===g.id;
    return `<div class="ag${open?" open":""}"><button class="ah" data-g="${g.id}" aria-expanded="${open}"><span class="stk">${mem.map(p=>`<i style="background:${p[1]}">${ini(p[0])}</i>`).join("")}</span><span class="an"><b>${g.name}${mine?' <em>คุณ</em>':""}</b><small>${mem.map(p=>p[0]).join(" · ")}</small></span><span class="chev">›</span></button>
    <div class="ab"><div class="abi">${g.list?`<ol>${g.list.map(x=>`<li>${x}</li>`).join("")}</ol>`:`<p>${g.p}</p>`}${g.cta?`<a class="btn acta" target="_blank" rel="noopener" href="${g.cta[1]}">${g.cta[0]} ↗</a>`:""}</div></div></div>`}).join("")}</div></div>`:""}
