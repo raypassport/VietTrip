@@ -58,7 +58,7 @@ h1{font-family:var(--f-display);font-weight:700;font-size:clamp(40px,8vw,64px);l
 .tabs button[aria-selected="true"]{background:var(--accent);color:#fff}
 .progress{flex:1;min-width:140px;display:flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
 .progress i{flex:1;height:6px;border-radius:9px;background:var(--line);overflow:hidden;display:block}
-.progress i span{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.progress i span{display:block;height:100%;width:100%;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform 400ms var(--ease-out)}
 a.btn,.btn{display:inline-flex;align-items:center;gap:4px;font:700 11px var(--f-mono);letter-spacing:.06em;text-decoration:none;
   padding:5px 10px;border-radius:7px;background:var(--accent-soft);color:var(--accent);border:1px solid transparent;white-space:nowrap}
 a.btn:hover{border-color:var(--accent)}
@@ -77,9 +77,25 @@ section.block h2 small{display:block;font:500 11px var(--f-mono);color:var(--mut
 .item .what strong{display:block;font-weight:600}
 .item .what span{font-size:13px;color:var(--muted)}
 .item .links{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
-.chk{width:22px;height:22px;border-radius:6px;border:2px solid var(--line);background:none;cursor:pointer;display:grid;place-items:center;padding:0;margin-top:1px;color:#fff}
-.item.done{opacity:.55} .item.done .what strong{text-decoration:line-through;color:var(--done)}
-.item.done .chk{background:var(--accent);border-color:var(--accent)}
+/* checkbox micro-interaction — press on pointer-down, fill grows from center, tick draws */
+:root{--ease-out:cubic-bezier(0.23,1,0.32,1)}
+.chk{position:relative;width:24px;height:24px;border-radius:7px;border:2px solid var(--line);background:var(--surface);cursor:pointer;padding:0;color:#fff;-webkit-tap-highlight-color:transparent;transition:transform 120ms var(--ease-out),border-color 160ms ease}
+.chk::after{content:"";position:absolute;inset:-12px}
+.chk:active{transform:scale(.88)}
+.chk .fill{position:absolute;inset:-2px;border-radius:7px;background:var(--accent);transform:scale(.4);opacity:0;transition:transform 260ms var(--ease-out),opacity 160ms ease}
+.chk svg{position:absolute;inset:0;margin:auto;width:14px;height:14px;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.chk svg path{stroke-dasharray:20;stroke-dashoffset:20;transition:stroke-dashoffset 200ms var(--ease-out)}
+.item.done .chk{border-color:var(--accent)}
+.item.done .chk .fill{transform:scale(1);opacity:1}
+.item.done .chk svg path{stroke-dashoffset:0;transition-delay:70ms}
+.item .what strong{transition:color 220ms ease}
+.item .what strong b{font-weight:inherit;background:linear-gradient(currentColor,currentColor) no-repeat 0 58%/0% 1.5px;-webkit-box-decoration-break:clone;box-decoration-break:clone;transition:background-size 300ms var(--ease-out)}
+.item.done .what strong{color:var(--done)}
+.item.done .what strong b{background-size:100% 1.5px;transition-delay:90ms}
+.item .th,.item .links{transition:opacity 240ms ease}
+.item.done .th,.item.done .links{opacity:.55}
+.item.done .th{filter:grayscale(1)}.item .th{transition:filter 300ms ease}
+@media (prefers-reduced-motion:reduce){.chk,.chk .fill,.chk svg path,.item .what strong b,.progress i span{transition-duration:0ms!important;transition-delay:0ms!important}.chk .fill{transition:opacity 150ms ease!important}}
 .item.now{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .now-tag{display:inline-block;font:700 10px var(--f-mono);background:var(--accent);color:#fff;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:2px}
 .deadline{color:var(--accent);font-weight:600}
@@ -310,8 +326,8 @@ function renderPlan(){
   ${b.items.map(i=>`<div class="item ${done[i.id]?"done":""}" id="it-${i.id}" data-s="${i.s??""}" data-e="${i.e??""}">
     <div class="t">${i.t}</div>
     <div class="card"><div class="th">${ICO(i)}${(i.tt||i.m)?`<img class="thumb" alt="" loading="lazy" data-tt="${i.tt||i.m}" hidden>`:""}</div>
-     <div class="what"><strong>${i.w}</strong>${i.n&&i.n.includes("deadline")?`<span>${i.n}</span>`:""}<div class="links">${L(i.m,i.tt,i.na)}</div></div>
-     <button class="chk" data-id="${i.id}" aria-label="ทำแล้ว: ${i.w}">${done[i.id]?"✓":""}</button></div></div>`).join("")}
+     <div class="what"><strong><b>${i.w}</b></strong>${i.n&&i.n.includes("deadline")?`<span>${i.n}</span>`:""}<div class="links">${L(i.m,i.tt,i.na)}</div></div>
+     <button class="chk" data-id="${i.id}" role="checkbox" aria-checked="${!!done[i.id]}" aria-label="ทำแล้ว: ${i.w}"><span class="fill"></span><svg viewBox="0 0 14 14"><path d="M2.5 7.5l3 3 6-7"/></svg></button></div></div>`).join("")}
  </div></section>`).join("");
  tick(); thumbs();
 }
@@ -336,7 +352,7 @@ function renderPlaces(){
 function renderAll(){renderDays();renderPlan();renderPlaces()}
 function progress(){
  const all=D().blocks.flatMap(b=>b.items), n=all.filter(i=>done[i.id]).length;
- document.getElementById("pbar").style.width=(n/all.length*100)+"%";
+ document.getElementById("pbar").style.transform=`scaleX(${n/all.length})`;
  document.getElementById("ptxt").textContent=`${n}/${all.length}`;
 }
 function tick(){
@@ -355,7 +371,7 @@ function tick(){
 }
 document.addEventListener("click",e=>{
  const dy=e.target.closest(".days button"); if(dy){cur=+dy.dataset.day;filt=null;try{localStorage.setItem(DKEY,cur)}catch(_){};renderAll();window.scrollTo({top:0});return}
- const c=e.target.closest(".chk"); if(c){const id=c.dataset.id;done[id]=!done[id];save();renderPlan();return}
+ const c=e.target.closest(".chk"); if(c){const id=c.dataset.id;done[id]=!done[id];save();c.closest(".item").classList.toggle("done",!!done[id]);c.setAttribute("aria-checked",!!done[id]);if(done[id]&&navigator.vibrate)navigator.vibrate(8);progress();return}
  const ch=e.target.closest(".chip"); if(ch){filt=filt===ch.dataset.g?null:ch.dataset.g;renderPlan();return}
  const t=e.target.closest(".tabs button"); if(t){
   document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",b===t));
