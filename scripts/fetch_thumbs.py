@@ -45,6 +45,10 @@ def map_thumb(u):
     return t
 os.makedirs("thumbs",exist_ok=True)
 old={} if os.environ.get("FORCE") else json.load(open("thumbs/map.json")) if os.path.exists("thumbs/map.json") else {}
+if not old:
+    import subprocess
+    try: old=json.loads(subprocess.check_output(["git","show","HEAD~1:thumbs/map.json"]))
+    except Exception: pass
 out={}; log=[]
 from concurrent.futures import ThreadPoolExecutor
 def do_tt(u):
@@ -77,6 +81,8 @@ def do_map(u):
     except Exception as e:
         if u in old and os.path.exists(old[u]): out[u]=old[u]
         log.append(f"FAIL {u}: {e}")
+with ThreadPoolExecutor(8) as ex:
     list(ex.map(do_tt,urls)); list(ex.map(do_map,maps))
+if len(out)<len(old)//2: raise SystemExit("too few thumbnails, keeping previous map")
 json.dump(dict(sorted(out.items())),open("thumbs/map.json","w"),indent=1)
 print("\n".join(log)); print(f"{len(out)}/{len(urls)} thumbnails")
