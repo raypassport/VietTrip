@@ -427,7 +427,7 @@ body.locked{position:fixed;left:0;right:0;overflow:hidden}
 </header>
   <div class="bar">
     <div class="hello"><button class="me" id="me" aria-label="เมนูผู้ใช้" aria-haspopup="menu" aria-controls="user-menu" aria-expanded="false">?</button><button class="who" id="who"><small>ยินดีต้อนรับ</small><b id="myname">เลือกว่าคุณเป็นใคร</b></button>
-      <button class="mega" id="mega" aria-label="ประกาศ"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z" /> <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" /></svg></button><div class="pill" aria-label="ความคืบหน้า"><i><span id="pbar"></span></i><b id="ptxt">0<em>/0</em></b></div></div>
+      <button class="mega" id="mega" aria-label="ประกาศ"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg></button><div class="pill" aria-label="ความคืบหน้า"><i><span id="pbar"></span></i><b id="ptxt">0<em>/0</em></b></div></div>
     <div class="days" id="days"></div>
   </div>
 
@@ -624,7 +624,7 @@ function closeSheet(){if(!SH.open||SH.classList.contains("closing"))return;SH.cl
 SH.addEventListener("cancel",e=>{e.preventDefault();closeSheet()});
 function renderPlan(){
  const el=document.getElementById("plan");
- el.innerHTML=(false?`<div class="announcement"><span>ประกาศสำคัญ<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span></div>`:"")+D().blocks.map(b=>`<section class="block"><h2>${/^(เช้า|กลางวัน|บ่าย|เย็น|ค่ำ)/.test(b.k)?"ช่วง":""}${b.k}</h2><div class="list">
+ el.innerHTML=(D().date==="2026-10-21"?`<div class="announcement" role="button" tabindex="0" data-ann="open"><span>ประกาศสำคัญ<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span></div>`:"")+D().blocks.map(b=>`<section class="block"><h2>${/^(เช้า|กลางวัน|บ่าย|เย็น|ค่ำ)/.test(b.k)?"ช่วง":""}${b.k}</h2><div class="list">
   ${b.split?`<div class="item grp-row"><div class="t">13:00–<br>16:00</div><div class="acc">${groups.map(g=>{const mem=PPL.filter(p=>p[2]===g.id),mine=ME&&mem.some(p=>p[0]===ME),open=openG===g.id;
    return `<div class="ag${open?" open":""}"><button class="ah" data-g="${g.id}" aria-expanded="${open}"><span class="stk">${mem.map(p=>`<i style="background:${p[1]}">${ini(p[0])}</i>`).join("")}</span><span class="an"><b>${g.name}${mine?' <em>คุณ</em>':""}</b><small>${mem.map(p=>p[0]).join(" · ")}</small></span><span class="chev">›</span></button>
    <div class="ab"><div class="abi">${g.list?`<ol>${g.list.map(x=>`<li>${x}</li>`).join("")}</ol>`:`<p>${g.p}</p>`}${g.cta?`<a class="btn acta" target="_blank" rel="noopener" href="${g.cta[1]}">${g.cta[0]} ↗</a>`:""}</div></div></div>`}).join("")}</div></div>`:""}
