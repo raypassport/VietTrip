@@ -331,6 +331,9 @@ body.locked{position:fixed;left:0;right:0;overflow:hidden}
 #user-menu button:last-child{color:#e5232e;border-top:1px solid #ececef;border-radius:0 0 10px 10px}
 @media(prefers-reduced-motion:reduce){#wm .pp.on .av{transform:none}}
 
+#wm .reset-actions{display:flex;gap:10px;margin-top:22px}
+#wm .reset-actions .go{flex:1;margin-top:0}
+#wm .reset-actions .cancel-reset{background:#f4f4f6;color:#18181b}
 </style>
 </head>
 <body>
@@ -581,6 +584,7 @@ const WM=document.getElementById("wm"),WMC=document.getElementById("wmc"),WMI=do
 let wmStep=null,pick=null,wmClosable=false;
 function wmHTML(st){
  const x=wmClosable?'<button class="x" data-wm="close" aria-label="ปิด">×</button>':"";
+ if(st==="reset")return `<h3>ล้างข้อมูลทั้งหมด?</h3><p id="reset-warning">ความคืบหน้าทั้งหมดและชื่อที่เลือกไว้ในเครื่องนี้จะถูกลบ และจะกลับไปเริ่มต้นใหม่<br>การล้างข้อมูลนี้ไม่สามารถย้อนกลับได้</p><div class="reset-actions"><button class="go cancel-reset" data-wm="close" autofocus>ยกเลิก</button><button class="go" data-wm="reset-confirm">ล้างข้อมูล</button></div>`;
  if(st==="intro")return `${WM_ART}<h3>Welcome to Vietnam Trip</h3><p>21–24 ต.ค. · แก๊ง 13 คน<br>ตาราง แผนที่ ร้านเด็ด อยู่ที่นี่หมดแล้ว</p><button class="go" data-wm="next">เริ่มเลย</button>`;
  if(st==="pick")return `${x}<h3>คุณคือใครในทริปนี้</h3><p>เลือกชื่อตัวเอง</p><div class="ppl${pick?" has":""}">${PPL.map(p=>`<button class="pp${pick===p[0]?" on":""}" data-p="${p[0]}" aria-pressed="${pick===p[0]}"><span class="av" style="background:${p[1]}">${ini(p[0])}</span>${p[0]}</button>`).join("")}</div><button class="go" data-wm="me" ${pick?"":"disabled"}>${pick?"ฉันคือ "+pick:"เลือกชื่อก่อน"}</button>`;
  if(st==="hello"){const p=PPL.find(x=>x[0]===ME);return `<div class="big" style="background:${p[1]}">${ini(p[0])}</div><div><div class="hi">ยินดีต้อนรับ</div><div class="nm">${p[0]}</div></div><p>${LINE[p[2]]}</p><button class="go" data-wm="close">Enjoy your trip ✈️</button>`}
@@ -603,7 +607,8 @@ function welcomeFlight(from){
 }
 function wmShow(st){
  if(wmBusy)return;
- WM.setAttribute("aria-label",st==="pick"?"เลือกผู้ร่วมทริป":"ยินดีต้อนรับ");
+ WM.setAttribute("aria-label",st==="reset"?"ยืนยันการล้างข้อมูล":st==="pick"?"เลือกผู้ร่วมทริป":"ยินดีต้อนรับ");
+ if(st==="reset")WM.setAttribute("aria-describedby","reset-warning");else WM.removeAttribute("aria-describedby");
  if(!WM.open){wmStep=st;WMI.innerHTML=wmHTML(st);WMC.style.height="";WM.classList.remove("closing","open");lockScroll();WM.showModal();WMC.getBoundingClientRect();requestAnimationFrame(()=>{WM.classList.add("open");enterWM(st)});return}
  wmBusy=true;
  const from=st==="hello"?WMI.querySelector(".pp.on .av")?.getBoundingClientRect():null;
@@ -626,6 +631,7 @@ WM.addEventListener("click",e=>{
  if(!a)return;const v=a.dataset.wm;
  if(v==="next")wmShow("pick");
  else if(v==="me"&&pick){ME=pick;LS.set("hcmc-me",ME);renderMe();wmClosable=false,wmShow("hello")}
+ else if(v==="reset-confirm"&&wmStep==="reset")resetTrip();
  else if(v==="close")wmClose();
 });
 function maybeNewDay(){const t=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Ho_Chi_Minh"}).format(new Date()),i=DAYS.findIndex(d=>d.date===t),seen=LS.get("hcmc-days",[]);
@@ -642,11 +648,11 @@ function openUserMenu(){
 userMenu.addEventListener("toggle",()=>{const open=userMenu.matches(":popover-open");avatarButton.setAttribute("aria-expanded",open);if(!open&&!WM.open)avatarButton.focus({preventScroll:true})});
 userMenu.addEventListener("keydown",e=>{const buttons=[...userMenu.querySelectorAll("button")],i=buttons.indexOf(document.activeElement);if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();buttons[(i+(e.key==="ArrowDown"?1:-1)+buttons.length)%buttons.length].focus()}if(e.key==="Home"||e.key==="End"){e.preventDefault();buttons[e.key==="Home"?0:buttons.length-1].focus()}});
 document.getElementById("switch-user").addEventListener("click",()=>{userMenu.hidePopover();pick=null;wmClosable=true;wmShow("pick")});
-document.getElementById("reset-user").addEventListener("click",()=>{
- userMenu.hidePopover();
+document.getElementById("reset-user").addEventListener("click",()=>{userMenu.hidePopover();wmClosable=true;wmShow("reset")});
+function resetTrip(){
  [KEY,DKEY,"hcmc-me","hcmc-onb","hcmc-days"].forEach(k=>{try{localStorage.removeItem(k)}catch(_){}});
  done={};cur=0;ME=null;pick=null;filt=null;openG=null;renderMe();renderAll();wmClosable=false;wmShow("intro");
-});
+}
 avatarButton.addEventListener("click",openUserMenu);document.getElementById("who").addEventListener("click",openUserMenu);
 window.addEventListener("resize",()=>{if(userMenu.matches(":popover-open"))userMenu.hidePopover()});
 
