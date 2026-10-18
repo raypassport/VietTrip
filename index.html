@@ -507,7 +507,7 @@ function tick(){
  progress();
 }
 document.addEventListener("click",e=>{
- const dy=e.target.closest(".days button"); if(dy){cur=+dy.dataset.day;filt=null;try{localStorage.setItem(DKEY,cur)}catch(_){};renderAll();window.scrollTo({top:0});return}
+ const dy=e.target.closest(".days button"); if(dy){cur=+dy.dataset.day;filt=null;try{localStorage.setItem(DKEY,cur)}catch(_){};window.scrollTo({top:0});renderAll();revealList();return}
  const nb=e.target.closest(".note"); if(nb){openSheet(nb.dataset.note);return}
  if(e.target.closest("[data-close]")){closeSheet();return}
  const c=e.target.closest(".chk"); if(c){const id=c.dataset.id;done[id]=!done[id];save();c.closest(".item").classList.toggle("done",!!done[id]);c.setAttribute("aria-checked",!!done[id]);if(done[id]&&navigator.vibrate)navigator.vibrate(8);progress();return}
@@ -557,6 +557,13 @@ function openPicker(){pick=ME;wmClosable=true;wmShow("pick")}
 document.getElementById("me").addEventListener("click",openPicker);document.getElementById("who").addEventListener("click",openPicker);
 
 renderAll(); setInterval(tick,30000);
+/* day switch: fast staggered blur-fade reveal (only what's on screen) */
+function revealList(){const RM=matchMedia("(prefers-reduced-motion: reduce)").matches,H=innerHeight;let n=0;
+ document.querySelectorAll("#plan section.block h2, #plan .item").forEach(el=>{const r=el.getBoundingClientRect();if(r.top>H)return;
+  const d=Math.min(n++*28,220);
+  el.animate(RM?[{opacity:0},{opacity:1}]:[{opacity:0,transform:"translateY(10px)",filter:"blur(6px)"},{opacity:1,transform:"none",filter:"blur(0)"}],
+   {duration:RM?160:340,delay:d,easing:"cubic-bezier(0.23,1,0.32,1)",fill:"backwards"})});}
+
 /* whole-card press: squish on pointer-down, spring back with a soft overshoot on release (interruptible, from live value) */
 (()=>{const RM=matchMedia("(prefers-reduced-motion: reduce)");let cur=null;
  const live=c=>getComputedStyle(c).transform==="none"?"scale(1)":getComputedStyle(c).transform;
