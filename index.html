@@ -153,6 +153,7 @@ const TEEBAR="https://maps.app.goo.gl/MTwVyJTUfnfvJfsh6?g_st=ic", FROLIC="https:
 const PLA_T="https://www.tiktok.com/@vyhaydi.sg/video/7536439123712691474", NHAM_T="https://www.tiktok.com/@tony_khoa/video/7484257638478335240", BV_T="https://www.tiktok.com/@phodibobuivien/video/7456325717085654280";
 const IND_T="https://www.tiktok.com/@morrididau/video/7644072376409312533", BANH_T="https://www.tiktok.com/@didausaigon/video/7319392254643162369", VIN_T="https://www.tiktok.com/@vincomcenterdongkhoi/video/7555896999074221319", VINF_T="https://www.tiktok.com/@yangho0910/video/7480032426719317255", BAM_T="https://www.tiktok.com/@bam.sgn/video/7403553625949097224", TEE_T="https://www.tiktok.com/discover/thi-bar";
 const PLA_M="https://www.google.com/maps/search/?api=1&query=ng%C3%A2m%20CAFE%20193/19%20Nam%20K%E1%BB%B3%20Kh%E1%BB%9Fi%20Ngh%C4%A9a%20Ho%20Chi%20Minh", BANH_M="https://www.google.com/maps/search/?api=1&query=B%C3%A1nh%20%C6%AF%E1%BB%9Bt%20Ban%20M%C3%AA%20Giang%20V%C6%B0%C6%A1ng%20T%C3%B4n%20Th%E1%BA%A5t%20T%C3%B9ng%20Ho%20Chi%20Minh", MARI_M="https://www.google.com/maps/search/?api=1&query=Mariamman%20Hindu%20Temple%2045%20Tr%C6%B0%C6%A1ng%20%C4%90%E1%BB%8Bnh%20Ho%20Chi%20Minh";
+const MANMI_T="https://www.tiktok.com/search?q=B%C3%A1nh%20M%C3%AC%20362%20Tr%E1%BA%A7n%20Cao%20V%C3%A2n", CHIN_T="https://www.tiktok.com/discover/gay-bar-s%C3%A0i-g%C3%B2n-qu%E1%BA%ADn-1", FROLIC_T="https://www.tiktok.com/discover/gay-bars-in-ho-chi-minh-city";
 const MARI_T="https://vt.tiktok.com/ZSgMmRDhD/", BV="https://maps.app.goo.gl/jkgcDc9D9Vvn7vMq5?g_st=ic", BAM="https://maps.app.goo.gl/ACyUdbvT2Wv6WkYF6?g_st=ic", VIN="https://maps.app.goo.gl/kkutkAAVDsfRsdet7?g_st=ic";
 
 const groups=[
@@ -198,7 +199,7 @@ const DAYS=[
  blocks:[
  {k:"เช้า",en:"MORNING",items:[
   {id:"d2wake",t:"08:00",s:480,e:540,w:"ตื่น · อาบน้ำแต่งตัว",n:"เวลาเสนอ · ออกจากบ้านพร้อมกัน",m:HOME},
-  {id:"d2manmi",t:"09:00",s:540,e:600,w:"ข้าวมันหมี่ · Bánh Mì 362",n:"พิกัดที่ส่งมา · รอชื่อร้าน/คลิปไทย",m:MANMI},
+  {id:"d2manmi",t:"09:00",s:540,e:600,w:"บั๋นหมี่ · Bánh Mì 362",n:"พิกัดที่ส่งมา · รอชื่อร้าน/คลิปไทย",m:MANMI,tt:MANMI_T},
   {id:"d2dophu",t:"10:00",s:600,e:660,w:"คาเฟ่หลุมหลบภัย · Cà Phê Đỗ Phủ",n:"287/72 Nguyễn Đình Chiểu",m:DOPHU,tt:DOPHU_T},
   {id:"d2pla",t:"11:00",s:660,e:705,w:"คาเฟ่ปลา · ngâm CAFE",n:"193/19 Nam Kỳ Khởi Nghĩa",m:PLA_M,tt:PLA_T},
   {id:"d2indo",t:"11:45",s:705,e:750,w:"คาเฟ่อินดัสลิน · INDUSLISM",n:"พิกัดที่ส่งมา · รอยืนยันชื่อสะกด",m:INDO,tt:IND_T}]},
@@ -212,14 +213,14 @@ const DAYS=[
   {id:"d2home",t:"19:00",s:1140,e:1200,w:"กลับบ้าน · นัดเจอทุกคน",n:"เวลาเสนอ · เปลี่ยนชุดก่อนออกต่อ",m:HOME}]},
  {k:"ค่ำ–ดึก",en:"NIGHT",items:[
   {id:"d2htk",t:"20:00",s:1200,e:1290,w:"สตรีทฟู้ด · Hồ Thị Kỷ",n:"มื้อค่ำ · ตลาดกลางคืน",m:HTK,tt:HTK_T},
-  {id:"d2chin",t:"หลังอาหาร",s:null,w:"ชินชิน · ChinChin Bar",n:"75 Hồ Tùng Mậu ชั้น 1",m:CHIN},
+  {id:"d2chin",t:"หลังอาหาร",s:null,w:"ชินชิน · ChinChin Bar",n:"75 Hồ Tùng Mậu ชั้น 1",m:CHIN,tt:CHIN_T},
   {id:"d2tee",t:"ต่อจากนั้น",s:null,w:"ตี๋บาร์",n:"ผับเกย์ · ที่ไปที่แรก",m:TEEBAR,tt:TEE_T},
-  {id:"d2frolic",t:"ต่อจากนั้น",s:null,w:"ฟรอลิค · Frolic",n:"ผับเกย์",m:FROLIC},
+  {id:"d2frolic",t:"ต่อจากนั้น",s:null,w:"ฟรอลิค · Frolic",n:"ผับเกย์",m:FROLIC,tt:FROLIC_T},
   {id:"d2end",t:"ปิดท้าย",s:null,w:"กลับบ้าน",n:"เวลาเดินทางกลับรอยืนยัน",m:HOME}]}],
  places:[
- {k:"เช้า",route:true,rows:[["01","บ้าน · 16C Phùng Khắc Khoan","ที่พักหลัก",HOME],["02","ข้าวมันหมี่ · Bánh Mì 362","รอชื่อร้าน + TikTok ไทย",MANMI],["03","คาเฟ่หลุมหลบภัย · Đỗ Phủ","คลิปตรงรอยืนยัน",DOPHU,DOPHU_T],["04","คาเฟ่ปลา · ngâm CAFE","193/19 Nam Kỳ Khởi Nghĩa",PLA_M,PLA_T],["05","คาเฟ่อินดัสลิน · INDUSLISM","พิกัดที่ส่งมา",INDO,IND_T]]},
+ {k:"เช้า",route:true,rows:[["01","บ้าน · 16C Phùng Khắc Khoan","ที่พักหลัก",HOME],["02","บั๋นหมี่ · Bánh Mì 362","รอชื่อร้าน + TikTok ไทย",MANMI,MANMI_T],["03","คาเฟ่หลุมหลบภัย · Đỗ Phủ","คลิปตรงรอยืนยัน",DOPHU,DOPHU_T],["04","คาเฟ่ปลา · ngâm CAFE","193/19 Nam Kỳ Khởi Nghĩa",PLA_M,PLA_T],["05","คาเฟ่อินดัสลิน · INDUSLISM","พิกัดที่ส่งมา",INDO,IND_T]]},
  {k:"กลางวัน",route:true,rows:[["06","เบ๊บ มีซลิน · Bếp Mẹ Ỉn","สาขาเสนอ รอยืนยันกับคลิป",BEP,BEP_T],["07","Fine Arts Museum","พิพิธภัณฑ์ศิลปะ",ART,ART_T],["08","คาเฟ่ยัยแน้ม · Nhâm Coffee","195/10/2 Điện Biên Phủ",NHAM,NHAM_T],["09","คาเฟ่อะพาร์ตเมนต์ · The Cafe Apartments","42 Nguyễn Huệ",APT,APT_T]]},
- {k:"ค่ำ–ดึก",route:true,rows:[["10","บ้าน · นัดรวม","รอเวลาล็อก",HOME],["11","สตรีทฟู้ด · Hồ Thị Kỷ","มื้อค่ำ",HTK,HTK_T],["12","ชินชิน · ChinChin Bar","75 Hồ Tùng Mậu",CHIN],["13","ตี๋บาร์","พิกัดที่ส่งมา",TEEBAR,TEE_T],["14","ฟรอลิค · Frolic","พิกัดที่ส่งมา",FROLIC]]}]},
+ {k:"ค่ำ–ดึก",route:true,rows:[["10","บ้าน · นัดรวม","รอเวลาล็อก",HOME],["11","สตรีทฟู้ด · Hồ Thị Kỷ","มื้อค่ำ",HTK,HTK_T],["12","ชินชิน · ChinChin Bar","75 Hồ Tùng Mậu",CHIN,CHIN_T],["13","ตี๋บาร์","พิกัดที่ส่งมา",TEEBAR,TEE_T],["14","ฟรอลิค · Frolic","พิกัดที่ส่งมา",FROLIC,FROLIC_T]]}]},
 {n:"03",date:"2026-10-23",th:"23 ต.ค.",meta:"Ho Chi Minh City · 23 Oct 2026 · 13 people",
  top:["HOME MAP ↗",HOME],
  foot:"ปุ่มลิงก์แสดงเฉพาะที่มีลิงก์จริง · ย่านช้อปปิ้งยังไม่ระบุ",
