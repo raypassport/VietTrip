@@ -405,7 +405,7 @@ body.locked{position:fixed;left:0;right:0;overflow:hidden}
 #news .nw{position:fixed;left:16px;right:16px;top:50%;margin:0 auto;max-width:440px;background:#fff;border-radius:24px;padding:18px 16px 16px;transform:translateY(-50%) scale(.96);opacity:0;transition:transform 280ms var(--ease-out),opacity 220ms ease}
 #news.open .scrim{opacity:1}#news.open .nw{transform:translateY(-50%) scale(1);opacity:1}
 .nw-h{display:flex;align-items:center;justify-content:space-between;margin:0 4px 12px}.nw-h h3{margin:0;font:600 20px "IBM Plex Sans Thai"}
-.nw-list{display:grid;gap:10px}.nw-list .announcement{margin:0;height:110px}
+.nw-list{display:grid;gap:10px;max-height:calc(100dvh - 160px);overflow-y:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}.nw-list .announcement{margin:0;height:110px}
 .announcement.off{background:var(--c);cursor:default;justify-content:space-between;align-items:flex-end}
 .announcement.off::before{background:rgba(0,0,0,.08)}.announcement.off span{font-size:17px;line-height:1.25;flex:1;min-width:0}
 .announcement.off em{position:relative;font:500 11px "IBM Plex Sans Thai";font-style:normal;color:#fff;background:rgba(255,255,255,.22);border-radius:999px;padding:3px 9px;white-space:nowrap;flex:none;margin-left:10px}
@@ -442,6 +442,8 @@ body.locked{position:fixed;left:0;right:0;overflow:hidden}
   <div class="announcement" role="button" tabindex="0" data-ann="open"><span>ประกาศสำคัญ<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span></div>
   <div class="announcement off" style="--c:#3f7f95"><span>เอกสารและสิ่งที่ต้องทำ</span><em>เร็วๆ นี้</em></div>
   <div class="announcement off" style="--c:#c96f3b"><span>ข้อควรระวังในการเที่ยวเวียดนาม</span><em>เร็วๆ นี้</em></div>
+  <div class="announcement off" style="--c:#6f8a3a"><span>เงินดองดูยังไง ไม่ให้งง</span><em>เร็วๆ นี้</em></div>
+  <div class="announcement off" style="--c:#7a5d8c"><span>ประโยคเวียดนามเบื้องต้น</span><em>เร็วๆ นี้</em></div>
  </div></div></dialog>
 <section id="annpage" class="annpage" aria-hidden="true" aria-labelledby="ann-h">
  <div class="ap-hero"><button class="ap-back" data-ann="close" aria-label="กลับ"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button><h1 id="ann-h">ประกาศสำคัญ</h1></div>
