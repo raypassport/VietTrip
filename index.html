@@ -285,14 +285,13 @@ function renderPlan(){
  </div></section>`).join("");
  tick(); thumbs();
 }
-const TH={};
+let TMAP=null;
+const TMP=fetch("thumbs/map.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{}).catch(()=>({})).then(m=>TMAP=m);
 function thumbs(){
- document.querySelectorAll("img.thumb[data-tt]").forEach(img=>{
-  const u=img.dataset.tt, set=t=>{if(t){img.src=t;img.hidden=false;img.onerror=()=>img.remove()}else img.remove()};
-  if(u in TH){TH[u].then(set);return}
-  TH[u]=fetch("https://www.tiktok.com/oembed?url="+encodeURIComponent(u)).then(r=>r.ok?r.json():{}).then(j=>j.thumbnail_url||null).catch(()=>null);
-  TH[u].then(set);
- });
+ TMP.then(m=>document.querySelectorAll("img.thumb[data-tt]").forEach(img=>{
+  const f=m[img.dataset.tt]; if(!f){img.remove();return}
+  img.onerror=()=>img.remove(); img.src=f; img.hidden=false;
+ }));
 }
 function renderPlaces(){
  document.getElementById("places").innerHTML=D().places.map(s=>`<section class="block"><h2>${s.k}</h2><div class="route">
