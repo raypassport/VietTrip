@@ -14,11 +14,11 @@ permissions:
 jobs:
   thumbs:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - run: pip install pillow
-      - run: rm -f thumbs/*.jpg && python3 scripts/fetch_thumbs.py
+      - run: python3 scripts/fetch_thumbs.py
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

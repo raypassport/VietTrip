@@ -2,15 +2,16 @@ import io, re, json, hashlib, os, urllib.request, urllib.parse
 UA={"User-Agent":"Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Version/17.0 Mobile/15E148 Safari/604.1"}
 import time
 def get(u):
-    for n in range(3):
+    for n in range(2):
         try:
-            with urllib.request.urlopen(urllib.request.Request(u,headers=UA),timeout=12) as r: return r.geturl(), r.read()
+            with urllib.request.urlopen(urllib.request.Request(u,headers=UA),timeout=10) as r: return r.geturl(), r.read()
         except Exception:
-            if n==2: raise
-            time.sleep(3)
+            if n==1: raise
+            time.sleep(2)
 def thumb_of(full):
     try:
-        t=thumb_of(full)
+        _,b=get("https://www.tiktok.com/oembed?url="+urllib.parse.quote(full,safe=""))
+        t=json.loads(b).get("thumbnail_url")
         if t: return t
     except Exception: pass
     _,h=get(full); h=h.decode("utf-8","ignore")
@@ -45,7 +46,8 @@ def map_thumb(u):
 os.makedirs("thumbs",exist_ok=True)
 old={} if os.environ.get("FORCE") else json.load(open("thumbs/map.json")) if os.path.exists("thumbs/map.json") else {}
 out={}; log=[]
-for u in urls:
+from concurrent.futures import ThreadPoolExecutor
+def do_tt(u):
     try:
         full=u
         if "/video/" not in u and "/photo/" not in u:
@@ -59,7 +61,7 @@ for u in urls:
     except Exception as e:
         if u in old and os.path.exists(old[u]): out[u]=old[u]
         log.append(f"FAIL {u}: {e}")
-for u in maps:
+def do_map(u):
     try:
         t=None;src=""
         for name,fn in (("google",lambda:map_thumb(u)),("wikimedia",lambda:wiki_thumb(qname(u)) if qname(u) else None),("openverse",lambda:openverse_thumb(qname(u)) if qname(u) else None)):
@@ -75,5 +77,7 @@ for u in maps:
     except Exception as e:
         if u in old and os.path.exists(old[u]): out[u]=old[u]
         log.append(f"FAIL {u}: {e}")
-json.dump(out,open("thumbs/map.json","w"),indent=1)
+with ThreadPoolExecutor(8) as ex:
+    list(ex.map(do_tt,urls)); list(ex.map(do_map,maps))
+json.dump(dict(sorted(out.items())),open("thumbs/map.json","w"),indent=1)
 print("\n".join(log)); print(f"{len(out)}/{len(urls)} thumbnails")
