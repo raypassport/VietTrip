@@ -240,7 +240,7 @@ a.btn{background:#f4f4f6!important;color:#18181b!important}a.btn.tt{background:#
 #wm .ppl{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 6px;margin-top:20px}
 #wm .pp{background:none;border:0;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;font:500 13px "IBM Plex Sans Thai";color:#18181b;transition:opacity 200ms ease}
 #wm .av{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;color:#fff;font:600 20px "IBM Plex Sans Thai";position:relative;transition:transform 160ms var(--ease-out)}
-#wm .pp:active .av{transform:scale(.92)}
+#wm .pp:active .av{transform:scale(.97)}
 #wm .ppl.has .pp{opacity:.4}#wm .ppl.has .pp.on{opacity:1;color:#e5232e;font-weight:600}
 /* Keep selection separate from the animated avatar: no interpolated shadows. */
 #wm .pp .av::after{content:"";position:absolute;inset:-6px;border:2.5px solid #e5232e;border-radius:50%;pointer-events:none;display:none}
@@ -323,8 +323,8 @@ body.locked{position:fixed;left:0;right:0;overflow:hidden}
 #wm .ppl.has .pp{opacity:.6}
 #wm .ppl.has .pp.on{opacity:1}
 #wm .av{transition:transform 200ms var(--ease-out)}
-#wm .pp.on .av{transform:scale(1.06)}
-#wm .pp:active .av{transform:scale(.92)}
+#wm .pp.on .av{transform:none}
+#wm .pp:active .av{transform:scale(.97)}
 .avatar-flight{position:fixed;z-index:3;display:grid;place-items:center;border-radius:50%;color:white;font:600 20px "IBM Plex Sans Thai",sans-serif;pointer-events:none;transform-origin:0 0}
 #user-menu{position:fixed;inset:auto;margin:0;padding:6px;width:230px;max-width:calc(100vw - 32px);background:#fff;border:1px solid #ececef;border-radius:16px;box-shadow:0 10px 40px #18181b24;color:#18181b}
 #user-menu button{display:block;width:100%;text-align:left;border:0;background:transparent;color:inherit;padding:13px 12px;border-radius:10px;font:500 14px "IBM Plex Sans Thai",sans-serif;cursor:pointer}
@@ -335,6 +335,19 @@ body.locked{position:fixed;left:0;right:0;overflow:hidden}
 #wm .reset-actions{display:flex;gap:10px;margin-top:22px}
 #wm .reset-actions .go{flex:1;margin-top:0}
 #wm .reset-actions .cancel-reset{background:#f4f4f6;color:#18181b}
+/* Onboarding: stable shell, one content transition, one avatar handoff. */
+#wm .card{transition:transform 240ms var(--ease-out),opacity 180ms var(--ease-out)}
+#wm .in{transition:none}
+#wm .in.swap{opacity:1;transform:none;filter:none}
+#wm.journey .in{min-height:100%;display:flex;flex-direction:column;justify-content:center}
+#wm.journey .in>.go{flex-shrink:0}
+#wm .scrim{transition:opacity 180ms var(--ease-out)}
+#wm .pp{transition:color 120ms ease}
+#wm .ppl.has .pp{opacity:1;color:#777982}
+#wm .ppl.has .pp.on{color:#e5232e}
+#wm .pp .av{transition:transform 120ms var(--ease-out)}
+#wm .pp .av::after{inset:-5px;border-width:2px}
+@media(prefers-reduced-motion:reduce){#wm .pp:active .av{transform:none}}
 </style>
 </head>
 <body>
@@ -592,43 +605,62 @@ function wmHTML(st){
  if(typeof st==="number"){const m=DAYMSG[st];return `<div class="emo">${m[0]}</div><h3>เข้าสู่วันที่ ${st+1} แล้ว${ME?" "+ME:""}!</h3><p>${m[1]}</p><button class="go" data-wm="close">ไปกันเลย</button>`}
 }
 const motionOK=()=>!matchMedia("(prefers-reduced-motion: reduce)").matches;
-let wmBusy=false;
+let wmBusy=false,wmDismissPending=false;
+const wmEase=()=>getComputedStyle(document.documentElement).getPropertyValue("--ease-out").trim();
+const settle=animation=>animation.finished.catch(()=>{}).finally(()=>animation.cancel());
 function enterWM(st){
- if(!motionOK())return;
- const targets=st==="pick"?[...WMI.querySelectorAll("h3,p"),...WMI.querySelectorAll(".pp"),WMI.querySelector(".go")]:[...WMI.children].filter(el=>!el.matches(".x,.big"));
- targets.forEach((el,i)=>el.animate([{opacity:0,transform:"translateY(8px)",filter:"blur(2px)"},{opacity:1,transform:"none",filter:"blur(0)"}],{duration:300,delay:Math.min(i*40,200),easing:"cubic-bezier(.23,1,.32,1)",fill:"backwards"}));
- if(st==="intro")WMI.querySelectorAll(".wm-art > g[transform]").forEach((el,i)=>el.animate([{opacity:0},{opacity:1}],{duration:250,delay:60+i*45,fill:"backwards"}));
+ const groups=st==="pick"?[...WMI.querySelectorAll("h3,p,.ppl,.go")]:[...WMI.children].filter(el=>!el.matches(".x,.big"));
+ return Promise.all(groups.map((el,i)=>settle(el.animate(motionOK()?[{opacity:0,transform:"translateY(6px)"},{opacity:1,transform:"none"}]:[{opacity:0},{opacity:1}],{duration:180,delay:motionOK()?Math.min(i*30,90):0,easing:wmEase(),fill:"both"}))));
+}
+function sizeJourney(){
+ if(!WM.classList.contains("journey"))return;
+ const probe=document.createElement("div");probe.className="in";
+ Object.assign(probe.style,{position:"absolute",top:"0",left:"0",width:"100%",minHeight:"0",visibility:"hidden",pointerEvents:"none"});
+ probe.setAttribute("aria-hidden","true");probe.inert=true;WMC.append(probe);
+ let height=0;
+ for(const step of ["intro","pick","hello"]){if(step==="hello"&&!ME)continue;probe.innerHTML=wmHTML(step);height=Math.max(height,probe.offsetHeight)}
+ probe.remove();WMC.style.height=Math.ceil(height)+"px";
 }
 // One visible avatar throughout each handoff; only composite properties animate.
-function avatarHandoff(from,dest,sourceFont){
+function avatarHandoff(from,dest,sourceFont,source){
  const to=dest.getBoundingClientRect(),person=PPL.find(p=>p[0]===ME);
  if(!motionOK()||!from||!person||!to.width)return Promise.resolve();
  const fly=document.createElement("div"),glyph=document.createElement("span");
  fly.className="avatar-flight";fly.setAttribute("aria-hidden","true");glyph.textContent=ini(ME);fly.append(glyph);
  Object.assign(fly.style,{left:from.left+"px",top:from.top+"px",width:from.width+"px",height:from.height+"px",background:person[1],fontSize:sourceFont+"px"});
- WM.append(fly);const prior=dest.style.visibility;dest.style.visibility="hidden";
+ WM.append(fly);const prior=dest.style.visibility,sourcePrior=source?.style.visibility;dest.style.visibility="hidden";if(source)source.style.visibility="hidden";
  const scale=to.width/from.width,fontScale=parseFloat(getComputedStyle(dest).fontSize)/(sourceFont*scale);
  const easing=getComputedStyle(document.documentElement).getPropertyValue("--ease-in-out").trim();
  const animation=fly.animate([{transform:"translate(0,0) scale(1)"},{transform:`translate(${to.left-from.left}px,${to.top-from.top}px) scale(${scale})`}],{duration:280,easing,fill:"forwards"});
  const textAnimation=glyph.animate([{transform:"scale(1)"},{transform:`scale(${fontScale})`}],{duration:280,easing,fill:"forwards"});
  // Resizing invalidates the measured destination: reveal the live avatar immediately.
  const cancel=()=>animation.cancel();window.addEventListener("resize",cancel,{once:true});
- return animation.finished.catch(()=>{}).finally(()=>{dest.style.visibility=prior;fly.remove();textAnimation.cancel();window.removeEventListener("resize",cancel)});
+ return animation.finished.catch(()=>{}).finally(()=>{dest.style.visibility=prior;if(source)source.style.visibility=sourcePrior;fly.remove();textAnimation.cancel();window.removeEventListener("resize",cancel)});
 }
-function welcomeFlight(from){
- const dest=WMI.querySelector(".big");if(!from||!dest||!motionOK())return;
- avatarHandoff(from,dest,20);
-}
-function wmShow(st){
- if(wmBusy)return;
- WM.setAttribute("aria-label",st==="reset"?"ยืนยันการล้างข้อมูล":st==="pick"?"เลือกผู้ร่วมทริป":"ยินดีต้อนรับ");
- if(st==="reset")WM.setAttribute("aria-describedby","reset-warning");else WM.removeAttribute("aria-describedby");
- if(!WM.open){wmStep=st;WMI.innerHTML=wmHTML(st);WMC.style.height="";WM.classList.remove("closing","open");lockScroll();WM.showModal();WMC.getBoundingClientRect();requestAnimationFrame(()=>{WM.classList.add("open");enterWM(st)});return}
- wmBusy=true;
- const from=st==="hello"?WMI.querySelector(".pp.on .av")?.getBoundingClientRect():null;
- const h0=WMC.offsetHeight;WMC.style.height=h0+"px";WMI.classList.add("swap");
- setTimeout(()=>{wmStep=st;WMI.innerHTML=wmHTML(st);if(st==="hello")WMC.style.transitionProperty="transform,opacity";WMC.style.height=WMI.offsetHeight+"px";WMI.classList.remove("swap");enterWM(st);welcomeFlight(from);
- setTimeout(()=>{WMC.style.height="";WMC.style.transitionProperty="";wmBusy=false;WMI.querySelector(st==="pick"?".pp.on,.pp":".go")?.focus({preventScroll:true})},480)},motionOK()?140:0);
+async function wmShow(st){
+ if(wmBusy||WM.classList.contains("closing"))return;
+ wmBusy=true;WMI.inert=true;
+ const journey=["intro","pick","hello"].includes(st);
+ const source=st==="hello"?WMI.querySelector(".pp.on .av"):null;
+ const from=source?.getBoundingClientRect(),sourceFont=source?parseFloat(getComputedStyle(source).fontSize):0;
+ try{
+  if(WM.open){
+   // Keep the selected avatar visible while the rest of the picker exits.
+   const groups=source?[...WMI.children].filter(el=>!el.matches(".ppl")): [WMI];
+   if(source)WMI.querySelectorAll(".pp").forEach(p=>{if(!p.classList.contains("on"))groups.push(p)});
+   await Promise.all(groups.map(el=>settle(el.animate([{opacity:1},{opacity:0}],{duration:100,easing:wmEase(),fill:"forwards"}))));
+  }
+  WM.setAttribute("aria-label",st==="reset"?"ยืนยันการล้างข้อมูล":st==="pick"?"เลือกผู้ร่วมทริป":"ยินดีต้อนรับ");
+  if(st==="reset")WM.setAttribute("aria-describedby","reset-warning");else WM.removeAttribute("aria-describedby");
+  wmStep=st;WMI.innerHTML=wmHTML(st);WMI.scrollTop=0;WMC.scrollTop=0;
+  WM.classList.toggle("journey",journey);WMC.style.height="";
+  if(!WM.open){WM.classList.remove("closing","open");lockScroll();WM.showModal();sizeJourney();WMC.getBoundingClientRect();WM.classList.add("open")}
+  else sizeJourney();
+  // Replacing the source and creating its moving counterpart happen in one frame.
+  const landing=from?avatarHandoff(from,WMI.querySelector(".big"),sourceFont):Promise.resolve();
+  await Promise.all([enterWM(st),landing]);
+  WMI.inert=false;WMI.querySelector(st==="pick"?".pp.on,.pp":".go")?.focus({preventScroll:true});
+ }finally{WMI.inert=false;wmBusy=false;if(wmDismissPending){wmDismissPending=false;wmClose()}}
 }
 function wmRefresh(){
  WMI.querySelectorAll(".pp").forEach(p=>{const on=p.dataset.p===pick;p.classList.toggle("on",on);p.setAttribute("aria-pressed",on)});
@@ -640,8 +672,7 @@ async function wmClose(){
  const success=wmStep==="hello",source=success?WMI.querySelector(".big"):null;
  const from=source?.getBoundingClientRect(),home=document.getElementById("me");
  // Measure before the modal begins shrinking; the clone lives outside its card.
- const landing=source&&motionOK()?avatarHandoff(from,home,parseFloat(getComputedStyle(source).fontSize)):null;
- if(landing)source.style.visibility="hidden";
+ const landing=source&&motionOK()?avatarHandoff(from,home,parseFloat(getComputedStyle(source).fontSize),source):null;
  WM.classList.add("closing");WM.classList.remove("open");
  await (landing||new Promise(resolve=>setTimeout(resolve,motionOK()?220:0)));
  WM.classList.remove("closing");WM.close();unlockScroll();
@@ -649,7 +680,7 @@ async function wmClose(){
  home.focus({preventScroll:true});
  if(success){LS.set("hcmc-onb",1);renderPlan();maybeNewDay()}
 }
-WM.addEventListener("cancel",e=>{e.preventDefault();if(wmClosable||typeof wmStep==="number"||wmStep==="hello")wmClose()});
+WM.addEventListener("cancel",e=>{e.preventDefault();if(wmClosable||typeof wmStep==="number"||wmStep==="hello"){if(wmBusy)wmDismissPending=true;else wmClose()}});
 WM.addEventListener("click",e=>{
  if(wmBusy||WM.classList.contains("closing"))return;
  const a=e.target.closest("[data-wm]"),p=e.target.closest("[data-p]");
@@ -680,7 +711,7 @@ function resetTrip(){
  done={};cur=0;ME=null;pick=null;filt=null;openG=null;renderMe();renderAll();wmClosable=false;wmShow("intro");
 }
 avatarButton.addEventListener("click",openUserMenu);document.getElementById("who").addEventListener("click",openUserMenu);
-window.addEventListener("resize",()=>{if(userMenu.matches(":popover-open"))userMenu.hidePopover()});
+window.addEventListener("resize",()=>{if(WM.open&&!wmBusy&&!WM.classList.contains("closing"))sizeJourney();if(userMenu.matches(":popover-open"))userMenu.hidePopover()});
 
 renderAll(); setInterval(tick,30000);
 /* lock page scroll while any modal is open (iOS-safe) */
