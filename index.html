@@ -373,9 +373,26 @@ body.locked{position:fixed;left:0;right:0;overflow:hidden}
 @media (prefers-reduced-motion:reduce){.eod{transform:none;transition:opacity 200ms ease}}
 
 /* day-1 announcement banner */
-.announcement{position:relative;height:170px;margin:14px 0 4px;border-radius:16px;overflow:hidden;background:#ddd url(assets/day-21-announcement.jpg) center 80%/cover;display:flex;align-items:flex-end;justify-content:flex-end;padding:16px;cursor:pointer}
+.announcement{position:relative;height:136px;margin:14px 0 4px;border-radius:16px;overflow:hidden;background:#ddd url(assets/day-21-announcement.jpg) center 80%/cover;display:flex;align-items:flex-end;justify-content:flex-end;padding:16px;cursor:pointer}
 .announcement::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.2)}
 .announcement span{position:relative;display:flex;align-items:center;gap:2px;color:#fff;font:600 22px/1 "IBM Plex Sans Thai",sans-serif;text-shadow:0 1px 8px rgba(0,0,0,.35)}.announcement span svg{flex:none;margin-right:-4px}
+
+/* announcement full page */
+.annpage{position:fixed;inset:0;z-index:50;background:#fff;overflow-y:auto;-webkit-overflow-scrolling:touch;transform:translateX(100%);visibility:hidden;transition:transform 420ms var(--ease-drawer),visibility 0s 420ms}
+.annpage.open{transform:none;visibility:visible;transition:transform 420ms var(--ease-drawer),visibility 0s}
+.ap-hero{position:relative;height:300px;background:#ccc url(assets/day-21-announcement.jpg) center 80%/cover;display:flex;align-items:flex-end;padding:20px}
+.ap-hero::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.2)}
+.ap-hero h1{position:relative;margin:0;color:#fff;font:600 30px/1.1 "IBM Plex Sans Thai",sans-serif;text-shadow:0 1px 10px rgba(0,0,0,.35)}
+.ap-back{position:absolute;left:16px;top:calc(16px + env(safe-area-inset-top,0px));z-index:1;width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.85);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#18181b;display:grid;place-items:center;cursor:pointer}
+.ap-body{padding:24px 20px calc(48px + env(safe-area-inset-bottom,0px));color:#18181b;max-width:640px;margin:0 auto}
+.ap-lead{font-size:16px;line-height:1.7;margin:0 0 20px}
+.ap-list{list-style:none;counter-reset:a;margin:0;padding:0;display:grid;gap:14px}
+.ap-list li{counter-increment:a;position:relative;padding:16px 16px 16px 56px;background:#f6f6f8;border-radius:14px}
+.ap-list li::before{content:counter(a);position:absolute;left:16px;top:16px;width:28px;height:28px;border-radius:50%;background:#e5232e;color:#fff;font:600 14px/28px "IBM Plex Sans Thai";text-align:center}
+.ap-list b{display:block;font-weight:600;font-size:16px;line-height:1.4;margin-bottom:4px}
+.ap-list span{display:block;font-size:14px;line-height:1.7;color:#5f6168}.ap-list em{font-style:normal;font-weight:500;color:#18181b}
+.ap-end{margin:24px 0 0;font-size:15px;font-weight:500;text-align:center}
+@media (prefers-reduced-motion:reduce){.annpage,.annpage.open{transition:visibility 0s}}
 </style>
 </head>
 <body>
@@ -397,6 +414,18 @@ body.locked{position:fixed;left:0;right:0;overflow:hidden}
   </div>
 
 <main id="plan"></main>
+<section id="annpage" class="annpage" aria-hidden="true" aria-labelledby="ann-h">
+ <div class="ap-hero"><button class="ap-back" data-ann="close" aria-label="กลับ"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button><h1 id="ann-h">ประกาศสำคัญ</h1></div>
+ <div class="ap-body">
+  <p class="ap-lead">แก๊งงง อ่านแป๊บนึงนะ 3 ข้อสั้นๆ ทริปนี้จะได้สนุกแบบไม่มีใครหลง 🫶</p>
+  <ol class="ap-list">
+   <li><b>เย็นทุกวัน เจอกันที่บ้าน 🏠</b><span>เที่ยวแยกกันได้เต็มที่ แต่ตกเย็นต้องกลับมารวมพลกันให้ครบ เช็กเวลานัดในตารางของแต่ละวันได้เลย</span></li>
+   <li><b>สาย iPhone แชร์ตำแหน่งกันหน่อย 📍</b><span>เปิด <em>Find My → แชร์ตำแหน่งของฉัน</em> ให้เพื่อนในทริป ปลอดภัยกว่า แถมหากันเจอง่าย อยากไปสมทบกลุ่มไหนก็ตามไปได้ทันที</span></li>
+   <li><b>เป็นหูเป็นตาให้กันและกัน 👀</b><span>ก่อนแยกย้ายและตอนกลับถึงบ้าน นับหัวกันทุกครั้ง ใครหายไปไหน ทักในกลุ่มเลย ไม่ต้องเกรงใจ ทั้งหมด 13 คน ต้องกลับไทยครบ 13!</span></li>
+  </ol>
+  <p class="ap-end">รักนะ เที่ยวให้สุด กลับบ้านให้ครบ ✈️🇻🇳</p>
+ </div>
+</section>
 <div id="user-menu" popover="auto" role="menu" aria-label="เมนูผู้ใช้"><button role="menuitem" id="switch-user"></button><button role="menuitem" id="reset-user">ล้างข้อมูล</button></div>
 <dialog id="wm" aria-label="ยินดีต้อนรับ"><div class="scrim"></div><div class="card" id="wmc"><div class="in" id="wmi"></div></div></dialog>
 <dialog id="sheet" aria-labelledby="sheet-h"><div class="scrim" data-close></div>
@@ -570,7 +599,7 @@ function closeSheet(){if(!SH.open||SH.classList.contains("closing"))return;SH.cl
 SH.addEventListener("cancel",e=>{e.preventDefault();closeSheet()});
 function renderPlan(){
  const el=document.getElementById("plan");
- el.innerHTML=(D().date==="2026-10-21"?`<div class="announcement" role="note"><span>ประกาศสำคัญ<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span></div>`:"")+D().blocks.map(b=>`<section class="block"><h2>${/^(เช้า|กลางวัน|บ่าย|เย็น|ค่ำ)/.test(b.k)?"ช่วง":""}${b.k}</h2><div class="list">
+ el.innerHTML=(D().date==="2026-10-21"?`<div class="announcement" role="button" tabindex="0" data-ann="open"><span>ประกาศสำคัญ<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span></div>`:"")+D().blocks.map(b=>`<section class="block"><h2>${/^(เช้า|กลางวัน|บ่าย|เย็น|ค่ำ)/.test(b.k)?"ช่วง":""}${b.k}</h2><div class="list">
   ${b.split?`<div class="item grp-row"><div class="t">13:00–<br>16:00</div><div class="acc">${groups.map(g=>{const mem=PPL.filter(p=>p[2]===g.id),mine=ME&&mem.some(p=>p[0]===ME),open=openG===g.id;
    return `<div class="ag${open?" open":""}"><button class="ah" data-g="${g.id}" aria-expanded="${open}"><span class="stk">${mem.map(p=>`<i style="background:${p[1]}">${ini(p[0])}</i>`).join("")}</span><span class="an"><b>${g.name}${mine?' <em>คุณ</em>':""}</b><small>${mem.map(p=>p[0]).join(" · ")}</small></span><span class="chev">›</span></button>
    <div class="ab"><div class="abi">${g.list?`<ol>${g.list.map(x=>`<li>${x}</li>`).join("")}</ol>`:`<p>${g.p}</p>`}${g.cta?`<a class="btn acta" target="_blank" rel="noopener" href="${g.cta[1]}">${g.cta[0]} ↗</a>`:""}</div></div></div>`}).join("")}</div></div>`:""}
@@ -784,6 +813,14 @@ avatarButton.addEventListener("click",openUserMenu);document.getElementById("who
 window.addEventListener("resize",()=>{if(WM.open&&!wmBusy&&!WM.classList.contains("closing"))sizeJourney();if(userMenu.matches(":popover-open"))userMenu.hidePopover()});
 
 renderAll(); setInterval(tick,30000);
+/* announcement page open/close */
+(()=>{const P=document.getElementById("annpage");
+ const open=()=>{lockScroll();P.scrollTop=0;P.classList.add("open");P.setAttribute("aria-hidden","false");history.pushState({ann:1},"")};
+ const close=(fromPop)=>{if(!P.classList.contains("open"))return;P.classList.remove("open");P.setAttribute("aria-hidden","true");unlockScroll();if(!fromPop&&history.state&&history.state.ann)history.back()};
+ document.addEventListener("click",e=>{const a=e.target.closest("[data-ann]");if(!a)return;a.dataset.ann==="open"?open():close()});
+ document.addEventListener("keydown",e=>{if(e.key==="Escape")close();if((e.key==="Enter"||e.key===" ")&&e.target.matches(".announcement")){e.preventDefault();open()}});
+ addEventListener("popstate",()=>close(true));})();
+
 /* reveal end-of-day footer when it scrolls into view */
 (()=>{const e=document.getElementById("eod");if(!e)return;new IntersectionObserver(es=>es.forEach(x=>e.classList.toggle("in",x.isIntersecting)),{threshold:.6}).observe(e)})();
 
