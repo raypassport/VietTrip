@@ -348,6 +348,15 @@ body.locked{position:fixed;left:0;right:0;overflow:hidden}
 #wm .pp .av{transition:transform 120ms var(--ease-out)}
 #wm .pp .av::after{inset:-5px;border-width:2px}
 @media(prefers-reduced-motion:reduce){#wm .pp:active .av{transform:none}}
+/* Reset loop: instant selection, stable labels and correctly anchored menus. */
+#wm .pp,#wm .ppl.has .pp,#wm .ppl.has .pp.on{opacity:1;font-weight:500;transition:none}
+#wm .pp .av,#wm .pp.on .av,#wm .pp:active .av{transform:none;transition:none}
+#wm h3,#wm p,#wm .go,#wm .pp,#wm .hi,#wm .nm,.avatar-flight,#user-menu button{font-family:var(--f-body)}
+#wm h3:focus,#wm .nm:focus{outline:none}
+#wm .scrim{-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+#user-menu{transform-origin:22px 0}
+#user-menu button:focus:not(:focus-visible){outline:none}
+#wm h3.nm{font-size:clamp(22px,6vw,28px);line-height:1.4;font-weight:600;margin:0;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -587,8 +596,8 @@ document.addEventListener("click",e=>{
 
 /* ---- people + onboarding ---- */
 const PPL=[["เรจิ","#2fbfa5","lm"],["บีน","#2fbfa5","lm"],["คิน","#2fbfa5","lm"],["โอลี่","#9b5fd6","bt"],["ปราง","#9b5fd6","bt"],["แพรว","#9b5fd6","bt"],["ติว","#9b5fd6","bt"],["แบม","#5aa83a","sh"],["เต้","#4a6fdc","ch"],["โอ","#4a6fdc","ch"],["ฟร้อง","#8b6a55","fr"],["กาย","#8b6a55","fr"]];
-const LINE={lm:"สายแลนด์มาร์ก · บ่ายวันแรกเดินเก็บ 5 ที่ 🏛️",bt:"กลุ่มทำสวย · บ่ายวันแรกต่อขนตา 💅",sh:"สายช้อป · บ่ายวันแรกตะลุยช้อปปิ้ง 🛍️",ch:"กลุ่มนอนพักและนวด · บ่ายวันแรกพักผ่อน นวดสบายๆ 💆",fr:"กลุ่มฟร้อง + กาย · บ่ายวันแรกแพลนอิสระ 🗺️"};
-const DAYMSG=[null,["☕️","วันนี้สายคาเฟ่ทั้งวัน<br>ปิดท้ายด้วยสตรีทฟู้ดกับบาร์ 🍸"],["🛕","ไหว้วัดแขก ช้อปปิ้ง<br>แล้วไปต่อที่บุ่ยเหวียน 🌙"],["🧳","วันสุดท้ายแล้ว ซื้อของฝาก กินหอย<br>แล้วบินกลับ 21:30 ✈️"]];
+const LINE={lm:"สายแลนด์มาร์ก · บ่ายวันแรกเดินเก็บ 5 ที่",bt:"กลุ่มทำสวย · บ่ายวันแรกต่อขนตา",sh:"สายช้อป · บ่ายวันแรกตะลุยช้อปปิ้ง",ch:"กลุ่มนอนพักและนวด · บ่ายวันแรกพักผ่อน นวดสบายๆ",fr:"กลุ่มฟร้อง + กาย · บ่ายวันแรกแพลนอิสระ"};
+const DAYMSG=[null,["","วันนี้สายคาเฟ่ทั้งวัน<br>ปิดท้ายด้วยสตรีทฟู้ดกับบาร์"],["","ไหว้วัดแขก ช้อปปิ้ง<br>แล้วไปต่อที่บุ่ยเหวียน"],["","วันสุดท้ายแล้ว ซื้อของฝาก กินหอย<br>แล้วบินกลับ 21:30"]];
 const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const ini=n=>/^[เแโใไ]/.test(n)?n[1]:n[0];
 let ME=LS.get("hcmc-me",null);
@@ -601,8 +610,8 @@ function wmHTML(st){
  if(st==="reset")return `<h3>ล้างข้อมูลทั้งหมด?</h3><p id="reset-warning">ความคืบหน้าทั้งหมดและชื่อที่เลือกไว้ในเครื่องนี้จะถูกลบ และจะกลับไปเริ่มต้นใหม่<br>การล้างข้อมูลนี้ไม่สามารถย้อนกลับได้</p><div class="reset-actions"><button class="go cancel-reset" data-wm="close" autofocus>ยกเลิก</button><button class="go" data-wm="reset-confirm">ล้างข้อมูล</button></div>`;
  if(st==="intro")return `${WM_ART}<h3>Welcome to Vietnam Trip</h3><p>21–24 ต.ค. · แก๊ง 13 คน<br>ตาราง แผนที่ ร้านเด็ด อยู่ที่นี่หมดแล้ว</p><button class="go" data-wm="next">เริ่มเลย</button>`;
  if(st==="pick")return `${x}<h3>คุณคือใครในทริปนี้</h3><p>เลือกชื่อตัวเอง</p><div class="ppl${pick?" has":""}">${PPL.map(p=>`<button class="pp${pick===p[0]?" on":""}" data-p="${p[0]}" aria-pressed="${pick===p[0]}"><span class="av" style="background:${p[1]}">${ini(p[0])}</span>${p[0]}</button>`).join("")}</div><button class="go" data-wm="me" ${pick?"":"disabled"}>${pick?"ฉันคือ "+pick:"เลือกชื่อก่อน"}</button>`;
- if(st==="hello"){const p=PPL.find(x=>x[0]===ME);return `<div class="big" style="background:${p[1]}">${ini(p[0])}</div><div><div class="hi">ยินดีต้อนรับ</div><div class="nm">${p[0]}</div></div><p>${LINE[p[2]]}</p><button class="go" data-wm="close">Enjoy your trip ✈️</button>`}
- if(typeof st==="number"){const m=DAYMSG[st];return `<div class="emo">${m[0]}</div><h3>เข้าสู่วันที่ ${st+1} แล้ว${ME?" "+ME:""}!</h3><p>${m[1]}</p><button class="go" data-wm="close">ไปกันเลย</button>`}
+ if(st==="hello"){const p=PPL.find(x=>x[0]===ME);return `<div class="big" style="background:${p[1]}">${ini(p[0])}</div><h3 class="nm">ยินดีต้อนรับ ${p[0]}</h3><p>${LINE[p[2]]}</p><button class="go" data-wm="close">Enjoy your trip</button>`}
+ if(typeof st==="number"){const m=DAYMSG[st];return `<h3>เข้าสู่วันที่ ${st+1} แล้ว${ME?" "+ME:""}!</h3><p>${m[1]}</p><button class="go" data-wm="close">ไปกันเลย</button>`}
 }
 const motionOK=()=>!matchMedia("(prefers-reduced-motion: reduce)").matches;
 let wmBusy=false,wmDismissPending=false;
@@ -641,26 +650,36 @@ async function wmShow(st){
  if(wmBusy||WM.classList.contains("closing"))return;
  wmBusy=true;WMI.inert=true;
  const journey=["intro","pick","hello"].includes(st);
+ const replaceShell=WM.open&&journey!==WM.classList.contains("journey");
+ let shellExit=null;
  const source=st==="hello"?WMI.querySelector(".pp.on .av"):null;
  const from=source?.getBoundingClientRect(),sourceFont=source?parseFloat(getComputedStyle(source).fontSize):0;
  try{
   if(WM.open){
+   if(replaceShell){shellExit=WMC.animate([{opacity:1},{opacity:0}],{duration:100,easing:wmEase(),fill:"forwards"});await shellExit.finished}
+   else {
    // Keep the selected avatar visible while the rest of the picker exits.
    const groups=source?[...WMI.children].filter(el=>!el.matches(".ppl")): [WMI];
    if(source)WMI.querySelectorAll(".pp").forEach(p=>{if(!p.classList.contains("on"))groups.push(p)});
    await Promise.all(groups.map(el=>settle(el.animate([{opacity:1},{opacity:0}],{duration:100,easing:wmEase(),fill:"forwards"}))));
+   }
   }
   WM.setAttribute("aria-label",st==="reset"?"ยืนยันการล้างข้อมูล":st==="pick"?"เลือกผู้ร่วมทริป":"ยินดีต้อนรับ");
   if(st==="reset")WM.setAttribute("aria-describedby","reset-warning");else WM.removeAttribute("aria-describedby");
+  if(st==="intro"&&pendingTripReset){pendingTripReset=false;applyTripReset()}
   wmStep=st;WMI.innerHTML=wmHTML(st);WMI.scrollTop=0;WMC.scrollTop=0;
   WM.classList.toggle("journey",journey);WMC.style.height="";
   if(!WM.open){WM.classList.remove("closing","open");lockScroll();WM.showModal();sizeJourney();WMC.getBoundingClientRect();WM.classList.add("open")}
   else sizeJourney();
+  const shellEnter=replaceShell?WMC.animate([{opacity:0},{opacity:1}],{duration:180,easing:wmEase(),fill:"both"}):null;
+  if(shellExit){shellExit.cancel();shellExit=null}
   // Replacing the source and creating its moving counterpart happen in one frame.
   const landing=from?avatarHandoff(from,WMI.querySelector(".big"),sourceFont):Promise.resolve();
-  await Promise.all([enterWM(st),landing]);
-  WMI.inert=false;WMI.querySelector(st==="pick"?".pp.on,.pp":".go")?.focus({preventScroll:true});
- }finally{WMI.inert=false;wmBusy=false;if(wmDismissPending){wmDismissPending=false;wmClose()}}
+  WMI.inert=false;
+  const heading=WMI.querySelector("h3,.nm");if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true})}
+  WMI.inert=true;
+  await Promise.all([replaceShell?settle(shellEnter):enterWM(st),landing]);
+ }finally{if(shellExit)shellExit.cancel();WMI.inert=false;wmBusy=false;if(wmDismissPending){wmDismissPending=false;wmClose()}}
 }
 function wmRefresh(){
  WMI.querySelectorAll(".pp").forEach(p=>{const on=p.dataset.p===pick;p.classList.toggle("on",on);p.setAttribute("aria-pressed",on)});
@@ -696,19 +715,22 @@ function maybeNewDay(){const t=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/H
 function openPicker(){pick=ME;wmClosable=true;wmShow("pick")}
 const userMenu=document.getElementById("user-menu"),avatarButton=document.getElementById("me");
 function openUserMenu(){
+ userMenu.getAnimations().forEach(a=>a.cancel());
  if(userMenu.matches(":popover-open")){userMenu.hidePopover();return}
  document.getElementById("switch-user").textContent=ME?"ฉันไม่ใช่ "+ME:"เลือกว่าคุณเป็นใคร";
  const r=avatarButton.getBoundingClientRect();userMenu.style.left=Math.max(16,Math.min(r.left,innerWidth-246))+"px";userMenu.style.top=(r.bottom+8)+"px";
  userMenu.showPopover();document.getElementById("switch-user").focus({preventScroll:true});
- if(motionOK())userMenu.animate([{opacity:0,transform:"translateY(-5px) scale(.97)"},{opacity:1,transform:"none"}],{duration:180,easing:"ease-out"});
+ if(motionOK())userMenu.animate([{opacity:0,transform:"translateY(-5px) scale(.97)"},{opacity:1,transform:"none"}],{duration:160,easing:wmEase()});
 }
 userMenu.addEventListener("toggle",()=>{const open=userMenu.matches(":popover-open");avatarButton.setAttribute("aria-expanded",open);if(!open&&!WM.open)avatarButton.focus({preventScroll:true})});
 userMenu.addEventListener("keydown",e=>{const buttons=[...userMenu.querySelectorAll("button")],i=buttons.indexOf(document.activeElement);if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();buttons[(i+(e.key==="ArrowDown"?1:-1)+buttons.length)%buttons.length].focus()}if(e.key==="Home"||e.key==="End"){e.preventDefault();buttons[e.key==="Home"?0:buttons.length-1].focus()}});
 document.getElementById("switch-user").addEventListener("click",()=>{userMenu.hidePopover();pick=null;wmClosable=true;wmShow("pick")});
 document.getElementById("reset-user").addEventListener("click",()=>{userMenu.hidePopover();wmClosable=true;wmShow("reset")});
-function resetTrip(){
+let pendingTripReset=false;
+function resetTrip(){if(wmBusy)return;pendingTripReset=true;wmClosable=false;wmShow("intro")}
+function applyTripReset(){
  [KEY,DKEY,"hcmc-me","hcmc-onb","hcmc-days"].forEach(k=>{try{localStorage.removeItem(k)}catch(_){}});
- done={};cur=0;ME=null;pick=null;filt=null;openG=null;renderMe();renderAll();wmClosable=false;wmShow("intro");
+ done={};cur=0;ME=null;pick=null;filt=null;openG=null;renderMe();renderAll();
 }
 avatarButton.addEventListener("click",openUserMenu);document.getElementById("who").addEventListener("click",openUserMenu);
 window.addEventListener("resize",()=>{if(WM.open&&!wmBusy&&!WM.classList.contains("closing"))sizeJourney();if(userMenu.matches(":popover-open"))userMenu.hidePopover()});
