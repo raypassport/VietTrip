@@ -359,6 +359,9 @@ body.locked{position:fixed;left:0;right:0;overflow:hidden}
 #wm h3.nm{font-size:clamp(22px,6vw,28px);line-height:1.4;font-weight:600;margin:0;white-space:nowrap}
 #wm .card:focus{outline:none}
 :root:not([data-input="keyboard"]) :is(#wm button,#user-menu button,#me):focus{outline:none}
+#wm .scrim{z-index:0}
+#wm .card{z-index:2}
+.wm-morph{position:fixed;z-index:1;background:#fff;pointer-events:none;border-radius:24px}
 </style>
 </head>
 <body>
@@ -420,7 +423,7 @@ const MARI_T="https://vt.tiktok.com/ZSgMmRDhD/", BV="https://maps.app.goo.gl/jkg
 
 const groups=[
  {id:"lm",c:"--g1",s:"--g1s",cta:["เปิดใน Google Maps","https://www.google.com/maps/dir/?api=1&origin=Pho+Viet+Nam+14+Pham+Hong+Thai+Ho+Chi+Minh&destination=Ho+Chi+Minh+City+Book+Street&waypoints=War+Remnants+Museum+Ho+Chi+Minh%7CIndependence+Palace+Ho+Chi+Minh%7CNotre+Dame+Cathedral+of+Saigon%7CSaigon+Central+Post+Office&travelmode=walking"],name:"กลุ่มเก็บแลนด์มาร์ก",who:"เรจิ · บีน · คิน",list:["War Museum","Independence Palace","Notre-Dame + Post Office","Book Street"]},
- {id:"bt",c:"--g2",s:"--g2s",name:"กลุ่มทำสวย",who:"โอลี่ · ปราง · แพรว · ติว",p:"ต่อขนตา<br>คาดว่าเสร็จประมาณ 16:00"},
+ {id:"bt",c:"--g2",s:"--g2s",name:"กลุ่มทำสวย",who:"โอลี่ · ปราง · แพรว · ดิว",p:"ต่อขนตา<br>คาดว่าเสร็จประมาณ 16:00"},
  {id:"sh",c:"--g3",s:"--g3s",name:"กลุ่มช็อปปิ้งแม่แบม",who:"แบม",p:"Shopping Route ส่วนตัว<br>กลับบ้านตามเวลานัด"},
  {id:"ch",c:"--g4",s:"--g4s",name:"กลุ่มนอนพักและนวด",who:"ชาริเต้ (เต้) · โอ",p:"ชาริเต้พักที่บ้านก่อน<br>จากนั้นเที่ยวตามแพลนตัวเอง"},
  {id:"fr",c:"--g5",s:"--g5s",name:"กลุ่มฟร้อง + กาย",who:"ฟร้อง · กาย",p:"แพลนอิสระ<br>ยังไม่ยืนยันรายละเอียด"}
@@ -597,12 +600,13 @@ document.addEventListener("click",e=>{
 (()=>{const t=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Ho_Chi_Minh"}).format(new Date());const i=DAYS.findIndex(d=>d.date===t);if(i>=0)cur=i})();
 
 /* ---- people + onboarding ---- */
-const PPL=[["เรจิ","#2fbfa5","lm"],["บีน","#2fbfa5","lm"],["คิน","#2fbfa5","lm"],["โอลี่","#9b5fd6","bt"],["ปราง","#9b5fd6","bt"],["แพรว","#9b5fd6","bt"],["ติว","#9b5fd6","bt"],["แบม","#5aa83a","sh"],["เต้","#4a6fdc","ch"],["โอ","#4a6fdc","ch"],["ฟร้อง","#8b6a55","fr"],["กาย","#8b6a55","fr"]];
+const PPL=[["เรจิ","#2fbfa5","lm"],["บีน","#2fbfa5","lm"],["คิน","#2fbfa5","lm"],["โอลี่","#9b5fd6","bt"],["ปราง","#9b5fd6","bt"],["แพรว","#9b5fd6","bt"],["ดิว","#9b5fd6","bt"],["แบม","#5aa83a","sh"],["เต้","#4a6fdc","ch"],["โอ","#4a6fdc","ch"],["ฟร้อง","#8b6a55","fr"],["กาย","#8b6a55","fr"]];
 const LINE={lm:"สายแลนด์มาร์ก · บ่ายวันแรกเดินเก็บ 5 ที่",bt:"กลุ่มทำสวย · บ่ายวันแรกต่อขนตา",sh:"สายช้อป · บ่ายวันแรกตะลุยช้อปปิ้ง",ch:"กลุ่มนอนพักและนวด · บ่ายวันแรกพักผ่อน นวดสบายๆ",fr:"กลุ่มฟร้อง + กาย · บ่ายวันแรกแพลนอิสระ"};
 const DAYMSG=[null,["","วันนี้สายคาเฟ่ทั้งวัน<br>ปิดท้ายด้วยสตรีทฟู้ดกับบาร์"],["","ไหว้วัดแขก ช้อปปิ้ง<br>แล้วไปต่อที่บุ่ยเหวียน"],["","วันสุดท้ายแล้ว ซื้อของฝาก กินหอย<br>แล้วบินกลับ 21:30"]];
 const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const ini=n=>/^[เแโใไ]/.test(n)?n[1]:n[0];
 let ME=LS.get("hcmc-me",null);
+if(ME==="ติว"){ME="ดิว";LS.set("hcmc-me",ME)}
 function renderMe(){const p=PPL.find(x=>x[0]===ME),b=document.getElementById("me");
  b.textContent=p?ini(p[0]):"?";b.style.background=p?p[1]:"#d9dadf";document.getElementById("myname").textContent=p?p[0]:"เลือกว่าคุณเป็นใคร";}
 const WM=document.getElementById("wm"),WMC=document.getElementById("wmc"),WMI=document.getElementById("wmi");
@@ -630,11 +634,12 @@ function enterWM(st){
 }
 function sizeJourney(){
  if(!WM.classList.contains("journey"))return;
+ if(wmStep==="hello"){WMC.style.height="";return}
  const probe=document.createElement("div");probe.className="in";
  Object.assign(probe.style,{position:"absolute",top:"0",left:"0",width:"100%",minHeight:"0",visibility:"hidden",pointerEvents:"none"});
  probe.setAttribute("aria-hidden","true");probe.inert=true;WMC.append(probe);
  let height=0;
- for(const step of ["intro","pick","hello"]){if(step==="hello"&&!ME)continue;probe.innerHTML=wmHTML(step);height=Math.max(height,probe.offsetHeight)}
+ for(const step of ["intro","pick"]){if(step==="hello"&&!ME)continue;probe.innerHTML=wmHTML(step);height=Math.max(height,probe.offsetHeight)}
  probe.remove();WMC.style.height=Math.ceil(height)+"px";
 }
 // One visible avatar throughout each handoff; only composite properties animate.
@@ -653,12 +658,26 @@ function avatarHandoff(from,dest,sourceFont,source){
  const cancel=()=>animation.cancel();window.addEventListener("resize",cancel,{once:true});
  return animation.finished.catch(()=>{}).finally(()=>{dest.style.visibility=prior;if(source)source.style.visibility=sourcePrior;fly.remove();textAnimation.cancel();window.removeEventListener("resize",cancel)});
 }
+function hugSuccessShell(previous){
+ if(!previous||!motionOK())return Promise.resolve();
+ const next=WMC.getBoundingClientRect();
+ if(Math.abs(previous.height-next.height)<1)return Promise.resolve();
+ // Clip a separate background; the avatar and text keep their actual proportions.
+ const shell=document.createElement("div");shell.className="wm-morph";shell.setAttribute("aria-hidden","true");
+ Object.assign(shell.style,{left:previous.left+"px",top:previous.top+"px",width:previous.width+"px",height:previous.height+"px"});
+ WM.append(shell);const background=WMC.style.background;WMC.style.background="transparent";
+ const top=Math.max(0,next.top-previous.top),bottom=Math.max(0,previous.bottom-next.bottom);
+ const animation=shell.animate([{clipPath:"inset(0px 0px 0px 0px round 24px)"},{clipPath:`inset(${top}px 0px ${bottom}px 0px round 24px)`}],{duration:280,easing:getComputedStyle(document.documentElement).getPropertyValue("--ease-in-out").trim(),fill:"forwards"});
+ const cancel=()=>animation.cancel();window.addEventListener("resize",cancel,{once:true});
+ return animation.finished.catch(()=>{}).finally(()=>{WMC.style.background=background;shell.remove();window.removeEventListener("resize",cancel)});
+}
 async function wmShow(st){
  if(wmBusy||WM.classList.contains("closing"))return;
  wmBusy=true;WMI.inert=true;
  const journey=["intro","pick","hello"].includes(st);
  const replaceShell=WM.open&&journey!==WM.classList.contains("journey");
  let shellExit=null;
+ const previousShell=st==="hello"&&WM.open?WMC.getBoundingClientRect():null;
  const source=st==="hello"?WMI.querySelector(".pp.on .av"):null;
  const from=source?.getBoundingClientRect(),sourceFont=source?parseFloat(getComputedStyle(source).fontSize):0;
  try{
@@ -678,12 +697,13 @@ async function wmShow(st){
   WM.classList.toggle("journey",journey);WMC.style.height="";
   if(!WM.open){WM.classList.remove("closing","open");lockScroll();WM.showModal();WMC.focus({preventScroll:true});sizeJourney();WMC.getBoundingClientRect();WM.classList.add("open")}
   else sizeJourney();
+  const hug=hugSuccessShell(previousShell);
   const shellEnter=replaceShell?WMC.animate([{opacity:0},{opacity:1}],{duration:180,easing:wmEase(),fill:"both"}):null;
   if(shellExit){shellExit.cancel();shellExit=null}
   // Replacing the source and creating its moving counterpart happen in one frame.
   const landing=from?avatarHandoff(from,WMI.querySelector(".big"),sourceFont):Promise.resolve();
   WMC.focus({preventScroll:true});
-  await Promise.all([replaceShell?settle(shellEnter):enterWM(st),landing]);
+  await Promise.all([replaceShell?settle(shellEnter):enterWM(st),landing,hug]);
   WMI.inert=false;
   const heading=WMI.querySelector("h3,.nm");if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true})}
  }finally{if(shellExit)shellExit.cancel();WMI.inert=false;wmBusy=false;if(wmDismissPending){wmDismissPending=false;wmClose()}}
