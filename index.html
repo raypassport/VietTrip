@@ -93,6 +93,10 @@ section.block h2 small{display:block;font:500 11px var(--f-mono);color:var(--mut
 .item.done .what strong{color:var(--done)}
 .item.done .what strong b{background-size:100% 1.5px;transition-delay:90ms}
 .item .th,.item .links{transition:opacity 240ms ease}
+/* whole-card press: sinks on pointer-down, springs back on release */
+.item .card{transform-origin:center;transition:transform 320ms var(--ease-out),box-shadow 320ms var(--ease-out)}
+.item .card:has(.chk:active){transform:scale(.97);box-shadow:0 1px 2px rgba(13,20,34,.06);transition-duration:140ms}
+@media (prefers-reduced-motion:reduce){.item .card:has(.chk:active){transform:none}}
 .item.done .th,.item.done .links{opacity:.55}
 .item.done .th{filter:grayscale(1)}.item .th{transition:filter 300ms ease}
 @media (prefers-reduced-motion:reduce){.chk,.chk .fill,.chk svg path,.item .what strong b,.progress i span{transition-duration:0ms!important;transition-delay:0ms!important}.chk .fill{transition:opacity 150ms ease!important}}
