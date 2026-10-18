@@ -6,11 +6,15 @@ on:
     paths: [index.html, scripts/fetch_thumbs.py]
   schedule:
     - cron: "0 20 * * *"
+concurrency:
+  group: thumbs
+  cancel-in-progress: false
 permissions:
   contents: write
 jobs:
   thumbs:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - run: pip install pillow

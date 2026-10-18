@@ -300,7 +300,7 @@ function renderPlan(){
   ${b.items.map(i=>`<div class="item ${done[i.id]?"done":""}" id="it-${i.id}" data-s="${i.s??""}" data-e="${i.e??""}">
     <button class="chk" data-id="${i.id}" aria-label="ทำแล้ว: ${i.w}">${done[i.id]?"✓":""}</button>
     <div class="t">${i.t}</div>
-    <div class="what">${i.tt?`<img class="thumb" alt="" loading="lazy" data-tt="${i.tt}" hidden>`:""}<div><strong>${i.w}</strong>${i.n?`<span>${i.n}</span>`:""}</div></div>
+    <div class="what">${(i.tt||i.m)?`<img class="thumb" alt="" loading="lazy" data-tt="${i.tt||i.m}" hidden>`:""}<div><strong>${i.w}</strong>${i.n?`<span>${i.n}</span>`:""}</div></div>
     <div class="links">${L(i.m,i.tt,i.na)}</div></div>`).join("")}
  </div></section>`).join("");
  tick(); thumbs();
@@ -309,7 +309,7 @@ let TMAP=null;
 const TMP=fetch("thumbs/map.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{}).catch(()=>({})).then(m=>TMAP=m);
 function thumbs(){
  TMP.then(m=>document.querySelectorAll("img.thumb[data-tt]").forEach(img=>{
-  const f=m[img.dataset.tt]; if(!f){img.remove();return}
+  const f=m[img.dataset.tt]; if(!f){const w=img.closest(".pimg");img.remove();if(w)w.remove();return}
   img.onerror=()=>img.remove(); img.src=f; img.hidden=false;
  }));
 }
@@ -318,7 +318,7 @@ function renderPlaces(){
  const tm=r=>{if(r[5])return r[5];for(let j=k;j<its.length;j++){const i=its[j];if((r[4]&&i.tt===r[4])||(r[3]&&i.m===r[3])){k=j+1;return i.t}}return ""};
  document.getElementById("places").innerHTML=D().places.map(s=>`<section class="block"><h2>${s.k}</h2><div class="pgrid">
   ${s.rows.map(r=>`<div class="pcard"><div class="pbody">${(t=>t?`<b class="pn">${t}</b>`:"")(tm(r))}<strong>${r[1]}</strong>${r[2]?`<span>${r[2]}</span>`:""}</div>
-   ${r[4]?`<div class="pimg"><img class="thumb" alt="" loading="lazy" data-tt="${r[4]}" hidden></div>`:""}
+   ${(r[4]||r[3])?`<div class="pimg"><img class="thumb" alt="" loading="lazy" data-tt="${r[4]||r[3]}" hidden></div>`:""}
    <div class="pbtn">${r[3]?`<a class="btn" target="_blank" rel="noopener" href="${r[3]}">MAP</a>`:""}${r[4]?`<a class="btn tt" target="_blank" rel="noopener" href="${r[4]}">TIKTOK</a>`:""}</div></div>`).join("")}
  </div></section>`).join("");
  thumbs();

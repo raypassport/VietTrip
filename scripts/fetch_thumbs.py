@@ -4,7 +4,7 @@ import time
 def get(u):
     for n in range(3):
         try:
-            with urllib.request.urlopen(urllib.request.Request(u,headers=UA),timeout=20) as r: return r.geturl(), r.read()
+            with urllib.request.urlopen(urllib.request.Request(u,headers=UA),timeout=12) as r: return r.geturl(), r.read()
         except Exception:
             if n==2: raise
             time.sleep(3)
@@ -18,6 +18,16 @@ def thumb_of(full):
     return m.group(1).replace("\\u002F","/").replace("&amp;","&") if m else None
 html=open("index.html",encoding="utf-8").read()
 urls=sorted(set(re.findall(r'"(https://(?:vt|vm|www)\.tiktok\.com/[^"]+)"',html)))
+maps=sorted(set(re.findall(r'"(https://maps\.app\.goo\.gl/[^"]+)"',html)))
+for q in set(re.findall(r'M\("([^"]+)"\)',html)): maps.append("https://www.google.com/maps/search/?api=1&query="+q)
+def map_thumb(u):
+    _,h=get(u); h=h.decode("utf-8","ignore")
+    m=re.search(r'(https://lh[0-9]\.googleusercontent\.com/(?:p|gps-cs-s|geougc-cs)/[A-Za-z0-9_\-]+)',h) or re.search(r'<meta[^>]+(?:property|itemprop)="(?:og:)?image"[^>]+content="([^"]+)"',h)
+    if not m: return None
+    t=m.group(1).replace("&amp;","&")
+    if "googleusercontent" in t: t=re.sub(r"=[^/]*$","",t)+"=w400-h300-k-no"
+    if "staticmap" in t or "maps/api" in t: return None
+    return t
 os.makedirs("thumbs",exist_ok=True)
 old={} if os.environ.get("FORCE") else json.load(open("thumbs/map.json")) if os.path.exists("thumbs/map.json") else {}
 out={}; log=[]
@@ -32,6 +42,18 @@ for u in urls:
         fn="thumbs/"+hashlib.md5(u.encode()).hexdigest()[:10]+".jpg"
         from PIL import Image
         im=Image.open(io.BytesIO(img)).convert("RGB"); im.thumbnail((240,240)); im.save(fn,"JPEG",quality=72,optimize=True); out[u]=fn; log.append(f"OK   {u} -> {full}")
+    except Exception as e:
+        if u in old and os.path.exists(old[u]): out[u]=old[u]
+        log.append(f"FAIL {u}: {e}")
+for u in maps:
+    try:
+        t=map_thumb(u)
+        if not t: raise Exception("no photo")
+        _,img=get(t)
+        from PIL import Image
+        im=Image.open(io.BytesIO(img)).convert("RGB"); im.thumbnail((240,240))
+        fn="thumbs/m"+hashlib.md5(u.encode()).hexdigest()[:10]+".jpg"; im.save(fn,"JPEG",quality=72,optimize=True)
+        out[u]=fn; log.append(f"OK   {u}")
     except Exception as e:
         if u in old and os.path.exists(old[u]): out[u]=old[u]
         log.append(f"FAIL {u}: {e}")
