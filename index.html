@@ -81,6 +81,8 @@ section.block h2 small{display:block;font:500 11px var(--f-mono);color:var(--mut
 .grp .who{font-size:13px;font-weight:600;border-bottom:1px solid color-mix(in srgb,var(--ink) 15%,transparent);padding-bottom:6px}
 .grp ol,.grp p{margin:0;font-size:13px;color:var(--muted)} .grp ol{padding-left:18px}
 .grp.dim{opacity:.25}
+.grp .cta{display:block;margin-top:auto;text-align:center;color:var(--ink);background:color-mix(in srgb,var(--surface) 70%,transparent);border:1.5px solid;font:600 13px var(--f-body);text-decoration:none;padding:8px;border-radius:9px;white-space:nowrap}
+.grp{grid-template-rows:auto auto 1fr auto}
 .split-head{font-family:var(--f-mono);font-weight:700;font-size:13px;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
 .foot{font-size:12px;color:var(--muted);padding-top:16px;border-top:1px solid var(--line)}
 .route{display:grid;gap:0;counter-reset:s}
@@ -154,7 +156,7 @@ const PLA_M="https://www.google.com/maps/search/?api=1&query=ng%C3%A2m%20CAFE%20
 const MARI_T="https://vt.tiktok.com/ZSgMmRDhD/", BV="https://maps.app.goo.gl/jkgcDc9D9Vvn7vMq5?g_st=ic", BAM="https://maps.app.goo.gl/ACyUdbvT2Wv6WkYF6?g_st=ic", VIN="https://maps.app.goo.gl/kkutkAAVDsfRsdet7?g_st=ic";
 
 const groups=[
- {id:"lm",c:"--g1",s:"--g1s",name:"กลุ่มเก็บแลนด์มาร์ก",who:"เรจิ · มีน · คิน",list:["War Museum","Independence Palace","Notre-Dame + Post Office","Book Street"]},
+ {id:"lm",c:"--g1",s:"--g1s",cta:["เปิดใน Google Maps","https://www.google.com/maps/dir/?api=1&origin=Pho+Viet+Nam+14+Pham+Hong+Thai+Ho+Chi+Minh&destination=Ho+Chi+Minh+City+Book+Street&waypoints=War+Remnants+Museum+Ho+Chi+Minh%7CIndependence+Palace+Ho+Chi+Minh%7CNotre+Dame+Cathedral+of+Saigon%7CSaigon+Central+Post+Office&travelmode=walking"],name:"กลุ่มเก็บแลนด์มาร์ก",who:"เรจิ · มีน · คิน",list:["War Museum","Independence Palace","Notre-Dame + Post Office","Book Street"]},
  {id:"bt",c:"--g2",s:"--g2s",name:"กลุ่มทำสวย",who:"โอลี่ · ปราง · แพรว · ติว",p:"ต่อขนตา<br>คาดว่าเสร็จประมาณ 16:00"},
  {id:"sh",c:"--g3",s:"--g3s",name:"กลุ่มช็อปปิ้งแม่แบม",who:"แบม",p:"Shopping Route ส่วนตัว<br>กลับบ้านตามเวลานัด"},
  {id:"ch",c:"--g4",s:"--g4s",name:"กลุ่มชาริเต้ + โอ",who:"ชาริเต้ (เต้) · โอ",p:"ชาริเต้พักที่บ้านก่อน<br>จากนั้นเที่ยวตามแพลนตัวเอง"},
@@ -271,7 +273,7 @@ function renderPlan(){
  const el=document.getElementById("plan");
  el.innerHTML=D().blocks.map(b=>`<section class="block"><h2>${b.k}<small>${b.en}</small></h2><div class="list">
   ${b.split?`<div class="split-head"><span>13:00–16:00 · แยกกลุ่ม</span><div class="chips">${groups.map(g=>`<button class="chip" data-g="${g.id}" aria-pressed="${filt===g.id}"><i class="dot" style="background:var(${g.c})"></i>${g.name.replace("กลุ่ม","")}</button>`).join("")}</div></div>
-  <div class="groups">${groups.map(g=>`<div class="grp ${filt&&filt!==g.id?"dim":""}" style="background:var(${g.s})"><h3><i class="dot" style="background:var(${g.c})"></i>${g.name}</h3><div class="who">${g.who}</div>${g.list?`<ol>${g.list.map(x=>`<li>${x}</li>`).join("")}</ol>`:`<p>${g.p}</p>`}</div>`).join("")}</div>`:""}
+  <div class="groups">${groups.map(g=>`<div class="grp ${filt&&filt!==g.id?"dim":""}" style="background:var(${g.s})"><h3><i class="dot" style="background:var(${g.c})"></i>${g.name}</h3><div class="who">${g.who}</div>${g.list?`<ol>${g.list.map(x=>`<li>${x}</li>`).join("")}</ol>`:`<p>${g.p}</p>`}${g.cta?`<a class="cta" target="_blank" rel="noopener" href="${g.cta[1]}" style="border-color:var(${g.c})">${g.cta[0]} ↗</a>`:""}</div>`).join("")}</div>`:""}
   ${b.items.map(i=>`<div class="item ${done[i.id]?"done":""}" id="it-${i.id}" data-s="${i.s??""}" data-e="${i.e??""}">
     <button class="chk" data-id="${i.id}" aria-label="ทำแล้ว: ${i.w}">${done[i.id]?"✓":""}</button>
     <div class="t">${i.t}</div>
