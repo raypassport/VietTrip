@@ -77,29 +77,6 @@ def do_map(u):
     except Exception as e:
         if u in old and os.path.exists(old[u]): out[u]=old[u]
         log.append(f"FAIL {u}: {e}")
-# generic activities: one Unsplash photo per icon category (same category -> same photo)
-CATS={"house":"cozy apartment living room","plane":"airplane window wing sky","car":"car ride city street night","luggage":"suitcase travel packing",
- "alarm-clock":"morning sunlight bedroom","phone":"phone call friends","utensils":"pho noodle soup bowl","coffee":"vietnamese coffee phin",
- "martini":"cocktail bar night","shopping-bag":"market stalls shopping","landmark":"saigon city street","map-pin":"Ho Chi Minh City skyline"}
-def do_cat(c):
-    k="cat:"+c
-    if k in old and os.path.exists(old[k]): out[k]=old[k]; return
-    try:
-        t=None
-        for f in (openverse_thumb,wiki_thumb):
-            try: t=f(CATS[c])
-            except Exception: t=None
-            if t: break
-        if not t: raise Exception("no photo")
-        r={}
-        _,img=get(t)
-        from PIL import Image
-        im=Image.open(io.BytesIO(img)).convert("RGB"); im.thumbnail((240,240))
-        fn="thumbs/c-"+c+".jpg"; im.save(fn,"JPEG",quality=72,optimize=True); out[k]=fn
-        log.append(f"OK   stock     {c} ({r.get('user',{}).get('name','')})")
-    except Exception as e: log.append(f"FAIL cat {c}: {e}")
-with ThreadPoolExecutor(8) as ex:
-    list(ex.map(do_cat,CATS))
     list(ex.map(do_tt,urls)); list(ex.map(do_map,maps))
 json.dump(dict(sorted(out.items())),open("thumbs/map.json","w"),indent=1)
 print("\n".join(log)); print(f"{len(out)}/{len(urls)} thumbnails")
