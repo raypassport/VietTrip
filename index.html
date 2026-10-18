@@ -61,7 +61,9 @@ section.block h2 small{display:block;font:500 11px var(--f-mono);color:var(--mut
 .list{display:grid;gap:8px;min-width:0}
 .item{display:grid;grid-template-columns:28px 92px 1fr auto;gap:12px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;transition:opacity .2s}
 .item .t{font-family:var(--f-mono);font-weight:700;font-size:13px;padding-top:2px;font-variant-numeric:tabular-nums}
-.item .what{min-width:0}
+.item .what{min-width:0;display:flex;gap:10px;align-items:flex-start}
+.item .what>div{min-width:0}
+.thumb{width:56px;height:56px;flex:none;border-radius:8px;object-fit:cover;background:var(--line)}
 .item .what strong{display:block;font-weight:600}
 .item .what span{font-size:13px;color:var(--muted)}
 .item .links{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
@@ -278,10 +280,19 @@ function renderPlan(){
   ${b.items.map(i=>`<div class="item ${done[i.id]?"done":""}" id="it-${i.id}" data-s="${i.s??""}" data-e="${i.e??""}">
     <button class="chk" data-id="${i.id}" aria-label="ทำแล้ว: ${i.w}">${done[i.id]?"✓":""}</button>
     <div class="t">${i.t}</div>
-    <div class="what"><strong>${i.w}</strong>${i.n?`<span>${i.n}</span>`:""}</div>
+    <div class="what">${i.tt?`<img class="thumb" alt="" loading="lazy" data-tt="${i.tt}" hidden>`:""}<div><strong>${i.w}</strong>${i.n?`<span>${i.n}</span>`:""}</div></div>
     <div class="links">${L(i.m,i.tt,i.na)}</div></div>`).join("")}
  </div></section>`).join("");
- tick();
+ tick(); thumbs();
+}
+const TH={};
+function thumbs(){
+ document.querySelectorAll("img.thumb[data-tt]").forEach(img=>{
+  const u=img.dataset.tt, set=t=>{if(t){img.src=t;img.hidden=false;img.onerror=()=>img.remove()}else img.remove()};
+  if(u in TH){TH[u].then(set);return}
+  TH[u]=fetch("https://www.tiktok.com/oembed?url="+encodeURIComponent(u)).then(r=>r.ok?r.json():{}).then(j=>j.thumbnail_url||null).catch(()=>null);
+  TH[u].then(set);
+ });
 }
 function renderPlaces(){
  document.getElementById("places").innerHTML=D().places.map(s=>`<section class="block"><h2>${s.k}</h2><div class="route">
