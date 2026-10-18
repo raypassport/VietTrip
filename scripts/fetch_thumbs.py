@@ -1,11 +1,11 @@
-import re, json, hashlib, os, urllib.request, urllib.parse
+import io, re, json, hashlib, os, urllib.request, urllib.parse
 UA={"User-Agent":"Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Version/17.0 Mobile/15E148 Safari/604.1"}
 def get(u):
     with urllib.request.urlopen(urllib.request.Request(u,headers=UA),timeout=20) as r: return r.geturl(), r.read()
 html=open("index.html",encoding="utf-8").read()
 urls=sorted(set(re.findall(r'"(https://(?:vt|vm|www)\.tiktok\.com/[^"]+)"',html)))
 os.makedirs("thumbs",exist_ok=True)
-old=json.load(open("thumbs/map.json")) if os.path.exists("thumbs/map.json") else {}
+old={} if os.environ.get("FORCE") else json.load(open("thumbs/map.json")) if os.path.exists("thumbs/map.json") else {}
 out={}; log=[]
 for u in urls:
     try:
@@ -17,7 +17,8 @@ for u in urls:
         if not t: raise Exception("no thumbnail")
         _,img=get(t)
         fn="thumbs/"+hashlib.md5(u.encode()).hexdigest()[:10]+".jpg"
-        open(fn,"wb").write(img); out[u]=fn; log.append(f"OK   {u} -> {full}")
+        from PIL import Image
+        im=Image.open(io.BytesIO(img)).convert("RGB"); im.thumbnail((240,240)); im.save(fn,"JPEG",quality=72,optimize=True); out[u]=fn; log.append(f"OK   {u} -> {full}")
     except Exception as e:
         if u in old and os.path.exists(old[u]): out[u]=old[u]
         log.append(f"FAIL {u}: {e}")
