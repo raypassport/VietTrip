@@ -880,7 +880,7 @@ document.addEventListener("click",e=>{
 (()=>{const t=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Ho_Chi_Minh"}).format(new Date());const i=DAYS.findIndex(d=>d.date===t);if(i>=0)cur=i})();
 
 /* ---- people + onboarding ---- */
-const PPL=[["เรจิ","#2fbfa5","lm"],["บีน","#2fbfa5","lm"],["คิน","#2fbfa5","lm"],["โอลี่","#9b5fd6","bt"],["ปราง","#9b5fd6","bt"],["แพรว","#9b5fd6","bt"],["ดิว","#9b5fd6","bt"],["แบม","#5aa83a","sh"],["เต้","#4a6fdc","ch"],["โอ","#4a6fdc","ch"],["ฟร้อง","#8b6a55","fr"],["กาย","#8b6a55","fr"]];
+const PPL=[["เรจิ","#2fbfa5","lm"],["บีน","#2fbfa5","lm"],["คิน","#2fbfa5","lm"],["โอลี่","#9b5fd6","bt"],["ปราง","#9b5fd6","bt"],["แพรว","#9b5fd6","bt"],["ดิว","#9b5fd6","bt"],["ลิตเติ้ล","#9b5fd6","bt"],["แบม","#5aa83a","sh"],["เต้","#4a6fdc","ch"],["โอ","#4a6fdc","ch"],["ฟร้อง","#8b6a55","fr"],["กาย","#8b6a55","fr"]];
 const LINE={lm:"สายแลนด์มาร์ก · บ่ายวันแรกเดินเก็บ 5 ที่",bt:"กลุ่มทำสวย · บ่ายวันแรกต่อขนตา",sh:"สายช้อป · บ่ายวันแรกตะลุยช้อปปิ้ง",ch:"กลุ่มนอนพักและนวด · บ่ายวันแรกพักผ่อน นวดสบายๆ",fr:"กลุ่มฟร้อง + กาย · บ่ายวันแรกแพลนอิสระ"};
 const DAYMSG=[null,["","วันนี้สายคาเฟ่ทั้งวัน<br>ปิดท้ายด้วยสตรีทฟู้ดกับบาร์"],["","ไหว้วัดแขก ช้อปปิ้ง<br>แล้วไปต่อที่บุ่ยเหวียน"],["","วันสุดท้ายแล้ว ซื้อของฝาก กินหอย<br>แล้วบินกลับ 21:30"]];
 const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
