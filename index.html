@@ -435,7 +435,43 @@ a.btn.tt{background:#18181b!important;color:#fff!important}
 .ag+.ag{border-top:0!important}
 .ag{background:#fff;border-radius:14px;border:1px solid var(--line);overflow:hidden}
 .announcement{height:96px!important}
-</style></head>
+</style><style>
+#inv{padding:0;border:0;background:none;width:100%;height:100%;max-width:none;max-height:none;margin:0;overflow:hidden}#inv::backdrop{background:transparent}
+#inv .scrim{position:fixed;inset:0;background:rgba(24,24,27,.45);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);opacity:0;transition:opacity 260ms ease}
+#inv .nw{position:fixed;left:16px;right:16px;top:50%;margin:0 auto;max-width:440px;background:#fff;border-radius:24px;padding:18px 16px 16px;transform:translateY(-50%) scale(.96);opacity:0;transition:transform 280ms var(--ease-out),opacity 220ms ease}
+#inv.open .scrim{opacity:1}#inv.open .nw{transform:translateY(-50%) scale(1);opacity:1}
+.iv-sub{margin:-6px 4px 12px;font-size:13px;color:#8a8c93}.iv-sub b{color:#18181b;font-weight:600}
+.iv-bar{height:6px;border-radius:3px;background:#f1f1f4;margin:0 4px 14px;overflow:hidden}.iv-bar i{display:block;height:100%;background:#e5232e;border-radius:3px;transition:width 400ms var(--ease-out)}
+.iv-day{font:600 13px "IBM Plex Sans Thai";color:#18181b;margin:14px 4px 8px;display:flex;justify-content:space-between}.iv-day small{font-weight:500;color:#8a8c93}
+.iv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.iv-s{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 4px 8px;border-radius:14px;background:#fafafb;min-width:0}
+.iv-s .pic{height:64px;display:grid;place-items:center}
+.iv-s .pic svg{height:52px;width:auto;max-width:84px;transform:rotate(var(--r));filter:drop-shadow(0 2px 2px rgba(24,24,27,.2))}
+.iv-s .hole{width:56px;height:56px;border-radius:50%;background:#eeeef1;box-shadow:inset 0 2px 5px rgba(24,24,27,.14);border:1.5px dashed #d4d5da;display:grid;place-items:center;color:#c4c5cb}
+.iv-s .hole svg{width:20px;height:20px;filter:none;transform:none}
+.iv-s p{margin:0;font-size:11px;line-height:1.3;text-align:center;color:#18181b;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;width:100%}
+.iv-s.no p{color:#a3a5ad}
+</style><script>/* time sim: patch Date before app runs */
+(()=>{let s=null;try{s=JSON.parse(localStorage.getItem("hcmc-sim")||"null")}catch(e){}if(!s)return;
+const R=Date,off=s.t-s.at;window.__SIM=s;
+class S extends R{constructor(...a){super(...(a.length?a:[R.now()+off]))}static now(){return R.now()+off}}
+S.UTC=R.UTC;S.parse=R.parse;window.Date=S;})();</script>
+<style>
+.simtag{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:70;height:40px;padding:0 14px;border-radius:999px;background:#fff;color:#18181b;font:600 12px "IBM Plex Sans Thai";display:flex;align-items:center;gap:6px;box-shadow:0 6px 20px rgba(24,24,27,.14);border:1px dashed #e5232e;cursor:pointer}
+#tw{padding:0;border:0;background:none;width:100%;height:100%;max-width:none;max-height:none;margin:0;overflow:hidden}#tw::backdrop{background:transparent}
+#tw .scrim{position:fixed;inset:0;background:rgba(24,24,27,.35);opacity:0;transition:opacity 240ms ease}
+#tw .pn{z-index:1;position:fixed;left:0;right:0;bottom:0;max-width:520px;margin:0 auto;background:#fff;border-radius:20px 20px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform 320ms var(--ease-drawer,cubic-bezier(.32,.72,0,1));font-family:"IBM Plex Sans Thai";color:#18181b}
+#tw.open .scrim{opacity:1}#tw.open .pn{transform:none}
+#tw h4{color:#18181b;margin:0 0 2px;font-size:17px;font-weight:600}#tw .hint{margin:0 0 6px;font-size:12px;color:#8a8c93}
+#tw .lb{font-size:12px;color:#8a8c93;margin:14px 0 6px}
+#tw .seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}#tw .seg button{height:40px;border-radius:10px;border:1px solid #ececef;background:#fff;font:500 14px "IBM Plex Sans Thai";color:#18181b}#tw .seg button.on{background:#18181b;color:#fff;border-color:#18181b}
+#tw .tm{color:#18181b;font-size:30px;font-weight:600;font-variant-numeric:tabular-nums}
+#tw input[type=range]{width:100%;accent-color:#e5232e;margin:10px 0}
+#tw .q{display:flex;gap:6px;flex-wrap:wrap}#tw .q button{font:500 12px "IBM Plex Sans Thai";padding:7px 11px;border-radius:999px;background:#f4f4f6;border:0;color:#18181b}
+#tw .row{display:flex;gap:8px;margin-top:16px}#tw .row button{flex:1;height:46px;border-radius:12px;border:0;font:600 14px "IBM Plex Sans Thai";background:#f4f4f6;color:#18181b}#tw .row .pr{background:#18181b;color:#fff}
+@media (prefers-reduced-motion:reduce){#tw .pn{transition:none}}
+</style>
+</head>
 <body>
 
 <div class="wrap">
@@ -450,11 +486,21 @@ a.btn.tt{background:#18181b!important;color:#fff!important}
 </header>
   <div class="bar">
     <div class="hello"><button class="me" id="me" aria-label="เมนูผู้ใช้" aria-haspopup="menu" aria-controls="user-menu" aria-expanded="false">?</button><button class="who" id="who"><small>ยินดีต้อนรับ</small><b id="myname">เลือกว่าคุณเป็นใคร</b></button>
-      <div class="hr"><button class="mega" id="mega" aria-label="ประกาศ"><svg width="15" height="15" viewBox="0 0 512 512" fill="currentColor" aria-hidden="true"><!-- Font Awesome Free 6.7.2 bullhorn, CC BY 4.0 --><path d="M480 32c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9L381.7 53c-48 48-113.1 75-181 75l-8.7 0-32 0-96 0c-35.3 0-64 28.7-64 64l0 96c0 35.3 28.7 64 64 64l0 128c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-128 8.7 0c67.9 0 133 27 181 75l43.6 43.6c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6l0-147.6c18.6-8.8 32-32.5 32-60.4s-13.4-51.6-32-60.4L480 32zm-64 76.7L416 240l0 131.3C357.2 317.8 280.5 288 200.7 288l-8.7 0 0-96 8.7 0c79.8 0 156.5-29.8 215.3-83.3z"/></svg></button><div class="pill" aria-label="ความคืบหน้า"><i><span id="pbar"></span></i><b id="ptxt">0<em>/0</em></b></div></div></div>
+      <div class="hr"><button class="mega" id="invb" aria-label="สมุดสแตมป์"><svg width="15" height="15" fill="currentColor" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M312 201.8c0-17.4 9.2-33.2 19.9-47C344.5 138.5 352 118.1 352 96c0-53-43-96-96-96s-96 43-96 96c0 22.1 7.5 42.5 20.1 58.8c10.7 13.8 19.9 29.6 19.9 47c0 29.9-24.3 54.2-54.2 54.2L112 256C50.1 256 0 306.1 0 368c0 20.9 13.4 38.7 32 45.3L32 464c0 26.5 21.5 48 48 48l352 0c26.5 0 48-21.5 48-48l0-50.7c18.6-6.6 32-24.4 32-45.3c0-61.9-50.1-112-112-112l-33.8 0c-29.9 0-54.2-24.3-54.2-54.2zM416 416l0 32L96 448l0-32 320 0z"/></svg></button><button class="mega" id="mega" aria-label="ประกาศ"><svg width="15" height="15" viewBox="0 0 512 512" fill="currentColor" aria-hidden="true"><!-- Font Awesome Free 6.7.2 bullhorn, CC BY 4.0 --><path d="M480 32c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9L381.7 53c-48 48-113.1 75-181 75l-8.7 0-32 0-96 0c-35.3 0-64 28.7-64 64l0 96c0 35.3 28.7 64 64 64l0 128c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-128 8.7 0c67.9 0 133 27 181 75l43.6 43.6c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6l0-147.6c18.6-8.8 32-32.5 32-60.4s-13.4-51.6-32-60.4L480 32zm-64 76.7L416 240l0 131.3C357.2 317.8 280.5 288 200.7 288l-8.7 0 0-96 8.7 0c79.8 0 156.5-29.8 215.3-83.3z"/></svg></button><div class="pill" aria-label="ความคืบหน้า"><i><span id="pbar"></span></i><b id="ptxt">0<em>/0</em></b></div></div></div>
     <div class="days" id="days"></div>
   </div>
 
 <main id="plan"></main>
+<dialog id="tw" aria-label="จำลองเวลา"><div class="scrim" data-tw="close"></div><div class="pn">
+<h4>จำลองเวลา</h4><p class="hint">ใช้ทดสอบเท่านั้น · มีผลแค่เครื่องนี้</p>
+<div class="lb">วัน</div><div class="seg" id="tw-d"><button data-d="21">21</button><button data-d="22">22</button><button data-d="23">23</button><button data-d="24">24</button></div>
+<div class="lb">เวลา (เวียดนาม)</div><div class="tm" id="tw-t">12:00</div><input type="range" id="tw-r" min="0" max="1435" step="5" value="720">
+<div class="q" id="tw-q"><button data-m="420">07:00</button><button data-m="750">12:30</button><button data-m="960">16:00</button><button data-m="1200">20:00</button><button data-m="1410">23:30</button></div>
+<div class="row"><button id="tw-real">ใช้เวลาจริง</button><button class="pr" id="tw-go">ใช้เวลานี้</button></div></div></dialog>
+<dialog id="inv" aria-label="สมุดสแตมป์"><div class="scrim" data-inv="close"></div><div class="nw">
+ <div class="nw-h"><h3>สมุดสแตมป์</h3><button class="sh-x" data-inv="close" aria-label="ปิด"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+ <div class="iv-sub" id="iv-sub"></div><div class="iv-bar"><i id="iv-bar"></i></div>
+ <div class="nw-list" id="iv-list"></div></div></dialog>
 <dialog id="news" aria-label="ประกาศ"><div class="scrim" data-news="close"></div><div class="nw">
  <div class="nw-h"><h3>ประกาศ</h3><button class="sh-x" data-news="close" aria-label="ปิด"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
  <div class="nw-list">
@@ -874,6 +920,37 @@ renderAll(); setInterval(tick,30000);
  const close=()=>{if(!N.open)return;N.classList.remove("open");setTimeout(()=>{N.close();unlockScroll()},220)};
  document.getElementById("mega").addEventListener("click",open);
  N.addEventListener("click",e=>{if(e.target.closest("[data-news=close]"))close()});
+ N.addEventListener("cancel",e=>{e.preventDefault();close()});})();
+
+/* time sim panel: tap progress pill 5x */
+(()=>{const N=document.getElementById("tw"),K="hcmc-sim",r=document.getElementById("tw-r"),tl=document.getElementById("tw-t");let day=21;
+ const fmt=m=>String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0");
+ const sync=()=>{tl.textContent=fmt(+r.value);N.querySelectorAll("#tw-d button").forEach(b=>b.classList.toggle("on",+b.dataset.d===day))};
+ const open=()=>{const p=new Intl.DateTimeFormat("en-GB",{timeZone:"Asia/Ho_Chi_Minh",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date()),g=k=>+p.find(x=>x.type===k).value;
+  day=window.__SIM?g("day"):21;if(day<21||day>24)day=21;r.value=Math.round((g("hour")%24*60+g("minute"))/5)*5;sync();
+  lockScroll();N.showModal();N.getBoundingClientRect();requestAnimationFrame(()=>N.classList.add("open"))};
+ const close=()=>{if(!N.open)return;N.classList.remove("open");setTimeout(()=>{N.close();unlockScroll()},300)};
+ let n=0,tm;document.querySelector(".pill").addEventListener("click",()=>{n++;clearTimeout(tm);tm=setTimeout(()=>n=0,1500);if(n>=5){n=0;open()}});
+ r.addEventListener("input",sync);
+ N.addEventListener("click",e=>{const d=e.target.closest("[data-d]"),q=e.target.closest("[data-m]");if(d){day=+d.dataset.d;sync()}if(q){r.value=q.dataset.m;sync()}if(e.target.closest("[data-tw=close]"))close()});
+ N.addEventListener("cancel",e=>{e.preventDefault();close()});
+ document.getElementById("tw-go").addEventListener("click",()=>{const t=new Date(`2026-10-${day}T${fmt(+r.value)}:00+07:00`).getTime();try{localStorage.setItem(K,JSON.stringify({t,at:Date.now()-(window.__SIM?window.__SIM.t-window.__SIM.at:0)}))}catch(e){}location.reload()});
+ document.getElementById("tw-real").addEventListener("click",()=>{try{localStorage.removeItem(K)}catch(e){}location.reload()});
+ if(window.__SIM){const b=document.createElement("button");b.className="simtag";const p=new Intl.DateTimeFormat("en-GB",{timeZone:"Asia/Ho_Chi_Minh",day:"numeric",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date()),g=k=>p.find(x=>x.type===k).value;
+  b.textContent=`🧪 ${g("day")} ต.ค. · ${g("hour")}:${g("minute")}`;b.addEventListener("click",open);document.body.appendChild(b)}})();
+
+/* stamp inventory */
+(()=>{const N=document.getElementById("inv");
+ const svgOf=i=>{const L=STK[ICN(i)]||STK["map-pin"],h=[...(i.id+ICN(i))].reduce((a,c)=>(a*131+c.charCodeAt(0))>>>0,7);return L[h%L.length]};
+ const render=()=>{let all=0,got=0;const dn=["พ.","พฤ.","ศ.","ส."];
+  document.getElementById("iv-list").innerHTML=DAYS.map((d,k)=>{const its=d.blocks.flatMap(b=>b.items);const g=its.filter(i=>done[i.id]).length;all+=its.length;got+=g;
+   return `<div class="iv-day">Day ${String(k+1).padStart(2,"0")} · ${dn[k]||""} ${d.date.slice(-2)}<small>${g}/${its.length}</small></div><div class="iv-grid">${its.map(i=>done[i.id]?`<div class="iv-s"><div class="pic" style="--r:${stkRot(i.id)}deg">${svgOf(i)}</div><p>${i.w}</p></div>`:`<div class="iv-s no"><div class="pic"><div class="hole">${IC[ICN(i)]}</div></div><p>${i.w}</p></div>`).join("")}</div>`}).join("");
+  document.getElementById("iv-sub").innerHTML=`สะสมแล้ว <b>${got}</b> จาก ${all} สแตมป์`;
+  document.getElementById("iv-bar").style.width=(all?got/all*100:0)+"%"};
+ const open=()=>{render();lockScroll();N.showModal();N.querySelector(".nw-list").scrollTop=0;N.getBoundingClientRect();requestAnimationFrame(()=>N.classList.add("open"))};
+ const close=()=>{if(!N.open)return;N.classList.remove("open");setTimeout(()=>{N.close();unlockScroll()},220)};
+ document.getElementById("invb").addEventListener("click",open);
+ N.addEventListener("click",e=>{if(e.target.closest("[data-inv=close]"))close()});
  N.addEventListener("cancel",e=>{e.preventDefault();close()});})();
 
 /* announcement page open/close */
