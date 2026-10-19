@@ -1158,7 +1158,7 @@ function contour(x,cx,k){const {w,h,y}=pillGeo(k),o=DB.g+DB.sw,r=h/2,rc=r+o,top=
  return Y}
 function dbRender(){if(!DB)return;const sv=document.getElementById("dbar"),wr=sv&&sv.parentElement;if(!wr)return;const W=wr.clientWidth;sv.setAttribute("viewBox",`0 0 ${W} ${DB.H}`);
  let d="";for(let x=12;x<=W-12;x+=1){let yy=DB.H;for(const b of DBK)yy=Math.min(yy,contour(x,b.x,b.k));d+=(d?"L":"M")+x+" "+yy.toFixed(2)}
- document.getElementById("dbt").setAttribute("d",d);const f=document.getElementById("dbf");f.setAttribute("d",d);const L=f.getTotalLength(),pr=Math.min(1,Math.max(0,DPV||0));f.style.strokeDasharray=L;f.style.strokeDashoffset=L*(1-pr);f.style.opacity=pr>0.002?1:0}
+ document.getElementById("dbt").setAttribute("d",d);const f=document.getElementById("dbf");f.setAttribute("d",d);const pr=Math.min(1,Math.max(0,DPV||0));f.setAttribute("pathLength","1000");f.style.strokeDashoffset="0";f.style.strokeDasharray=`${(pr*1000).toFixed(2)} 3000`;f.style.opacity=pr>0.002?1:0}
 var DPV,DPA;
 function dpTo(v){v=Math.min(1,Math.max(0,v||0));cancelAnimationFrame(DPA);const from=+DPV||0,t0=performance.now(),dur=matchMedia("(prefers-reduced-motion: reduce)").matches?0:560;if(Math.abs(v-from)<1e-4){DPV=v;dbRender();return}
  const f=n=>{const k=dur?Math.min(1,(n-t0)/dur):1,e=1-Math.pow(1-k,3);DPV=from+(v-from)*e;dbRender();if(k<1)DPA=requestAnimationFrame(f)};DPA=requestAnimationFrame(f)}
