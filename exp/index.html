@@ -861,7 +861,7 @@ const TMP=fetch("https://raypassport.github.io/VietTrip/thumbs/map.json",{cache:
 function thumbs(){
  TMP.then(m=>document.querySelectorAll("img.thumb[data-tt]").forEach(img=>{
   const f=m[img.dataset.tt]||m[img.dataset.m]; if(!f){const w=img.closest(".pimg");img.remove();if(w)w.remove();return}
-  img.onerror=()=>img.remove(); img.src=f; img.hidden=false;
+  img.onerror=()=>img.remove(); img.src=/^https?:/.test(f)?f:"https://raypassport.github.io/VietTrip/"+f; img.hidden=false;
  }));
 }
 function renderAll(){renderDays();renderPlan();const t=document.getElementById("eodt");if(t)t.textContent=cur<DAYS.length-1?`จบ Day ${+D().n} แล้ว · พรุ่งนี้เจอกัน`:"จบทริปแล้ว · เดินทางปลอดภัย ✈️"}
