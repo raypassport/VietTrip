@@ -587,7 +587,7 @@ S.UTC=R.UTC;S.parse=R.parse;window.Date=S;})();</script>
 #avs .sgrp .ic svg{width:14px;height:14px;color:#18181b!important}
 #avs .sgrp .red .ic{background:#fde8e9}#avs .sgrp .red .ic svg{color:#e5232e!important}
 #avs .sgrp button:active{background:#ececf0!important}
-</style><style>#plan .item .th{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}#plan .item .th.lp{transform:scale(.94);transition:transform 800ms var(--ease-out)}#plan .item .th img.ct{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}</style></head>
+</style><style>#plan .item .th{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}#plan .item .th.lp{transform:scale(.94);transition:transform 800ms var(--ease-out)}#plan .item .th img.ct{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}</style><style>#plan .item .th .ctadd{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:#18181b;color:#fff;font:600 12px "IBM Plex Sans Thai";border-radius:inherit;cursor:pointer;animation:ctIn 180ms var(--ease-out)}@keyframes ctIn{from{opacity:0;transform:scale(.9)}}</style></head>
 <body>
 
 <div class="wrap">
@@ -1096,14 +1096,17 @@ function hasImg(th){return !!th.querySelector("img.thumb:not([hidden])[src]")}
 function applyCT(){TMP.then(()=>setTimeout(()=>document.querySelectorAll("#plan .item").forEach(it=>{const id=it.id.slice(3),u=CT[id],th=it.querySelector(".th");if(!th||!u)return;
  const ex=th.querySelector("img.ct");if(ex){if(ex.src!==u)ex.src=u;return}if(hasImg(th))return;const im=document.createElement("img");im.className="thumb ct";im.alt="";im.src=u;th.appendChild(im)}),0))}
 function ctSave(){try{localStorage.setItem("hcmc-ct",JSON.stringify(CT))}catch(e){}}
-(()=>{let tm=null,sx=0,sy=0,tgt=null;const F=document.createElement("input");F.type="file";F.accept="image/*";F.hidden=true;document.body.appendChild(F);
+(()=>{let tm=null,sx=0,sy=0,tgt=null,justLP=false;const F=document.createElement("input");F.type="file";F.accept="image/*";F.id="ct-f";F.style.cssText="position:fixed;left:-9999px;opacity:0";document.body.appendChild(F);
+ const hideAdd=()=>document.querySelectorAll(".ctadd").forEach(x=>x.remove());
  const cancel=()=>{clearTimeout(tm);tm=null;if(tgt)tgt.classList.remove("lp");tgt=null};
  document.addEventListener("pointerdown",e=>{const th=e.target.closest("#plan .item .th");if(!th||hasImg(th))return;tgt=th;sx=e.clientX;sy=e.clientY;th.classList.add("lp");
-  tm=setTimeout(()=>{const id=th.closest(".item").id.slice(3);th.classList.remove("lp");tgt=null;tm=null;if(navigator.vibrate)navigator.vibrate(12);F.dataset.id=id;F.value="";F.click()},800)},{passive:true});
+  tm=setTimeout(()=>{const id=th.closest(".item").id.slice(3);th.classList.remove("lp");tgt=null;tm=null;if(navigator.vibrate)navigator.vibrate(12);hideAdd();justLP=true;setTimeout(()=>justLP=false,700);F.dataset.id=id;F.value="";
+   const l=document.createElement("label");l.className="ctadd";l.htmlFor="ct-f";l.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span>ใส่รูป</span>';th.appendChild(l)},800)},{passive:true});
+ document.addEventListener("click",e=>{if(justLP){justLP=false;if(e.target.closest("#plan .item .th")){e.preventDefault();e.stopPropagation()}return}if(!e.target.closest(".ctadd"))hideAdd()},true);
  document.addEventListener("pointermove",e=>{if(tm&&Math.hypot(e.clientX-sx,e.clientY-sy)>8)cancel()},{passive:true});
  ["pointerup","pointercancel","scroll"].forEach(ev=>addEventListener(ev,()=>{if(tm)cancel()},{passive:true,capture:true}));
  document.addEventListener("contextmenu",e=>{if(e.target.closest("#plan .item .th"))e.preventDefault()});
- F.addEventListener("change",()=>{const f=F.files[0],id=F.dataset.id;if(!f||!id)return;const img=new Image(),u=URL.createObjectURL(f);
+ F.addEventListener("change",()=>{hideAdd();const f=F.files[0],id=F.dataset.id;if(!f||!id)return;const img=new Image(),u=URL.createObjectURL(f);
   img.onload=()=>{const s=Math.min(img.naturalWidth,img.naturalHeight),c=document.createElement("canvas");c.width=c.height=480;c.getContext("2d").drawImage(img,(img.naturalWidth-s)/2,(img.naturalHeight-s)/2,s,s,0,0,480,480);URL.revokeObjectURL(u);
    const d=c.toDataURL("image/jpeg",.85);CT[id]=d;ctSave();applyCT();
    const fd=new FormData();fd.append("file",d);fd.append("upload_preset","viettrip");fd.append("tags","viettrip");let dev="x";try{dev=localStorage.getItem("hcmc-dev")||"x"}catch(_){}fd.append("context",`thumb=${id}|dev=${dev}`);
