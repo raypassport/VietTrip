@@ -487,6 +487,27 @@ S.UTC=R.UTC;S.parse=R.parse;window.Date=S;})();</script>
 #plan .item.now:not(.grp-row)>.t::after{top:21px!important}
 @keyframes nowBlink{0%,100%{opacity:1}50%{opacity:.15}}
 @media (prefers-reduced-motion:reduce){#plan .item.now .t::after{animation:none!important}}
+</style><style>
+.gal{background:#18181b;color:#fff;border-radius:28px 28px 0 0;margin:8px -16px -48px;padding:24px 0 calc(40px + env(safe-area-inset-bottom));min-height:60vh}
+.gal-in{max-width:640px;margin:0 auto;padding:0 16px}
+.gal-h{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:16px}
+.gal-h h2{margin:0;font:600 20px "IBM Plex Sans Thai";color:#fff}.gal-h small{font-size:12px;color:#8a8c93}
+.gal-up{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border-radius:999px;background:#e5232e;color:#fff;font:500 14px "IBM Plex Sans Thai";cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform 140ms var(--ease-out)}.gal-up:active{transform:scale(.95)}
+.gal-g{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;border-radius:12px;overflow:hidden}
+.gal-g button{position:relative;aspect-ratio:1/1;padding:0;border:0;background:#27272a;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.gal-g img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity 300ms ease}.gal-g img.ok{opacity:1}
+.gal-g .ld::after{content:"";position:absolute;left:50%;top:50%;width:20px;height:20px;margin:-10px;border-radius:50%;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;animation:galSpin .8s linear infinite}
+.gal-g .ld img{opacity:.45}
+.gal-g .err{outline:2px solid #e5232e;outline-offset:-2px}
+@keyframes galSpin{to{transform:rotate(360deg)}}
+.gal-e{margin:24px 0 0;text-align:center;font-size:13px;color:#8a8c93}
+#lb{padding:0;border:0;margin:0;width:100%;height:100%;max-width:none;max-height:none;background:#000;color:#fff;display:none;flex-direction:column}#lb[open]{display:flex}#lb::backdrop{background:#000}
+.lb-top,.lb-bot{display:flex;align-items:center;justify-content:space-between;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;font-size:13px;color:#a3a5ad}
+.lb-bot{justify-content:center;padding:10px 16px calc(14px + env(safe-area-inset-bottom))}
+.lb-x{width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff;display:grid;place-items:center}
+.lb-img{flex:1;min-height:0;display:grid;place-items:center}.lb-img img{max-width:100%;max-height:100%;object-fit:contain}
+.lb-dl{display:inline-flex;align-items:center;gap:8px;height:46px;padding:0 22px;border-radius:999px;border:0;background:#fff;color:#18181b;font:600 15px "IBM Plex Sans Thai"}.lb-dl:disabled{opacity:.5}
+@media (prefers-reduced-motion:reduce){.gal-g .ld::after{animation:none}}
 </style></head>
 <body>
 
@@ -547,6 +568,13 @@ S.UTC=R.UTC;S.parse=R.parse;window.Date=S;})();</script>
 
 <div class="eod" id="eod"><i></i><span id="eodt">จบวันแล้ว</span></div>
 </div>
+<section class="gal" id="gal" aria-label="แกลเลอรี"><div class="gal-in">
+ <div class="gal-h"><div><h2>แกลเลอรี</h2><small id="gal-n">กำลังโหลด…</small></div>
+ <label class="gal-up"><input type="file" id="gal-f" accept="image/*" multiple hidden><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>เพิ่มรูป</label></div>
+ <div class="gal-g" id="gal-g"></div><p class="gal-e" id="gal-e" hidden>ยังไม่มีรูป · เป็นคนแรกที่เพิ่มรูปสิ</p></div></section>
+<dialog id="lb" aria-label="ดูรูป"><div class="lb-top"><span id="lb-by"></span><button class="lb-x" data-lb="close" aria-label="ปิด"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+ <div class="lb-img"><img id="lb-i" alt=""></div>
+ <div class="lb-bot"><button class="lb-dl" id="lb-dl"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg><span>บันทึกรูป</span></button></div></dialog>
 
 <script>
 const M=q=>"https://www.google.com/maps/search/?api=1&query="+q;
@@ -968,6 +996,37 @@ function goNowSync(){if(!GN)return;const n=document.querySelector("#plan .item.n
 addEventListener("scroll",goNowSync,{passive:true});addEventListener("resize",railFill);
 GN.addEventListener("click",()=>{const it=document.querySelector("#plan .item.now");if(!it)return;const r=it.getBoundingClientRect();scrollTo({top:scrollY+r.top-innerHeight/2+r.height/2,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});it.classList.remove("flash");setTimeout(()=>{it.classList.add("flash");setTimeout(()=>it.classList.remove("flash"),800)},450)});
 if(window.ResizeObserver)new ResizeObserver(()=>railFill()).observe(document.getElementById("plan"));
+
+/* photo gallery (Cloudinary) */
+(()=>{const CN="zhp3tanr",PR="viettrip",TAG="viettrip",MAX=10*1024*1024,G=document.getElementById("gal-g"),NC=document.getElementById("gal-n"),EM=document.getElementById("gal-e"),LB=document.getElementById("lb");
+ let items=[];
+ const base=`https://res.cloudinary.com/${CN}/image/upload`;
+ const thumb=r=>`${base}/c_fill,g_auto,w_300,h_300,q_auto,f_auto/v${r.version}/${r.public_id}.jpg`;
+ const full=r=>`${base}/v${r.version}/${r.public_id}.${r.format}`;
+ const byOf=r=>r.context?.custom?.by||r.context?.by||"";
+ const draw=()=>{G.innerHTML=items.map((r,k)=>`<button data-k="${k}" class="${r.loading?"ld":""}${r.err?" err":""}" aria-label="ดูรูป"><img alt="" loading="lazy" src="${r.local||thumb(r)}" onload="this.classList.add('ok')"></button>`).join("");
+  const n=items.filter(r=>!r.err).length;NC.textContent=n?`${n} รูป`:"";EM.hidden=!!items.length};
+ const load=()=>fetch(`https://res.cloudinary.com/${CN}/image/list/${TAG}.json?t=${Date.now()}`).then(r=>r.ok?r.json():{resources:[]}).catch(()=>({resources:[]})).then(j=>{
+  const have=new Set(j.resources.map(r=>r.public_id));const pending=items.filter(r=>(r.loading||r.public_id)&&!have.has(r.public_id)&&!r.err);
+  items=[...pending,...j.resources.sort((a,b)=>(b.created_at||"").localeCompare(a.created_at||""))];draw()});
+ document.getElementById("gal-f").addEventListener("change",e=>{const fs=[...e.target.files];e.target.value="";
+  fs.forEach(f=>{const it={loading:true,local:URL.createObjectURL(f)};items.unshift(it);
+   if(f.size>MAX){it.loading=false;it.err=true;draw();alert(`รูป "${f.name}" ใหญ่เกิน 10MB อัปโหลดไม่ได้`);return}
+   const fd=new FormData();fd.append("file",f);fd.append("upload_preset",PR);fd.append("tags",TAG);if(ME)fd.append("context",`by=${ME}`);
+   fetch(`https://api.cloudinary.com/v1_1/${CN}/image/upload`,{method:"POST",body:fd}).then(r=>r.json()).then(r=>{if(!r.public_id)throw r;Object.assign(it,r,{loading:false,context:{custom:{by:ME||""}}});draw()}).catch(()=>{it.loading=false;it.err=true;draw();alert("อัปโหลดไม่สำเร็จ ลองใหม่อีกครั้ง")})});
+  draw()});
+ let curR=null;
+ G.addEventListener("click",e=>{const b=e.target.closest("button[data-k]");if(!b)return;const r=items[+b.dataset.k];if(!r||r.loading||r.err)return;curR=r;
+  document.getElementById("lb-i").src=full(r);const by=byOf(r);document.getElementById("lb-by").textContent=by?`โดย ${by}`:"";lockScroll();LB.showModal()});
+ const close=()=>{if(!LB.open)return;LB.close();unlockScroll();document.getElementById("lb-i").removeAttribute("src")};
+ LB.addEventListener("click",e=>{if(e.target.closest("[data-lb=close]"))close()});LB.addEventListener("cancel",e=>{e.preventDefault();close()});
+ const DL=document.getElementById("lb-dl");
+ DL.addEventListener("click",async()=>{if(!curR)return;const url=full(curR),name=curR.public_id.split("/").pop()+"."+curR.format;DL.disabled=true;
+  try{const bl=await (await fetch(url)).blob();const f=new File([bl],name,{type:bl.type||"image/jpeg"});
+   if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f]})}else{const a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download=name;document.body.appendChild(a);a.click();a.remove()}}
+  catch(err){if(err&&err.name!=="AbortError")window.open(url.replace("/upload/","/upload/fl_attachment/"),"_blank")}
+  DL.disabled=false});
+ load();})();
 
 /* stamp inventory */
 const SN={"fly": "ทะยานฟ้า", "arr": "เหยียบไซ่ง่อน", "car": "ซิ่งเข้าเมือง", "bag": "แพ็กเก่งตัวท็อป", "pho": "เซียนเฝอ", "merge": "รวมพลังสามแก๊ง", "call": "ผู้ต้อนฝูง", "home": "บ้านอบอุ่น", "pizza": "พิซซ่าเลิฟเวอร์", "coffee": "มือหนึ่งโกปี้", "motly": "ค่ำคืนแรกสุดชิค", "d2wake": "ตื่นทันใจ", "d2manmi": "ขาประจำบั๋นหมี่", "d2dophu": "มุดหลุมหาคาเฟอีน", "d2pla": "ว่ายน้ำกับปลา", "d2indo": "สายอินดัส", "d2bep": "ครัวคุณแม่", "d2art": "ซึมซับศิลป์", "d2nham": "ยัยแน้มก็มา", "d2apt": "ไต่ตึกคาเฟ่", "d2walk": "นักเดินเมือง", "d2home": "กลับรังครบทีม", "d2htk": "นักล่าสตรีทฟู้ด", "d2chin": "ชินชินชนแก้ว", "d2tee": "ราตรีตี๋บาร์", "d2frolic": "เต้นจนเช้า", "d2end": "ปิดจ๊อบวันสอง", "d3banh": "เซียนแหนมเนือง", "d3temple": "สายมูสายบุญ", "d3shop": "นักช้อปตัวตึง", "d3home": "แปลงร่างรอบเย็น", "d3bv": "ตะลุยบุ่ยเวียน", "d3bam": "แบมแบมปาร์ตี้", "d4crab": "ราชาบะหมี่ปู", "d4vin": "กวาดเรียบวินมาร์ท", "d4lunch": "มื้อสุดท้ายในเมือง", "d4shell": "ส่งท้ายด้วยหอย", "d4leave": "ลาก่อนบ้านหลังนี้", "d4air": "ภารกิจสำเร็จ"};
