@@ -607,7 +607,7 @@ S.UTC=R.UTC;S.parse=R.parse;window.Date=S;})();</script>
 .dwrap .days button[aria-pressed="true"]{width:86px;height:58px;border-radius:999px!important;transform:translateY(-16px);background:#18181b!important;border-color:#18181b!important}
 .dwrap .days button[aria-pressed="true"] b{font-size:24px!important;color:#fff!important}.dwrap .days button[aria-pressed="true"] small{color:#a3a5ad!important}
 @media (prefers-reduced-motion:reduce){.dwrap .days button,#dbf{transition:none}}
-</style><style>.dwrap .days button{gap:5px}.dwrap .days button small{font-size:11px!important}</style><style>.dwrap .days{display:grid!important;grid-template-columns:repeat(4,1fr);justify-items:center}</style></head>
+</style><style>.dwrap .days button{gap:5px}.dwrap .days button small{font-size:11px!important}</style><style>.dwrap .days{display:grid!important;grid-template-columns:repeat(4,1fr);justify-items:center}</style><style>.hr .pill{display:none!important}.dwrap{margin-top:-26px}</style></head>
 <body>
 
 <div class="wrap">
@@ -1091,7 +1091,7 @@ renderAll(); setInterval(tick,30000);
   day=window.__SIM?g("day"):21;if(day<21||day>24)day=21;r.value=Math.round((g("hour")%24*60+g("minute"))/5)*5;sync();
   lockScroll();N.showModal();N.getBoundingClientRect();requestAnimationFrame(()=>N.classList.add("open"))};
  const close=()=>{if(!N.open)return;N.classList.remove("open");setTimeout(()=>{N.close();unlockScroll()},300)};
- let n=0,tm;document.querySelector(".pill").addEventListener("click",()=>{n++;clearTimeout(tm);tm=setTimeout(()=>n=0,1500);if(n>=5){n=0;open()}});
+ let n=0,tm;document.querySelector(".dwrap").addEventListener("click",e=>{if(e.target.closest(".days button"))return;n++;clearTimeout(tm);tm=setTimeout(()=>n=0,1500);if(n>=5){n=0;open()}});
  r.addEventListener("input",sync);
  N.addEventListener("click",e=>{const d=e.target.closest("[data-d]"),q=e.target.closest("[data-m]");if(d){day=+d.dataset.d;sync()}if(q){r.value=q.dataset.m;sync()}if(e.target.closest("[data-tw=close]"))close()});
  N.addEventListener("cancel",e=>{e.preventDefault();close()});
