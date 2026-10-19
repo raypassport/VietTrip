@@ -512,7 +512,7 @@ S.UTC=R.UTC;S.parse=R.parse;window.Date=S;})();</script>
 .gal-h small{display:block;margin-top:2px}
 .gal-d{display:flex;align-items:baseline;gap:8px;margin:18px 0 8px;font:600 14px "IBM Plex Sans Thai";color:#fff}.gal-d:first-child{margin-top:0}.gal-d small{font-weight:500;font-size:12px;color:#8a8c93}
 .gal-g button .tm{position:absolute;left:0;right:0;bottom:0;padding:10px 5px 3px;font:500 10px "IBM Plex Sans Thai";color:#fff;text-align:left;background:linear-gradient(transparent,rgba(0,0,0,.55));font-variant-numeric:tabular-nums;pointer-events:none}
-</style><style>html.galbot{background:#18181b}</style><style>.gonow{transition:opacity 200ms ease,transform 260ms var(--ease-out),background-color 200ms ease,color 200ms ease!important}.gonow.inv{background:#fff;color:#18181b;box-shadow:0 6px 20px rgba(0,0,0,.4)}</style><style>.lb-bot{gap:10px}.lb-del{width:46px;height:46px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#ff6b72;display:grid;place-items:center}.lb-del[hidden]{display:none}.lb-del:disabled{opacity:.5}</style><style>
+</style><style>.gonow{transition:opacity 200ms ease,transform 260ms var(--ease-out),background-color 200ms ease,color 200ms ease!important}.gonow.inv{background:#fff;color:#18181b;box-shadow:0 6px 20px rgba(0,0,0,.4)}</style><style>.lb-bot{gap:10px}.lb-del{width:46px;height:46px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#ff6b72;display:grid;place-items:center}.lb-del[hidden]{display:none}.lb-del:disabled{opacity:.5}</style><style>
 .lb-hrt{display:inline-flex;align-items:center;gap:6px;height:46px;min-width:46px;padding:0 14px;border-radius:999px;border:0;background:rgba(255,255,255,.12);color:#fff;font:600 15px "IBM Plex Sans Thai"}
 .lb-hrt b{font-weight:600}.lb-hrt b:empty{display:none}
 .lb-hrt.on{color:#ff4d57}.lb-hrt.on svg{fill:currentColor}
@@ -542,7 +542,7 @@ S.UTC=R.UTC;S.parse=R.parse;window.Date=S;})();</script>
 .gal-g .lk b::after{content:"";position:absolute;left:3px;bottom:-4px;border-left:5px solid #fff;border-bottom:5px solid transparent}
 .gal-g .lk b:empty{transform:scale(.6);opacity:0}
 .gal-g .lk.pop svg{animation:hrtPop 360ms var(--ease-out)}
-</style><style>.gal-g .lk svg{top:8px!important;bottom:auto!important;right:8px!important}.gal-g .lk b{top:-12px!important}</style><style>.botfill{position:fixed;left:0;right:0;bottom:0;height:calc(env(safe-area-inset-bottom,0px) + 4px);background:#18181b;z-index:1;pointer-events:none;opacity:0;transition:opacity 200ms ease}html.galbot .botfill{opacity:1}</style></head>
+</style><style>.gal-g .lk svg{top:8px!important;bottom:auto!important;right:8px!important}.gal-g .lk b{top:-12px!important}</style><style>.botfill{position:fixed;left:0;right:0;bottom:0;height:calc(env(safe-area-inset-bottom,0px) + 4px);background:#18181b;z-index:1;pointer-events:none;opacity:0;transition:opacity 200ms ease}html.galbot .botfill{opacity:1}</style><style>body{background:var(--bg) linear-gradient(var(--bg),var(--bg)) no-repeat 0 0/100% var(--galtop,100%)}html.galbot body{background-color:#18181b}.botfill{display:none}</style></head>
 <body>
 
 <div class="wrap">
@@ -1088,7 +1088,8 @@ if(window.ResizeObserver)new ResizeObserver(()=>railFill()).observe(document.get
    if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f]})}else{const a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download=name;document.body.appendChild(a);a.click();a.remove()}}
   catch(err){if(err&&err.name!=="AbortError")window.open(url.replace("/upload/","/upload/fl_attachment/"),"_blank")}
   DL.disabled=false});
- const bot=()=>document.documentElement.classList.toggle("galbot",scrollY+innerHeight>document.getElementById("gal").offsetTop+innerHeight/2);addEventListener("scroll",bot,{passive:true});bot();
+ const GL=document.getElementById("gal"),gt=()=>document.body.style.setProperty("--galtop",(GL.getBoundingClientRect().top+scrollY+40)+"px");gt();addEventListener("resize",gt);if(window.ResizeObserver)new ResizeObserver(gt).observe(document.body);
+ const bot=()=>{gt();document.documentElement.classList.toggle("galbot",scrollY+innerHeight>GL.offsetTop+innerHeight/2)};addEventListener("scroll",bot,{passive:true});bot();
  load();})();
 
 /* stamp inventory */
