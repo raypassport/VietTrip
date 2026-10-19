@@ -1403,11 +1403,11 @@ async function tmMoveSection(day,index,delta){const to=index+delta,msg=document.
 async function tmAddSection(day,index){const msg=document.querySelector("#tm-section-form .tm-msg"),block={k:"ช่วงใหม่",en:"CUSTOM",_customTitle:true,_sid:`custom-${crypto.randomUUID()}`,items:[]};day.blocks.splice(index+1,0,block);msg.textContent="กำลังบันทึก…";try{await tmSaveSectionLayout(day,msg);renderAll();tmOpenSectionForm(index+1)}catch(x){day.blocks.splice(index+1,1);msg.textContent=x.message||"บันทึกไม่สำเร็จ"}}
 async function tmDeleteSection(day,index,btn){const msg=document.querySelector("#tm-section-form .tm-msg");if(btn.dataset.confirm!=="1"){btn.dataset.confirm="1";btn.textContent="แตะอีกครั้งเพื่อยืนยันลบ";msg.textContent="การลบจะนำกิจกรรมในช่วงนี้ออกทั้งหมด";return}const removed=day.blocks.splice(index,1)[0];msg.textContent="กำลังลบ…";try{await tmSaveSectionLayout(day,msg);closeSheet();renderAll()}catch(x){day.blocks.splice(index,0,removed);msg.textContent=x.message||"ลบไม่สำเร็จ"}}
 
-/* Hidden management entry: ten quick avatar taps. Keep it active only for this browser session. */
+/* Hidden management entry: five quick avatar taps. Keep it active only for this browser session. */
 document.getElementById("trip-manage")?.remove();
 try{if(sessionStorage.getItem("hcmc-manage")==="1")localStorage.setItem("hcmc-manage","1");else localStorage.removeItem("hcmc-manage")}catch(e){}
 const tmSetModeBase=tmSetMode;tmSetMode=function(on){tmSetModeBase(on);try{sessionStorage.setItem("hcmc-manage",on?"1":"0");localStorage.setItem("hcmc-manage",on?"1":"0")}catch(e){}};
-(()=>{let taps=0,last=0,reset;avatarButton.addEventListener("click",e=>{const now=performance.now();if(now-last>650)taps=0;last=now;taps++;clearTimeout(reset);reset=setTimeout(()=>taps=0,900);if(taps>1){e.preventDefault();e.stopImmediatePropagation();if(userMenu.matches(":popover-open"))userMenu.hidePopover()}if(taps===10){taps=0;clearTimeout(reset);if(navigator.vibrate)navigator.vibrate([12,40,12]);tmSetMode(!TM_EDIT)}},true)})();
+(()=>{let taps=0,last=0,reset;avatarButton.addEventListener("click",e=>{const now=performance.now();if(now-last>650)taps=0;last=now;taps++;clearTimeout(reset);reset=setTimeout(()=>taps=0,900);if(taps>1){e.preventDefault();e.stopImmediatePropagation();if(userMenu.matches(":popover-open"))userMenu.hidePopover()}if(taps===5){taps=0;clearTimeout(reset);if(navigator.vibrate)navigator.vibrate([12,40,12]);tmSetMode(!TM_EDIT)}},true)})();
 
 /* Keep the avatar as the only menu trigger. Native popover light-dismiss happens
    before the underlying click, so briefly suppress that click to prevent reopen. */
