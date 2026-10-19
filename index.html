@@ -553,6 +553,15 @@ S.UTC=R.UTC;S.parse=R.parse;window.Date=S;})();</script>
 #user-menu button[hidden]{display:none!important}
 #wm .bigw{position:relative;width:104px;margin:4px auto 14px}#wm .bigw .big{margin:0}
 #wm .avedit{position:absolute;right:-2px;bottom:-2px;width:34px;height:34px;border-radius:50%;border:3px solid #fff;background:#18181b;color:#fff;display:grid;place-items:center;padding:0;cursor:pointer;transition:transform 120ms var(--ease-out)}#wm .avedit:active{transform:scale(.92)}
+</style><style>
+#avs{padding:0;border:0;background:none;width:100%;height:100%;max-width:none;max-height:none;margin:0;overflow:hidden}#avs::backdrop{background:transparent}
+#avs .scrim{position:fixed;inset:0;background:rgba(24,24,27,.35);opacity:0;transition:opacity 200ms ease}
+#avs .pn{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));max-width:480px;margin:0 auto;display:grid;gap:8px;transform:translateY(110%);transition:transform 280ms var(--ease-drawer,cubic-bezier(.32,.72,0,1))}
+#avs.open .scrim{opacity:1}#avs.open .pn{transform:none}
+#avs .pn button{display:flex;align-items:center;gap:12px;height:54px;padding:0 18px;border:0;border-radius:14px;background:#fff;color:#18181b;font:500 16px "IBM Plex Sans Thai";cursor:pointer}
+#avs .pn button svg{color:#8a8c93}#avs .pn .red,#avs .pn .red svg{color:#e5232e}
+#avs .pn .cn{justify-content:center;font-weight:600;margin-top:2px}
+@media (prefers-reduced-motion:reduce){#avs .pn{transition:none}}
 </style></head>
 <body>
 
@@ -579,6 +588,8 @@ S.UTC=R.UTC;S.parse=R.parse;window.Date=S;})();</script>
 <div class="lb">เวลา (เวียดนาม)</div><div class="tm" id="tw-t">12:00</div><input type="range" id="tw-r" min="0" max="1435" step="5" value="720">
 <div class="q" id="tw-q"><button data-m="420">07:00</button><button data-m="750">12:30</button><button data-m="960">16:00</button><button data-m="1200">20:00</button><button data-m="1410">23:30</button></div>
 <div class="row"><button id="tw-real">ใช้เวลาจริง</button><button class="pr" id="tw-go">ใช้เวลานี้</button></div></div></dialog>
+<dialog id="avs" aria-label="รูปโปรไฟล์"><div class="scrim" data-avs="close"></div><div class="pn">
+<button data-avs="change"><svg width="16" height="16" fill="currentColor" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M149.1 64.8L138.7 96 64 96C28.7 96 0 124.7 0 160L0 416c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-256c0-35.3-28.7-64-64-64l-74.7 0L362.9 64.8C356.4 45.2 338.1 32 317.4 32L194.6 32c-20.7 0-39 13.2-45.5 32.8zM256 192a96 96 0 1 1 0 192 96 96 0 1 1 0-192z"/></svg><span>เปลี่ยนรูป</span></button><button data-avs="clear" class="red"><svg width="16" height="16" fill="currentColor" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0L284.2 0c12.1 0 23.2 6.8 28.6 17.7L320 32l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 96C14.3 96 0 81.7 0 64S14.3 32 32 32l96 0 7.2-14.3zM32 128l384 0 0 320c0 35.3-28.7 64-64 64L96 512c-35.3 0-64-28.7-64-64l0-320zm96 64c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16z"/></svg><span>ลบรูปโปรไฟล์</span></button><button data-avs="close" class="cn">ยกเลิก</button></div></dialog>
 <dialog id="inv" aria-label="สมุดสแตมป์"><div class="scrim" data-inv="close"></div><div class="nw">
  <div class="nw-h"><h3>สมุดสแตมป์</h3><button class="sh-x" data-inv="close" aria-label="ปิด"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
  <div class="iv-sub" id="iv-sub"></div><div class="iv-bar"><i id="iv-bar"></i></div>
@@ -1041,7 +1052,12 @@ renderAll(); setInterval(tick,30000);
 
 
 /* avatar upload */
-function avPick(){if(!ME)return;const f=document.getElementById("av-f");f.value="";f.click()}
+function avFile(){const f=document.getElementById("av-f");f.value="";f.click()}
+function avPick(){if(!ME)return;if(!AV[ME]){avFile();return}const S=document.getElementById("avs");S.showModal();requestAnimationFrame(()=>S.classList.add("open"))}
+function avsClose(){const S=document.getElementById("avs");S.classList.remove("open");setTimeout(()=>S.open&&S.close(),220)}
+function avClear(){const who=ME;if(!who)return;delete AV[who];avRefresh();const fd=new FormData();fd.append("file","data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=");fd.append("upload_preset","viettrip");fd.append("tags","viettrip");fd.append("context",`avatar=${who}|clear=1`);fetch("https://api.cloudinary.com/v1_1/zhp3tanr/image/upload",{method:"POST",body:fd}).catch(()=>{})}
+document.getElementById("avs").addEventListener("click",e=>{const b=e.target.closest("[data-avs]");if(!b)return;const v=b.dataset.avs;avsClose();if(v==="change")setTimeout(avFile,60);if(v==="clear")avClear()});
+document.getElementById("avs").addEventListener("cancel",e=>{e.preventDefault();avsClose()});
 document.getElementById("av-f").addEventListener("change",e=>{const f=e.target.files[0];if(!f||!ME)return;const who=ME,img=new Image(),u=URL.createObjectURL(f);
  img.onload=()=>{const s=Math.min(img.naturalWidth,img.naturalHeight),c=document.createElement("canvas");c.width=c.height=360;c.getContext("2d").drawImage(img,(img.naturalWidth-s)/2,(img.naturalHeight-s)/2,s,s,0,0,360,360);URL.revokeObjectURL(u);
   const d=c.toDataURL("image/jpeg",.85);AV[who]=d;avRefresh();
@@ -1080,7 +1096,7 @@ if(window.ResizeObserver)new ResizeObserver(()=>railFill()).observe(document.get
   const lm={};j.resources.filter(r=>cx(r).like||cx(r).unlike).sort((a,b)=>(a.created_at||"").localeCompare(b.created_at||"")).forEach(r=>{const c=cx(r),pid=c.like||c.unlike;(lm[pid]=lm[pid]||{})[c.dev||r.public_id]=!!c.like});
   likes={};for(const pid in lm){likes[pid]=new Set(Object.keys(lm[pid]).filter(d=>lm[pid][d]))}
   for(const pid in myLike){likes[pid]=likes[pid]||new Set();myLike[pid]?likes[pid].add(DEV):likes[pid].delete(DEV)}
-  const avs=j.resources.filter(r=>cx(r).avatar).sort((a,b)=>(a.created_at||"").localeCompare(b.created_at||""));if(avs.length){avs.forEach(r=>{AV[cx(r).avatar]=`${base}/c_fill,w_200,h_200,q_auto/v${r.version}/${r.public_id}.${r.format}`});avRefresh()}
+  const avs=j.resources.filter(r=>cx(r).avatar).sort((a,b)=>(a.created_at||"").localeCompare(b.created_at||""));if(avs.length){avs.forEach(r=>{const c=cx(r);if(c.clear)delete AV[c.avatar];else AV[c.avatar]=`${base}/c_fill,w_200,h_200,q_auto/v${r.version}/${r.public_id}.${r.format}`});avRefresh()}
   items=[...pending,...j.resources.filter(r=>{const c=cx(r);return !c.del&&!c.like&&!c.unlike&&!c.avatar&&!gone.has(r.public_id)})];draw()});
  document.getElementById("gal-f").addEventListener("change",e=>{const fs=[...e.target.files];e.target.value="";
   fs.forEach(async f=>{const it={loading:true,local:URL.createObjectURL(f),localT:f.lastModified||Date.now()};items.unshift(it);draw();
