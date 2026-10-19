@@ -482,6 +482,11 @@ S.UTC=R.UTC;S.parse=R.parse;window.Date=S;})();</script>
 @keyframes nowFlash{0%,100%{box-shadow:0 0 0 3px var(--accent-soft)}40%{box-shadow:0 0 0 7px rgba(229,35,46,.28)}}
 .item.now.flash .card{animation:nowFlash 700ms var(--ease-out)}
 @media (prefers-reduced-motion:reduce){.gonow{transition:opacity 200ms ease;transform:none}#plan .list::after{transition:none}.item.now.flash .card{animation:none}}
+</style><style>
+#plan .item.now .t::after{left:3px!important;width:4px!important;height:4px!important;margin-top:-2px!important;background:#fff!important;opacity:1;z-index:2;transform:none!important;animation:nowBlink 1.2s ease-in-out infinite!important}
+#plan .item.now:not(.grp-row)>.t::after{top:21px!important}
+@keyframes nowBlink{0%,100%{opacity:1}50%{opacity:.15}}
+@media (prefers-reduced-motion:reduce){#plan .item.now .t::after{animation:none!important}}
 </style></head>
 <body>
 
