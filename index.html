@@ -587,7 +587,7 @@ S.UTC=R.UTC;S.parse=R.parse;window.Date=S;})();</script>
 #avs .sgrp .ic svg{width:14px;height:14px;color:#18181b!important}
 #avs .sgrp .red .ic{background:#fde8e9}#avs .sgrp .red .ic svg{color:#e5232e!important}
 #avs .sgrp button:active{background:#ececf0!important}
-</style></head>
+</style><style>#plan .item .th{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}#plan .item .th.lp{transform:scale(.94);transition:transform 800ms var(--ease-out)}#plan .item .th img.ct{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}</style></head>
 <body>
 
 <div class="wrap">
@@ -831,7 +831,7 @@ function renderPlan(){
      <div class="what"><strong><b>${i.w}</b></strong>${i.n&&i.n.includes("deadline")?`<span>${i.n}</span>`:""}<div class="links">${L(i.m,i.tt,i.na)}</div></div>
      ${i.n?`<button class="note" data-note="${i.id}" aria-label="ดูรายละเอียด: ${i.w}"><svg class="lucide lucide-notepad-text" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M8 2v4" /> <path d="M12 2v4" /> <path d="M16 2v4" /> <rect width="16" height="18" x="4" y="4" rx="2" /> <path d="M8 10h6" /> <path d="M8 14h8" /> <path d="M8 18h5" /> </svg></button>`:""}${done[i.id]?stkHTML(i):""}<button class="chk" data-id="${i.id}" role="checkbox" aria-checked="${!!done[i.id]}" aria-label="ทำแล้ว: ${i.w}"><span class="fill"></span><svg viewBox="0 0 14 14"><path d="M2.5 7.5l3 3 6-7"/></svg></button></div></div>`).join("")}
  </div></section>`).join("");
- tick(); thumbs(); document.querySelectorAll("#plan .item").forEach(it=>{const n=it.querySelector(":scope .card>.note"),l=it.querySelector(".links");if(n&&l)l.appendChild(n)});
+ tick(); thumbs(); applyCT(); document.querySelectorAll("#plan .item").forEach(it=>{const n=it.querySelector(":scope .card>.note"),l=it.querySelector(".links");if(n&&l)l.appendChild(n)});
 }
 let TMAP=null;
 const TMP=fetch("thumbs/map.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{}).catch(()=>({})).then(m=>TMAP=m);
@@ -1090,6 +1090,25 @@ document.getElementById("av-f").addEventListener("change",e=>{const f=e.target.f
   const fd=new FormData();fd.append("file",d);fd.append("upload_preset","viettrip");fd.append("tags","viettrip");let dev="x";try{dev=localStorage.getItem("hcmc-dev")||"x"}catch(_){}fd.append("context",`avatar=${who}|dev=${dev}`);
   fetch("https://api.cloudinary.com/v1_1/zhp3tanr/image/upload",{method:"POST",body:fd}).then(r=>r.json()).then(r=>{if(r.secure_url){AV[who]=r.secure_url.replace("/upload/","/upload/c_fill,w_200,h_200,q_auto/");try{localStorage.setItem("hcmc-av",JSON.stringify(AV))}catch(_){}}}).catch(()=>{})};
  img.onerror=()=>{URL.revokeObjectURL(u);alert("เปิดรูปนี้ไม่ได้ ลองรูปอื่นนะ")};img.src=u});
+/* custom thumbnails: long-press empty placeholder */
+var CT={};try{CT=JSON.parse(localStorage.getItem("hcmc-ct")||"{}")}catch(e){}
+function hasImg(th){return !!th.querySelector("img.thumb:not([hidden])[src]")}
+function applyCT(){TMP.then(()=>setTimeout(()=>document.querySelectorAll("#plan .item").forEach(it=>{const id=it.id.slice(3),u=CT[id],th=it.querySelector(".th");if(!th||!u)return;
+ const ex=th.querySelector("img.ct");if(ex){if(ex.src!==u)ex.src=u;return}if(hasImg(th))return;const im=document.createElement("img");im.className="thumb ct";im.alt="";im.src=u;th.appendChild(im)}),0))}
+function ctSave(){try{localStorage.setItem("hcmc-ct",JSON.stringify(CT))}catch(e){}}
+(()=>{let tm=null,sx=0,sy=0,tgt=null;const F=document.createElement("input");F.type="file";F.accept="image/*";F.hidden=true;document.body.appendChild(F);
+ const cancel=()=>{clearTimeout(tm);tm=null;if(tgt)tgt.classList.remove("lp");tgt=null};
+ document.addEventListener("pointerdown",e=>{const th=e.target.closest("#plan .item .th");if(!th||hasImg(th))return;tgt=th;sx=e.clientX;sy=e.clientY;th.classList.add("lp");
+  tm=setTimeout(()=>{const id=th.closest(".item").id.slice(3);th.classList.remove("lp");tgt=null;tm=null;if(navigator.vibrate)navigator.vibrate(12);F.dataset.id=id;F.value="";F.click()},800)},{passive:true});
+ document.addEventListener("pointermove",e=>{if(tm&&Math.hypot(e.clientX-sx,e.clientY-sy)>8)cancel()},{passive:true});
+ ["pointerup","pointercancel","scroll"].forEach(ev=>addEventListener(ev,()=>{if(tm)cancel()},{passive:true,capture:true}));
+ document.addEventListener("contextmenu",e=>{if(e.target.closest("#plan .item .th"))e.preventDefault()});
+ F.addEventListener("change",()=>{const f=F.files[0],id=F.dataset.id;if(!f||!id)return;const img=new Image(),u=URL.createObjectURL(f);
+  img.onload=()=>{const s=Math.min(img.naturalWidth,img.naturalHeight),c=document.createElement("canvas");c.width=c.height=480;c.getContext("2d").drawImage(img,(img.naturalWidth-s)/2,(img.naturalHeight-s)/2,s,s,0,0,480,480);URL.revokeObjectURL(u);
+   const d=c.toDataURL("image/jpeg",.85);CT[id]=d;ctSave();applyCT();
+   const fd=new FormData();fd.append("file",d);fd.append("upload_preset","viettrip");fd.append("tags","viettrip");let dev="x";try{dev=localStorage.getItem("hcmc-dev")||"x"}catch(_){}fd.append("context",`thumb=${id}|dev=${dev}`);
+   fetch("https://api.cloudinary.com/v1_1/zhp3tanr/image/upload",{method:"POST",body:fd}).then(r=>r.json()).then(r=>{if(r.secure_url){CT[id]=r.secure_url.replace("/upload/","/upload/c_fill,w_240,h_240,q_auto/");ctSave()}}).catch(()=>{})};
+  img.onerror=()=>{URL.revokeObjectURL(u);alert("เปิดรูปนี้ไม่ได้ ลองรูปอื่นนะ")};img.src=u});})();
 /* go-to-now floating pill */
 var GN=document.createElement("button");GN.className="gonow";GN.setAttribute("aria-label","ไปยังกิจกรรมตอนนี้");GN.innerHTML='<i></i>ไปยังกิจกรรมตอนนี้<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';document.body.appendChild(GN);
 function goNowSync(){if(!GN)return;{const g=document.getElementById("gal");GN.classList.toggle("inv",!!g&&g.getBoundingClientRect().top<innerHeight-40)}const n=document.querySelector("#plan .item.now .card");if(!n){GN.classList.remove("on");return}const r=n.getBoundingClientRect(),vh=innerHeight,off=r.bottom<140||r.top>vh-80;GN.classList.toggle("on",off);GN.classList.toggle("up",r.bottom<140)}
@@ -1123,7 +1142,8 @@ if(window.ResizeObserver)new ResizeObserver(()=>railFill()).observe(document.get
   likes={};for(const pid in lm){likes[pid]=new Set(Object.keys(lm[pid]).filter(d=>lm[pid][d]))}
   for(const pid in myLike){likes[pid]=likes[pid]||new Set();myLike[pid]?likes[pid].add(DEV):likes[pid].delete(DEV)}
   const avs=j.resources.filter(r=>cx(r).avatar).sort((a,b)=>(a.created_at||"").localeCompare(b.created_at||""));if(avs.length){avs.forEach(r=>{const c=cx(r);if(c.clear)delete AV[c.avatar];else AV[c.avatar]=`${base}/c_fill,w_200,h_200,q_auto/v${r.version}/${r.public_id}.${r.format}`});avRefresh()}
-  items=[...pending,...j.resources.filter(r=>{const c=cx(r);return !c.del&&!c.like&&!c.unlike&&!c.avatar&&!gone.has(r.public_id)})];draw()});
+  const cts=j.resources.filter(r=>cx(r).thumb).sort((a,b)=>(a.created_at||"").localeCompare(b.created_at||""));if(cts.length){cts.forEach(r=>{CT[cx(r).thumb]=`${base}/c_fill,w_240,h_240,q_auto/v${r.version}/${r.public_id}.${r.format}`});ctSave();applyCT()}
+  items=[...pending,...j.resources.filter(r=>{const c=cx(r);return !c.del&&!c.like&&!c.unlike&&!c.avatar&&!c.thumb&&!gone.has(r.public_id)})];draw()});
  document.getElementById("gal-f").addEventListener("change",e=>{const fs=[...e.target.files];e.target.value="";
   fs.forEach(async f=>{const it={loading:true,local:URL.createObjectURL(f),localT:f.lastModified||Date.now()};items.unshift(it);draw();
    if(f.size>MAX){it.loading=false;it.err=true;draw();alert(`รูป "${f.name}" ใหญ่เกิน 10MB อัปโหลดไม่ได้`);return}
