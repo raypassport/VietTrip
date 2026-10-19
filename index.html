@@ -599,15 +599,15 @@ S.UTC=R.UTC;S.parse=R.parse;window.Date=S;})();</script>
 </style><style>.announcement.mop{background-image:url(assets/mop.jpg)!important;background-position:center!important}.ap-cta{display:flex;align-items:center;justify-content:center;gap:8px;height:52px;margin:4px 0 20px;border-radius:16px;background:#18181b;color:#fff!important;text-decoration:none;font:600 16px "IBM Plex Sans Thai"}.ap-cta:active{transform:scale(.98)}</style><style>#news .nw,#inv .nw{display:flex;flex-direction:column;max-height:calc(100dvh - 48px);padding-bottom:0!important;overflow:hidden}#news .nw-list,#inv .nw-list{flex:1;min-height:0;max-height:none!important;overflow-y:auto!important;padding-bottom:16px!important;overscroll-behavior:contain}</style><style>
 .dwrap{position:relative;width:100%;grid-column:1/-1;align-self:stretch}
 .dbar{position:absolute;left:0;top:0;width:100%;height:130px;overflow:visible;pointer-events:none;z-index:0}.dwrap .days{position:relative;z-index:1}
-#dbt{fill:none;stroke:#ececef;stroke-width:16;stroke-linecap:round}
-#dbf{fill:none;stroke:url(#dg);stroke-width:16;stroke-linecap:round;transition:stroke-dashoffset 500ms var(--ease-out)}
+#dbt{fill:none;stroke:#ececef;stroke-width:22;stroke-linecap:round}
+#dbf{fill:none;stroke:url(#dg);stroke-width:22;stroke-linecap:round;transition:stroke-dashoffset 500ms var(--ease-out)}
 .dwrap .days{display:flex!important;justify-content:space-around;align-items:flex-end;height:130px;gap:0!important}
-.dwrap .days button{width:68px;height:60px;min-height:0!important;padding:0!important;border-radius:20px!important;display:flex!important;flex-direction:column;align-items:center!important;justify-content:center;background:#fff!important;border:1px solid #ececef!important;transition:width 380ms var(--ease-out),height 380ms var(--ease-out),transform 380ms var(--ease-out),background-color 200ms ease;transform:translateY(0)}
+.dwrap .days button{width:72px;height:48px;flex-direction:row!important;gap:5px;min-height:0!important;padding:0!important;border-radius:999px!important;display:flex!important;flex-direction:row;align-items:center!important;justify-content:center;background:#fff!important;border:1px solid #ececef!important;transition:width 380ms var(--ease-out),height 380ms var(--ease-out),transform 380ms var(--ease-out),background-color 200ms ease;transform:translateY(0)}
 .dwrap .days button small{font-size:10px!important;line-height:1}.dwrap .days button b{font-size:18px!important;line-height:1.1}
-.dwrap .days button[aria-pressed="true"]{width:84px;height:72px;border-radius:24px!important;transform:translateY(-18px);background:#18181b!important;border-color:#18181b!important}
+.dwrap .days button[aria-pressed="true"]{width:86px;height:58px;border-radius:999px!important;transform:translateY(-16px);background:#18181b!important;border-color:#18181b!important}
 .dwrap .days button[aria-pressed="true"] b{font-size:24px!important;color:#fff!important}.dwrap .days button[aria-pressed="true"] small{color:#a3a5ad!important}
 @media (prefers-reduced-motion:reduce){.dwrap .days button,#dbf{transition:none}}
-</style></head>
+</style><style>.dwrap .days button{gap:5px}.dwrap .days button small{font-size:11px!important}</style></head>
 <body>
 
 <div class="wrap">
@@ -1144,7 +1144,7 @@ function acarInit(){clearInterval(ACT);const c=document.querySelector("#plan .ac
  ACT=setInterval(()=>{if(document.hidden||Date.now()<hold||!tr.isConnected)return;const k=(i+1)%n;tr.scrollTo({left:k*tr.clientWidth,behavior:"smooth"})},5000)}
 /* curved day progress bar (experiment) */
 var DBX=null,DBA=null;
-function dbPath(W,cx){const H=130,w=84,h=72,r=24,raise=18,g=6,sw=8,o=g+sw,uh=60,rf=16;
+function dbPath(W,cx){const H=130,w=86,h=58,r=29,raise=16,g=6,sw=11,o=g+sw,uh=48,rf=18;
  const top=H-h-raise,Y=top-o,rc=r+o,xl=cx-w/2-o,xr=cx+w/2+o,yb=H-uh-g-sw,fy=yb-rf;
  const side=(Cx,Cy,dir)=>{const dx=Math.sqrt(Math.max(0,(rc+rf)**2-(Cy-fy)**2)),xf=Cx-dir*dx,vx=xf-Cx,vy=fy-Cy,L=Math.hypot(vx,vy);return [xf,Cx+vx/L*rc,Cy+vy/L*rc]};
  const [lf,ltx,lty]=side(xl+rc,Y+rc,1),[rfx,rtx,rty]=side(xr-rc,Y+rc,-1);const head=lf<12?`M${ltx} ${lty}`:`M12 ${yb} L${lf} ${yb} A${rf} ${rf} 0 0 0 ${ltx} ${lty}`,tail=rfx>W-12?"":` A${rf} ${rf} 0 0 0 ${rfx} ${yb} L${W-12} ${yb}`;
