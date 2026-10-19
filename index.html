@@ -493,7 +493,7 @@ S.UTC=R.UTC;S.parse=R.parse;window.Date=S;})();</script>
 .gal-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .gal-h h2{margin:0;font:600 20px "IBM Plex Sans Thai";color:#fff}.gal-h small{font-size:12px;color:#8a8c93}
 .gal-up{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border-radius:999px;background:#e5232e;color:#fff;font:500 14px "IBM Plex Sans Thai";cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform 140ms var(--ease-out)}.gal-up:active{transform:scale(.95)}
-.gal-g{display:grid;grid-template-columns:repeat(4,1fr);gap:3px}
+.gal-g{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
 .gal-g button{position:relative;aspect-ratio:1/1;padding:0;border:0;background:#27272a;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .gal-g img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity 300ms ease}.gal-g img.ok{opacity:1}
 .gal-g .ld::after{content:"";position:absolute;left:50%;top:50%;width:20px;height:20px;margin:-10px;border-radius:50%;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;animation:galSpin .8s linear infinite}
@@ -1036,7 +1036,7 @@ if(window.ResizeObserver)new ResizeObserver(()=>railFill()).observe(document.get
  const CN="zhp3tanr",PR="viettrip",TAG="viettrip",MAX=10*1024*1024,G=document.getElementById("gal-g"),NC=document.getElementById("gal-n"),EM=document.getElementById("gal-e"),LB=document.getElementById("lb");
  let items=[];const hidden=new Set();let likes={};const myLike={};
  const base=`https://res.cloudinary.com/${CN}/image/upload`;
- const thumb=r=>`${base}/c_fill,g_auto,w_300,h_300,q_auto,f_auto/v${r.version}/${r.public_id}.jpg`;
+ const thumb=r=>`${base}/c_fill,g_auto,w_400,h_400,q_auto,f_auto/v${r.version}/${r.public_id}.jpg`;
  const full=r=>`${base}/v${r.version}/${r.public_id}.${r.format}`;
  const byOf=r=>r.context?.custom?.by||r.context?.by||"";
  const takenOf=r=>{const c=r.context?.custom?.taken||r.context?.taken;return c?+c:(r.local?r.localT:Date.parse(r.created_at)||0)};
