@@ -1327,6 +1327,32 @@ const tmOpenBase=tmOpenForm;tmOpenForm=function(id){tmOpenBase(id);if(id){const 
 const tmLoginBase=tmLogin;tmLogin=async function(){try{localStorage.setItem("hcmc-manage","1")}catch(e){}return tmLoginBase()};
 // This trip is intentionally collaborative: everyone with the site can manage events.
 tmCanEdit=async()=>true;
+// Keep every editable field aligned with what an itinerary card renders.
+tmApply=function(rows){
+ TM_ROWS=rows||[];
+ for(const row of TM_ROWS){
+  const day=DAYS.find(d=>d.date===row.event_date);if(!day)continue;
+  let item;
+  if(row.sort_order<1000)item=day.blocks.flatMap(b=>b.items).find(x=>x._ord===row.sort_order);
+  else{let block=day.blocks.find(b=>b._tm);if(!block){block={k:"เพิ่มเติม",en:"ADDED",_tm:true,items:[]};day.blocks.push(block)}item={_dbid:row.id,_ord:row.sort_order,_date:day.date,id:`db-${row.id}`};block.items.push(item)}
+  if(!item)continue;
+  Object.assign(item,{_dbid:row.id,w:row.title,n:row.description||row.location||"",m:row.map_url||null,tt:row.tiktok_url||null,t:tmLabel(row.start_time,row.end_time),s:tmMinutes(row.start_time),e:tmMinutes(row.end_time)});
+  if(row.thumbnail_url){CT[item.id]=row.thumbnail_url;ctSave()}
+ }
+};
+const tmOpenMediaBase=tmOpenForm;tmOpenForm=function(id){
+ tmOpenMediaBase(id);const found=id?tmFind(id):null,item=found&&found.item,row=item&&item._dbid?TM_ROWS.find(x=>x.id===item._dbid):null,f=document.getElementById("tm-form"),msg=f&&f.querySelector(".tm-msg");if(!f||!msg)return;
+ const box=document.createElement("div");box.innerHTML='<label>ลิงก์ TikTok<input name="tiktok_url" type="url" inputmode="url" placeholder="https://www.tiktok.com/..."></label><label>รูป Thumbnail<input name="thumbnail" type="file" accept="image/*"></label>';while(box.firstChild)f.insertBefore(box.firstChild,msg);
+ f.tiktok_url.value=row?.tiktok_url||item?.tt||"";
+};
+tmSave=async function(e,item,row){
+ e.preventDefault();const f=e.currentTarget,msg=f.querySelector(".tm-msg"),btn=f.querySelector(".tm-save"),image=f.thumbnail?.files?.[0];btn.disabled=true;msg.textContent=image?"กำลังอัปโหลดรูป…":"กำลังบันทึก…";
+ const data=Object.fromEntries(new FormData(f));delete data.thumbnail;data.trip_id=TM_TRIP;data.start_time=data.start_time||null;data.end_time=data.end_time||null;data.location=data.location||null;data.description=data.description||null;data.map_url=data.map_url||null;data.tiktok_url=data.tiktok_url||null;data.thumbnail_url=row?.thumbnail_url||null;data.sort_order=item?item._ord:Math.max(999,...TM_ROWS.filter(x=>x.event_date===data.event_date).map(x=>x.sort_order))+1;
+ try{
+  if(image){const fd=new FormData();fd.append("file",image);fd.append("upload_preset","viettrip");fd.append("tags","viettrip");fd.append("context",`thumb=${item?.id||"new-event"}`);const up=await fetch("https://api.cloudinary.com/v1_1/zhp3tanr/image/upload",{method:"POST",body:fd}),photo=await up.json();if(!up.ok||!photo.secure_url)throw new Error("อัปโหลดรูปไม่สำเร็จ");data.thumbnail_url=photo.secure_url.replace("/upload/","/upload/c_fill,w_480,h_480,q_auto,f_auto/")}
+  msg.textContent="กำลังบันทึก…";const url=row?`${TM_URL}/rest/v1/events?id=eq.${row.id}`:`${TM_URL}/rest/v1/events`,r=await fetch(url,{method:row?"PATCH":"POST",headers:{...tmHeaders(true),Prefer:"return=minimal"},body:JSON.stringify(data)});if(!r.ok){const x=await r.json().catch(()=>({}));throw new Error(x.message||"บันทึกไม่สำเร็จ")}msg.textContent="บันทึกแล้ว";setTimeout(()=>location.reload(),250)
+ }catch(x){msg.textContent=x.message||"บันทึกไม่สำเร็จ";btn.disabled=false}
+};
 
 </script>
 </body>
