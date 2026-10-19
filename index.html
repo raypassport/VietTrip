@@ -542,7 +542,7 @@ S.UTC=R.UTC;S.parse=R.parse;window.Date=S;})();</script>
 .gal-g .lk b::after{content:"";position:absolute;left:3px;bottom:-4px;border-left:5px solid #fff;border-bottom:5px solid transparent}
 .gal-g .lk b:empty{transform:scale(.6);opacity:0}
 .gal-g .lk.pop svg{animation:hrtPop 360ms var(--ease-out)}
-</style><style>.gal-g .lk svg{top:8px!important;bottom:auto!important;right:8px!important}.gal-g .lk b{top:-12px!important}</style></head>
+</style><style>.gal-g .lk svg{top:8px!important;bottom:auto!important;right:8px!important}.gal-g .lk b{top:-12px!important}</style><style>.botfill{position:fixed;left:0;right:0;bottom:0;height:calc(env(safe-area-inset-bottom,0px) + 90px);background:#18181b;z-index:1;pointer-events:none;opacity:0;transition:opacity 200ms ease}html.galbot .botfill{opacity:1}</style></head>
 <body>
 
 <div class="wrap">
@@ -602,7 +602,7 @@ S.UTC=R.UTC;S.parse=R.parse;window.Date=S;})();</script>
 
 <div class="eod" id="eod"><i></i><span id="eodt">จบวันแล้ว</span></div>
 </div>
-<section class="gal" id="gal" aria-label="แกลเลอรี"><div class="gal-in">
+<div class="botfill" aria-hidden="true"></div><section class="gal" id="gal" aria-label="แกลเลอรี"><div class="gal-in">
  <div class="gal-h"><div><h2>อัลบั้มรวมแก๊ง</h2><span id="gal-n" hidden></span></div>
  <label class="gal-up"><input type="file" id="gal-f" accept="image/*" multiple hidden><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>เพิ่มรูป</label></div>
  <div id="gal-g"></div><p class="gal-e" id="gal-e" hidden>ยังไม่มีรูป · เป็นคนแรกที่แปะรูปสิ</p></div></section>
