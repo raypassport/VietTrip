@@ -1,0 +1,21 @@
+name: Resolve links
+on:
+  push:
+    branches: [main]
+    paths: [scripts/resolve.txt]
+permissions:
+  contents: write
+jobs:
+  r:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          : > scripts/resolve.out.txt
+          while read -r u; do [ -z "$u" ] && continue
+            f=$(curl -sL -o /tmp/p.html -w '%{url_effective}' -A 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)' "$u")
+            t=$(grep -o '<meta content="[^"]*" property="og:title"\|property="og:title" content="[^"]*"' /tmp/p.html | head -1)
+            echo "$u|$f|$t" >> scripts/resolve.out.txt
+          done < scripts/resolve.txt
+          git config user.name bot; git config user.email bot@users.noreply.github.com
+          git add scripts/resolve.out.txt; git commit -m "resolve [skip ci]" || true; git push
