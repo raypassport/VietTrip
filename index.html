@@ -531,6 +531,17 @@ S.UTC=R.UTC;S.parse=R.parse;window.Date=S;})();</script>
 .gal-g .lk svg{width:15px;height:15px}
 .gal-g .lk b{position:absolute;top:3px;right:2px;min-width:15px;height:15px;padding:0 4px;box-sizing:border-box;border-radius:999px;background:#e5232e;color:#fff!important;font:600 9px/15px "IBM Plex Sans Thai"!important;text-align:center}
 .gal-g .lk:not(.me) b{background:#fff;color:#18181b!important}
+</style><style>
+.gal-g button{overflow:visible!important}
+.gal-g button img{clip-path:inset(0)}
+.gal-g .lk{position:absolute!important;top:0!important;right:0!important;width:40px!important;height:40px!important;padding:0!important;display:block!important;background:none!important;z-index:2;color:rgba(255,255,255,.65)}
+.gal-g .lk svg{position:absolute;right:8px;bottom:8px;width:16px!important;height:16px!important;fill:none;transition:fill 160ms ease,color 160ms ease}
+.gal-g .lk.has{color:#fff}
+.gal-g .lk.me{color:#ff4d57}.gal-g .lk.me svg{fill:currentColor}
+.gal-g .lk b{position:absolute!important;left:auto!important;top:-4px!important;right:-6px!important;bottom:auto!important;min-width:18px;height:18px;padding:0 5px!important;box-sizing:border-box;border-radius:9px!important;background:#fff!important;color:#e5232e!important;font:700 10px/18px "IBM Plex Sans Thai"!important;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.35);transform-origin:0 100%;transition:transform 180ms var(--ease-out),opacity 150ms ease}
+.gal-g .lk b::after{content:"";position:absolute;left:3px;bottom:-4px;border-left:5px solid #fff;border-bottom:5px solid transparent}
+.gal-g .lk b:empty{transform:scale(.6);opacity:0}
+.gal-g .lk.pop svg{animation:hrtPop 360ms var(--ease-out)}
 </style></head>
 <body>
 
@@ -1034,7 +1045,7 @@ if(window.ResizeObserver)new ResizeObserver(()=>railFill()).observe(document.get
   const flush=()=>{if(row)html+=`<div class="gal-g">${row}</div>`;row=""};
   for(const {r,k,ts} of list){const dk=vn(ts,{year:"numeric",month:"2-digit",day:"2-digit"});
    if(dk!==cur){flush();cur=dk;const di=DAYS.findIndex(d=>d.date===dk.split("/").reverse().join("-"));html+=`<div class="gal-d">${di>=0?`Day ${di+1}`:"นอกทริป"}<small>${+dk.slice(0,2)} ${["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."][+dk.slice(3,5)-1]}</small></div>`}
-   row+=`<button data-k="${k}" class="${r.loading?"ld":""}${r.err?" err":""}" aria-label="ดูรูป"><img alt="" loading="lazy" src="${r.local||thumb(r)}" onload="this.classList.add('ok')">${ts?`<span class="tm">${vn(ts,{hour:"2-digit",minute:"2-digit",hour12:false})}</span>`:""}${r.public_id&&!r.loading&&!r.err?(()=>{const s=likes[r.public_id],n=s?s.size:0,me=!!s&&s.has(DEV);return `<span class="lk${me?" me":""}${n?" has":""}" data-like="${r.public_id}" role="button" aria-label="ถูกใจ"><svg width="12" height="12" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" fill="${me?"currentColor":"none"}"><path d="M12 20s-7-4.4-9.2-9A5 5 0 0 1 12 6a5 5 0 0 1 9.2 5c-2.2 4.6-9.2 9-9.2 9z"/></svg>${n?`<b>${n}</b>`:""}</span>`})():""}</button>`}
+   row+=`<button data-k="${k}" class="${r.loading?"ld":""}${r.err?" err":""}" aria-label="ดูรูป"><img alt="" loading="lazy" src="${r.local||thumb(r)}" onload="this.classList.add('ok')">${ts?`<span class="tm">${vn(ts,{hour:"2-digit",minute:"2-digit",hour12:false})}</span>`:""}${r.public_id&&!r.loading&&!r.err?(()=>{const s=likes[r.public_id],n=s?s.size:0,me=!!s&&s.has(DEV);return `<span class="lk${me?" me":""}${n?" has":""}" data-like="${r.public_id}" role="button" aria-label="ถูกใจ"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M12 20s-7-4.4-9.2-9A5 5 0 0 1 12 6a5 5 0 0 1 9.2 5c-2.2 4.6-9.2 9-9.2 9z"/></svg><b>${n||""}</b></span>`})():""}</button>`}
   flush();G.innerHTML=html;
   const n=items.filter(r=>!r.err).length;NC.textContent=n?`${n} รูป`:"ยังไม่มีรูป";EM.hidden=!!items.length};
  let EX=null;const exif=()=>EX||(EX=new Promise(res=>{const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/exifr@7.1.3/dist/full.umd.js";s.onload=()=>res(window.exifr);s.onerror=()=>res(null);document.head.appendChild(s)}));
@@ -1061,7 +1072,7 @@ if(window.ResizeObserver)new ResizeObserver(()=>railFill()).observe(document.get
  const HB=document.getElementById("lb-hrt"),HN=document.getElementById("lb-hn");
  function hrtSync(){if(!curR)return;const s=likes[curR.public_id],on=!!s&&s.has(DEV);HB.classList.toggle("on",on);HN.textContent=s&&s.size?s.size:""}
  HB.addEventListener("click",()=>{if(!curR||!curR.public_id)return;const on=toggleLike(curR.public_id);HB.classList.remove("pop");void HB.offsetWidth;if(on)HB.classList.add("pop")});
- function toggleLike(pid){const s=likes[pid]=likes[pid]||new Set(),on=!s.has(DEV);on?s.add(DEV):s.delete(DEV);myLike[pid]=on;hrtSync();draw();
+ function toggleLike(pid){const s=likes[pid]=likes[pid]||new Set(),on=!s.has(DEV);on?s.add(DEV):s.delete(DEV);myLike[pid]=on;hrtSync();G.querySelectorAll(`[data-like="${CSS.escape(pid)}"]`).forEach(el=>{el.classList.toggle("me",on);el.classList.toggle("has",s.size>0);el.querySelector("b").textContent=s.size||""});
   const fd=new FormData();fd.append("file","data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=");fd.append("upload_preset",PR);fd.append("tags",TAG);fd.append("context",`${on?"like":"unlike"}=${pid}|dev=${DEV}`);
   fetch(`https://api.cloudinary.com/v1_1/${CN}/image/upload`,{method:"POST",body:fd}).catch(()=>{});return on}
  const DEL=document.getElementById("lb-del");
