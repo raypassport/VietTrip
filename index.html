@@ -596,7 +596,18 @@ S.UTC=R.UTC;S.parse=R.parse;window.Date=S;})();</script>
 #plan .acar-d i{width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.5);transition:width 240ms var(--ease-out),background-color 240ms ease}
 #plan .acar-d i.on{width:18px;background:#fff}
 @media (prefers-reduced-motion:reduce){#plan .acar-d i{transition:none}}
-</style><style>.announcement.mop{background-image:url(assets/mop.jpg)!important;background-position:center!important}.ap-cta{display:flex;align-items:center;justify-content:center;gap:8px;height:52px;margin:4px 0 20px;border-radius:16px;background:#18181b;color:#fff!important;text-decoration:none;font:600 16px "IBM Plex Sans Thai"}.ap-cta:active{transform:scale(.98)}</style><style>#news .nw,#inv .nw{display:flex;flex-direction:column;max-height:calc(100dvh - 48px);padding-bottom:0!important;overflow:hidden}#news .nw-list,#inv .nw-list{flex:1;min-height:0;max-height:none!important;overflow-y:auto!important;padding-bottom:16px!important;overscroll-behavior:contain}</style></head>
+</style><style>.announcement.mop{background-image:url(assets/mop.jpg)!important;background-position:center!important}.ap-cta{display:flex;align-items:center;justify-content:center;gap:8px;height:52px;margin:4px 0 20px;border-radius:16px;background:#18181b;color:#fff!important;text-decoration:none;font:600 16px "IBM Plex Sans Thai"}.ap-cta:active{transform:scale(.98)}</style><style>#news .nw,#inv .nw{display:flex;flex-direction:column;max-height:calc(100dvh - 48px);padding-bottom:0!important;overflow:hidden}#news .nw-list,#inv .nw-list{flex:1;min-height:0;max-height:none!important;overflow-y:auto!important;padding-bottom:16px!important;overscroll-behavior:contain}</style><style>
+.dwrap{position:relative;width:100%;grid-column:1/-1;align-self:stretch}
+.dbar{position:absolute;left:0;top:0;width:100%;height:96px;overflow:visible;pointer-events:none;z-index:0}.dwrap .days{position:relative;z-index:1}
+#dbt{fill:none;stroke:#ececef;stroke-width:14;stroke-linecap:round}
+#dbf{fill:none;stroke:url(#dg);stroke-width:14;stroke-linecap:round;transition:stroke-dashoffset 500ms var(--ease-out)}
+.dwrap .days{display:flex!important;justify-content:space-around;align-items:flex-end;height:96px;gap:0!important}
+.dwrap .days button{width:52px;height:52px;min-height:0!important;padding:0!important;border-radius:50%!important;display:flex!important;flex-direction:column;align-items:center!important;justify-content:center;background:#fff!important;border:1px solid #ececef!important;transition:width 380ms var(--ease-out),height 380ms var(--ease-out),transform 380ms var(--ease-out),background-color 200ms ease;transform:translateY(0)}
+.dwrap .days button small{font-size:10px!important;line-height:1}.dwrap .days button b{font-size:18px!important;line-height:1.1}
+.dwrap .days button[aria-pressed="true"]{width:68px;height:68px;transform:translateY(-14px);background:#18181b!important;border-color:#18181b!important}
+.dwrap .days button[aria-pressed="true"] b{font-size:24px!important;color:#fff!important}.dwrap .days button[aria-pressed="true"] small{color:#a3a5ad!important}
+@media (prefers-reduced-motion:reduce){.dwrap .days button,#dbf{transition:none}}
+</style></head>
 <body>
 
 <div class="wrap">
@@ -612,7 +623,7 @@ S.UTC=R.UTC;S.parse=R.parse;window.Date=S;})();</script>
   <div class="bar">
     <div class="hello"><button class="me" id="me" aria-label="เมนูผู้ใช้" aria-haspopup="menu" aria-controls="user-menu" aria-expanded="false">?</button><button class="who" id="who"><small>ยินดีต้อนรับ</small><b id="myname">เลือกว่าคุณเป็นใคร</b></button>
       <div class="hr"><button class="mega" id="invb" aria-label="สมุดสแตมป์"><svg width="15" height="15" fill="currentColor" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M312 201.8c0-17.4 9.2-33.2 19.9-47C344.5 138.5 352 118.1 352 96c0-53-43-96-96-96s-96 43-96 96c0 22.1 7.5 42.5 20.1 58.8c10.7 13.8 19.9 29.6 19.9 47c0 29.9-24.3 54.2-54.2 54.2L112 256C50.1 256 0 306.1 0 368c0 20.9 13.4 38.7 32 45.3L32 464c0 26.5 21.5 48 48 48l352 0c26.5 0 48-21.5 48-48l0-50.7c18.6-6.6 32-24.4 32-45.3c0-61.9-50.1-112-112-112l-33.8 0c-29.9 0-54.2-24.3-54.2-54.2zM416 416l0 32L96 448l0-32 320 0z"/></svg></button><button class="mega" id="mega" aria-label="ประกาศ"><svg width="15" height="15" viewBox="0 0 512 512" fill="currentColor" aria-hidden="true"><!-- Font Awesome Free 6.7.2 bullhorn, CC BY 4.0 --><path d="M480 32c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9L381.7 53c-48 48-113.1 75-181 75l-8.7 0-32 0-96 0c-35.3 0-64 28.7-64 64l0 96c0 35.3 28.7 64 64 64l0 128c0 17.7 14.3 32 32 32l64 0c17.7 0 32-14.3 32-32l0-128 8.7 0c67.9 0 133 27 181 75l43.6 43.6c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6l0-147.6c18.6-8.8 32-32.5 32-60.4s-13.4-51.6-32-60.4L480 32zm-64 76.7L416 240l0 131.3C357.2 317.8 280.5 288 200.7 288l-8.7 0 0-96 8.7 0c79.8 0 156.5-29.8 215.3-83.3z"/></svg></button><div class="pill" aria-label="ความคืบหน้า"><i><span id="pbar"></span></i><b id="ptxt">0<em>/0</em></b></div></div></div>
-    <div class="days" id="days"></div>
+    <div class="dwrap"><svg class="dbar" id="dbar" preserveAspectRatio="none"><defs><linearGradient id="dg" x1="0" x2="1"><stop offset="0" stop-color="#ff7a59"/><stop offset="1" stop-color="#e5232e"/></linearGradient></defs><path id="dbt" d=""/><path id="dbf" d=""/></svg><div class="days" id="days"></div></div>
   </div>
 
 <main id="plan"></main>
@@ -855,7 +866,7 @@ function thumbs(){
 function renderAll(){renderDays();renderPlan();const t=document.getElementById("eodt");if(t)t.textContent=cur<DAYS.length-1?`จบ Day ${+D().n} แล้ว · พรุ่งนี้เจอกัน`:"จบทริปแล้ว · เดินทางปลอดภัย ✈️"}
 function progress(){
  const all=D().blocks.flatMap(b=>b.items), n=all.filter(i=>done[i.id]).length;
- document.getElementById("pbar").style.transform=`scaleX(${n/all.length})`;
+ document.getElementById("pbar").style.transform=`scaleX(${n/all.length})`;window.__dp=n/all.length;if(typeof dbDraw==="function"){requestAnimationFrame(dbDraw);setTimeout(dbDraw,420)}
  document.getElementById("ptxt").innerHTML=`${n}<em>/${all.length}</em>`;
 }
 function railFill(){document.querySelectorAll("#plan .list").forEach(l=>{const r=[...l.querySelectorAll(".item.past,.item.now")].pop();let h=0;
@@ -1131,6 +1142,14 @@ function acarInit(){clearInterval(ACT);const c=document.querySelector("#plan .ac
  const pause=()=>{hold=Date.now()+8000};["touchstart","pointerdown","wheel"].forEach(ev=>tr.addEventListener(ev,pause,{passive:true}));
  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
  ACT=setInterval(()=>{if(document.hidden||Date.now()<hold||!tr.isConnected)return;const k=(i+1)%n;tr.scrollTo({left:k*tr.clientWidth,behavior:"smooth"})},5000)}
+/* curved day progress bar (experiment) */
+var DBX=null,DBA=null;
+function dbPath(W,cx){const y=70,top=48,w=64;const a=Math.max(10,cx-w),b=Math.min(W-10,cx+w);return `M10 ${y} L${a} ${y} C${cx-w*0.45} ${y} ${cx-w*0.45} ${top} ${cx} ${top} C${cx+w*0.45} ${top} ${cx+w*0.45} ${y} ${b} ${y} L${W-10} ${y}`}
+function dbDraw(){const sv=document.getElementById("dbar"),wr=sv&&sv.parentElement;if(!wr)return;const W=wr.clientWidth,sel=wr.querySelector('.days button[aria-pressed="true"]');if(!sel)return;
+ const r=sel.getBoundingClientRect(),wb=wr.getBoundingClientRect(),tx=r.left-wb.left+r.width/2;const from=DBX==null?tx:DBX;cancelAnimationFrame(DBA);const t0=performance.now(),dur=matchMedia("(prefers-reduced-motion: reduce)").matches?0:420;
+ sv.setAttribute("viewBox",`0 0 ${W} 96`);
+ const step=n=>{const k=dur?Math.min(1,(n-t0)/dur):1,e=1-Math.pow(1-k,3),x=from+(tx-from)*e;DBX=x;const d=dbPath(W,x);document.getElementById("dbt").setAttribute("d",d);const f=document.getElementById("dbf");f.setAttribute("d",d);const L=f.getTotalLength();f.style.strokeDasharray=L;f.style.strokeDashoffset=L*(1-(window.__dp||0));if(k<1)DBA=requestAnimationFrame(step)};DBA=requestAnimationFrame(step)}
+addEventListener("resize",()=>{DBX=null;dbDraw()});
 /* go-to-now floating pill */
 var GN=document.createElement("button");GN.className="gonow";GN.setAttribute("aria-label","ไปยังกิจกรรมตอนนี้");GN.innerHTML='<i></i>ไปยังกิจกรรมตอนนี้<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';document.body.appendChild(GN);
 function goNowSync(){if(!GN)return;{const g=document.getElementById("gal");GN.classList.toggle("inv",!!g&&g.getBoundingClientRect().top<innerHeight-40)}const n=document.querySelector("#plan .item.now .card");if(!n){GN.classList.remove("on");return}const r=n.getBoundingClientRect(),vh=innerHeight,off=r.bottom<140||r.top>vh-80;GN.classList.toggle("on",off);GN.classList.toggle("up",r.bottom<140)}
