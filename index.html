@@ -1377,6 +1377,11 @@ try{if(sessionStorage.getItem("hcmc-manage")==="1")localStorage.setItem("hcmc-ma
 const tmSetModeBase=tmSetMode;tmSetMode=function(on){tmSetModeBase(on);try{sessionStorage.setItem("hcmc-manage",on?"1":"0");localStorage.setItem("hcmc-manage",on?"1":"0")}catch(e){}};
 (()=>{let taps=0,last=0,reset;avatarButton.addEventListener("click",e=>{const now=performance.now();if(now-last>650)taps=0;last=now;taps++;clearTimeout(reset);reset=setTimeout(()=>taps=0,900);if(taps>1){e.preventDefault();e.stopImmediatePropagation();if(userMenu.matches(":popover-open"))userMenu.hidePopover()}if(taps===10){taps=0;clearTimeout(reset);if(navigator.vibrate)navigator.vibrate([12,40,12]);tmSetMode(!TM_EDIT)}},true)})();
 
+/* Keep the avatar as the only menu trigger. Native popover light-dismiss happens
+   before the underlying click, so briefly suppress that click to prevent reopen. */
+document.getElementById("who").removeEventListener("click",openUserMenu);
+(()=>{let closedAt=-1e9;userMenu.addEventListener("beforetoggle",e=>{if(e.newState==="closed")closedAt=performance.now()});avatarButton.addEventListener("click",e=>{if(performance.now()-closedAt<220){e.preventDefault();e.stopImmediatePropagation()}},true)})();
+
 </script>
 </body>
 </html>
