@@ -1353,6 +1353,22 @@ tmSave=async function(e,item,row){
   msg.textContent="กำลังบันทึก…";const url=row?`${TM_URL}/rest/v1/events?id=eq.${row.id}`:`${TM_URL}/rest/v1/events`,r=await fetch(url,{method:row?"PATCH":"POST",headers:{...tmHeaders(true),Prefer:"return=minimal"},body:JSON.stringify(data)});if(!r.ok){const x=await r.json().catch(()=>({}));throw new Error(x.message||"บันทึกไม่สำเร็จ")}msg.textContent="บันทึกแล้ว";setTimeout(()=>location.reload(),250)
  }catch(x){msg.textContent=x.message||"บันทึกไม่สำเร็จ";btn.disabled=false}
 };
+/* Media metadata stays in the existing description column so UI fields can evolve without schema migrations. */
+const tmMeta=row=>{if(!row)return{text:"",tiktok_url:null,thumbnail_url:null};try{const x=JSON.parse(row.description);if(x&&x._vt===1)return{text:x.text||"",tiktok_url:x.tiktok_url||null,thumbnail_url:x.thumbnail_url||null}}catch(e){}return{text:row.description||"",tiktok_url:null,thumbnail_url:null}};
+tmApply=function(rows){
+ TM_ROWS=rows||[];
+ for(const row of TM_ROWS){
+  const day=DAYS.find(d=>d.date===row.event_date);if(!day)continue;let item;
+  if(row.sort_order<1000)item=day.blocks.flatMap(b=>b.items).find(x=>x._ord===row.sort_order);
+  else{let block=day.blocks.find(b=>b._tm);if(!block){block={k:"เพิ่มเติม",en:"ADDED",_tm:true,items:[]};day.blocks.push(block)}item={_dbid:row.id,_ord:row.sort_order,_date:day.date,id:`db-${row.id}`};block.items.push(item)}
+  if(!item)continue;const meta=tmMeta(row);Object.assign(item,{_dbid:row.id,w:row.title,n:meta.text||row.location||"",m:row.map_url||null,tt:meta.tiktok_url||null,t:tmLabel(row.start_time,row.end_time),s:tmMinutes(row.start_time),e:tmMinutes(row.end_time)});if(meta.thumbnail_url){CT[item.id]=meta.thumbnail_url;ctSave()}
+ }
+};
+const tmOpenMetaBase=tmOpenForm;tmOpenForm=function(id){tmOpenMetaBase(id);const found=id?tmFind(id):null,item=found&&found.item,row=item&&item._dbid?TM_ROWS.find(x=>x.id===item._dbid):null,meta=tmMeta(row),f=document.getElementById("tm-form");if(!f)return;const tt=f.querySelector("[name=tiktok_url]");if(tt)tt.value=meta.tiktok_url||item?.tt||"";const desc=f.querySelector("[name=description]");if(desc&&row)desc.value=meta.text};
+tmSave=async function(e,item,row){
+ e.preventDefault();const f=e.currentTarget,msg=f.querySelector(".tm-msg"),btn=f.querySelector(".tm-save"),image=f.thumbnail?.files?.[0];btn.disabled=true;msg.textContent=image?"กำลังอัปโหลดรูป…":"กำลังบันทึก…";const data=Object.fromEntries(new FormData(f));delete data.thumbnail;const old=tmMeta(row),meta={_vt:1,text:data.description||"",tiktok_url:data.tiktok_url||null,thumbnail_url:old.thumbnail_url||null};delete data.tiktok_url;data.trip_id=TM_TRIP;data.start_time=data.start_time||null;data.end_time=data.end_time||null;data.location=data.location||null;data.map_url=data.map_url||null;data.sort_order=item?item._ord:Math.max(999,...TM_ROWS.filter(x=>x.event_date===data.event_date).map(x=>x.sort_order))+1;
+ try{if(image){const fd=new FormData();fd.append("file",image);fd.append("upload_preset","viettrip");fd.append("tags","viettrip");fd.append("context",`thumb=${item?.id||"new-event"}`);const up=await fetch("https://api.cloudinary.com/v1_1/zhp3tanr/image/upload",{method:"POST",body:fd}),photo=await up.json();if(!up.ok||!photo.secure_url)throw new Error("อัปโหลดรูปไม่สำเร็จ");meta.thumbnail_url=photo.secure_url.replace("/upload/","/upload/c_fill,w_480,h_480,q_auto,f_auto/")}data.description=JSON.stringify(meta);msg.textContent="กำลังบันทึก…";const url=row?`${TM_URL}/rest/v1/events?id=eq.${row.id}`:`${TM_URL}/rest/v1/events`,r=await fetch(url,{method:row?"PATCH":"POST",headers:{...tmHeaders(true),Prefer:"return=minimal"},body:JSON.stringify(data)});if(!r.ok){const x=await r.json().catch(()=>({}));throw new Error(x.message||"บันทึกไม่สำเร็จ")}msg.textContent="บันทึกแล้ว";setTimeout(()=>location.reload(),250)}catch(x){msg.textContent=x.message||"บันทึกไม่สำเร็จ";btn.disabled=false}
+};
 
 </script>
 </body>
