@@ -192,7 +192,7 @@ a.btn{border-radius:6px!important;font-size:10px!important;padding:5px 9px!impor
 :root,:root[data-theme]{--bg:#fafafb!important;--surface:#ffffff!important}
 body,.bar{background:#fafafb!important}
 .days button{background:#fff!important;border:1px solid #ececef!important}.days button b{color:#18181b!important}.days button small{color:#9a9ca3!important}
-.days button[aria-pressed="true"]{background:#e5232e!important;border-color:#e5232e!important}.days button[aria-pressed="true"] b,.days button[aria-pressed="true"] small{color:#fff!important}
+.days button[aria-pressed="true"]{background:#18181b!important;border-color:#18181b!important}.days button[aria-pressed="true"] b,.days button[aria-pressed="true"] small{color:#fff!important}
 .tabs{background:transparent!important;border-bottom:1px solid #ececef!important;border-radius:0!important;padding:0!important}.tabs button{border-radius:0!important;background:none!important;color:#9a9ca3!important}
 .tabs button[aria-selected="true"]{color:#18181b!important;box-shadow:inset 0 -2px 0 #e5232e!important;background:none!important}
 .item .card,.pcard{background:#fff!important;border:0!important;box-shadow:0 1px 2px rgba(24,24,27,.04),0 4px 14px rgba(24,24,27,.04)}.item .th{background:#f4f4f6!important;color:#b9bbc1!important}
@@ -373,14 +373,14 @@ body.locked{position:fixed;left:0;right:0;overflow:hidden}
 @media (prefers-reduced-motion:reduce){.eod{transform:none;transition:opacity 200ms ease}}
 
 /* day-1 announcement banner */
-.announcement{position:relative;height:136px;margin:14px 0 4px;border-radius:16px;overflow:hidden;background:#ddd url(assets/day-21-announcement.jpg) center 60%/cover;display:flex;align-items:flex-end;justify-content:flex-end;padding:16px;cursor:pointer}
+.announcement{position:relative;height:136px;margin:14px 0 4px;border-radius:16px;overflow:hidden;background:#ddd url(assets/day-21-announcement.jpg) center 52%/cover;display:flex;align-items:flex-end;justify-content:flex-end;padding:16px;cursor:pointer}
 .announcement::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.2)}
 .announcement span{position:relative;display:flex;align-items:center;gap:2px;color:#fff;font:600 22px/1 "IBM Plex Sans Thai",sans-serif;text-shadow:0 1px 8px rgba(0,0,0,.35)}.announcement span svg{flex:none;margin-right:-4px}
 
 /* announcement full page */
 .annpage{position:fixed;inset:0;z-index:50;background:#fff;overflow-y:auto;-webkit-overflow-scrolling:touch;transform:translateX(100%);visibility:hidden;transition:transform 420ms var(--ease-drawer),visibility 0s 420ms}
 .annpage.open{transform:none;visibility:visible;transition:transform 420ms var(--ease-drawer),visibility 0s}
-.ap-hero{position:relative;height:300px;background:#ccc url(assets/day-21-announcement.jpg) center 60%/cover;display:flex;align-items:flex-end;padding:20px}
+.ap-hero{position:relative;height:300px;background:#ccc url(assets/day-21-announcement.jpg) center 52%/cover;display:flex;align-items:flex-end;padding:20px}
 .ap-hero::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.2)}
 .ap-hero h1{position:relative;margin:0;color:#fff;font:600 30px/1.1 "IBM Plex Sans Thai",sans-serif;text-shadow:0 1px 10px rgba(0,0,0,.35)}
 .ap-back{position:absolute;left:16px;top:calc(16px + env(safe-area-inset-top,0px));z-index:1;width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.85);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#18181b;display:grid;place-items:center;cursor:pointer}
@@ -395,7 +395,7 @@ body.locked{position:fixed;left:0;right:0;overflow:hidden}
 @media (prefers-reduced-motion:reduce){.annpage,.annpage.open{transition:visibility 0s}}
 
 /* selected day: black */
-.days button[aria-pressed="true"]{background:#e5232e!important;border-color:#e5232e!important}
+.days button[aria-pressed="true"]{background:#18181b!important;border-color:#18181b!important}
 .days button[aria-pressed="true"] b,.days button[aria-pressed="true"] small{color:#fff!important}
 
 /* megaphone + news modal */
