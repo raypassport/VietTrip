@@ -546,6 +546,13 @@ S.UTC=R.UTC;S.parse=R.parse;window.Date=S;})();</script>
 .gonow{background:transparent!important;box-shadow:inset 0 0 0 40px #18181b,0 6px 20px rgba(24,24,27,.22)!important;visibility:hidden;transition:opacity 200ms ease,transform 260ms var(--ease-out),box-shadow 200ms ease,color 200ms ease,visibility 0s linear 260ms!important}
 .gonow.on{visibility:visible;transition:opacity 200ms ease,transform 260ms var(--ease-out),box-shadow 200ms ease,color 200ms ease,visibility 0s!important}
 .gonow.inv{box-shadow:inset 0 0 0 40px #fff,0 6px 20px rgba(0,0,0,.4)!important}
+</style><style>
+#user-menu button{display:flex!important;align-items:center;gap:12px}
+#user-menu button svg{flex:none;width:16px;color:#8a8c93}
+#user-menu #reset-user svg{color:#e5232e}
+#user-menu button[hidden]{display:none!important}
+#wm .bigw{position:relative;width:104px;margin:4px auto 14px}#wm .bigw .big{margin:0}
+#wm .avedit{position:absolute;right:-2px;bottom:-2px;width:34px;height:34px;border-radius:50%;border:3px solid #fff;background:#18181b;color:#fff;display:grid;place-items:center;padding:0;cursor:pointer;transition:transform 120ms var(--ease-out)}#wm .avedit:active{transform:scale(.92)}
 </style></head>
 <body>
 
@@ -597,7 +604,7 @@ S.UTC=R.UTC;S.parse=R.parse;window.Date=S;})();</script>
   <p class="ap-end">ขอให้ทุกคนสนุกกับทริปนี้ ✈️</p>
  </div>
 </section>
-<div id="user-menu" popover="auto" role="menu" aria-label="เมนูผู้ใช้"><button role="menuitem" id="switch-user"></button><button role="menuitem" id="reset-user">ล้างข้อมูล</button></div>
+<div id="user-menu" popover="auto" role="menu" aria-label="เมนูผู้ใช้"><button role="menuitem" id="edit-av"><svg width="15" height="15" fill="currentColor" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M149.1 64.8L138.7 96 64 96C28.7 96 0 124.7 0 160L0 416c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-256c0-35.3-28.7-64-64-64l-74.7 0L362.9 64.8C356.4 45.2 338.1 32 317.4 32L194.6 32c-20.7 0-39 13.2-45.5 32.8zM256 192a96 96 0 1 1 0 192 96 96 0 1 1 0-192z"/></svg><span>แก้ไขรูปโปรไฟล์</span></button><button role="menuitem" id="switch-user"><svg width="15" height="15" fill="currentColor" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M32 96l320 0 0-64c0-12.9 7.8-24.6 19.8-29.6s25.7-2.2 34.9 6.9l96 96c6 6 9.4 14.1 9.4 22.6s-3.4 16.6-9.4 22.6l-96 96c-9.2 9.2-22.9 11.9-34.9 6.9s-19.8-16.6-19.8-29.6l0-64L32 160c-17.7 0-32-14.3-32-32s14.3-32 32-32zM480 352c17.7 0 32 14.3 32 32s-14.3 32-32 32l-320 0 0 64c0 12.9-7.8 24.6-19.8 29.6s-25.7 2.2-34.9-6.9l-96-96c-6-6-9.4-14.1-9.4-22.6s3.4-16.6 9.4-22.6l96-96c9.2-9.2 22.9-11.9 34.9-6.9s19.8 16.6 19.8 29.6l0 64 320 0z"/></svg><span></span></button><button role="menuitem" id="reset-user"><svg width="15" height="15" fill="currentColor" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0L284.2 0c12.1 0 23.2 6.8 28.6 17.7L320 32l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 96C14.3 96 0 81.7 0 64S14.3 32 32 32l96 0 7.2-14.3zM32 128l384 0 0 320c0 35.3-28.7 64-64 64L96 512c-35.3 0-64-28.7-64-64l0-320zm96 64c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16z"/></svg><span>ล้างข้อมูล</span></button></div><input type="file" id="av-f" accept="image/*" hidden>
 <dialog id="wm" aria-label="ยินดีต้อนรับ"><div class="scrim"></div><div class="card" id="wmc"><div class="in" id="wmi"></div></div></dialog>
 <dialog id="sheet" aria-labelledby="sheet-h"><div class="scrim" data-close></div>
  <div class="panel" role="document"><div class="grab"></div>
@@ -779,7 +786,7 @@ function renderPlan(){
  const el=document.getElementById("plan");
  el.innerHTML=(D().date==="2026-10-21"?`<div class="announcement" role="button" tabindex="0" data-ann="open"><span>ประกาศสำคัญ<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span></div>`:"")+D().blocks.map(b=>`<section class="block"><h2>${/^(เช้า|กลางวัน|บ่าย|เย็น|ค่ำ)/.test(b.k)?"ช่วง":""}${b.k}</h2><div class="list">
   ${b.split?`<div class="item grp-row"><div class="t">13:00–<br>16:00</div><div class="acc">${groups.map(g=>{const mem=PPL.filter(p=>p[2]===g.id),mine=ME&&mem.some(p=>p[0]===ME),open=openG===g.id;
-   return `<div class="ag${open?" open":""}"><button class="ah" data-g="${g.id}" aria-expanded="${open}"><span class="stk">${mem.map(p=>`<i style="background:${p[1]}">${ini(p[0])}</i>`).join("")}</span><span class="an"><b>${g.name}${mine?' <em>คุณ</em>':""}</b><small>${mem.map(p=>p[0]).join(" · ")}</small></span><span class="chev">›</span></button>
+   return `<div class="ag${open?" open":""}"><button class="ah" data-g="${g.id}" aria-expanded="${open}"><span class="stk">${mem.map(p=>`<i style="background:${p[1]}${avS(p[0])}">${ini(p[0])}</i>`).join("")}</span><span class="an"><b>${g.name}${mine?' <em>คุณ</em>':""}</b><small>${mem.map(p=>p[0]).join(" · ")}</small></span><span class="chev">›</span></button>
    <div class="ab"><div class="abi">${g.list?`<ol>${g.list.map(x=>`<li>${x}</li>`).join("")}</ol>`:`<p>${g.p}</p>`}${g.cta?`<a class="btn acta" target="_blank" rel="noopener" href="${g.cta[1]}">${g.cta[0]} ↗</a>`:""}</div></div></div>`}).join("")}</div></div>`:""}
   ${b.items.map(i=>`<div class="item ${done[i.id]?"done":""}" id="it-${i.id}" data-s="${i.s??""}" data-e="${i.e??""}">
     <div class="t">${i.t}</div>
@@ -841,10 +848,13 @@ const LINE={lm:"สายแลนด์มาร์ก · บ่ายวัน
 const DAYMSG=[null,["","วันนี้สายคาเฟ่ทั้งวัน<br>ปิดท้ายด้วยสตรีทฟู้ดกับบาร์"],["","ไหว้วัดแขก ช้อปปิ้ง<br>แล้วไปต่อที่บุ่ยเหวียน"],["","วันสุดท้ายแล้ว ซื้อของฝาก กินหอย<br>แล้วบินกลับ 21:30"]];
 const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const ini=n=>/^[เแโใไ]/.test(n)?n[1]:n[0];
+let AV={};try{AV=JSON.parse(localStorage.getItem("hcmc-av")||"{}")}catch(e){}
+const avS=n=>AV[n]?`;background-image:url('${AV[n]}');background-size:cover;background-position:center;color:transparent`:"";
+function avRefresh(){try{localStorage.setItem("hcmc-av",JSON.stringify(AV))}catch(e){}renderMe();if(typeof renderAll==="function")renderAll();const b=document.querySelector("#wm .big");if(b&&ME){b.setAttribute("style",b.getAttribute("style").split(";background-image")[0]+avS(ME))}}
 let ME=LS.get("hcmc-me",null);
 if(ME==="ติว"){ME="ดิว";LS.set("hcmc-me",ME)}
 function renderMe(){const p=PPL.find(x=>x[0]===ME),b=document.getElementById("me");
- b.textContent=p?ini(p[0]):"?";b.style.background=p?p[1]:"#d9dadf";document.getElementById("myname").textContent=p?p[0]:"เลือกว่าคุณเป็นใคร";}
+ b.textContent=p?ini(p[0]):"?";b.setAttribute("style","background:"+(p?p[1]:"#d9dadf")+(p?avS(p[0]):""));document.getElementById("myname").textContent=p?p[0]:"เลือกว่าคุณเป็นใคร";}
 const WM=document.getElementById("wm"),WMC=document.getElementById("wmc"),WMI=document.getElementById("wmi");
 // Pointer users never receive a keyboard outline from programmatic focus.
 const inputMode=e=>{document.documentElement.dataset.input=e.type==="keydown"?"keyboard":"pointer"};
@@ -856,8 +866,8 @@ function wmHTML(st){
  const x=wmClosable?'<button class="x" data-wm="close" aria-label="ปิด">×</button>':"";
  if(st==="reset")return `<h3>ล้างข้อมูลทั้งหมด?</h3><p id="reset-warning">ความคืบหน้าทั้งหมดและชื่อที่เลือกไว้ในเครื่องนี้จะถูกลบ และจะกลับไปเริ่มต้นใหม่<br>การล้างข้อมูลนี้ไม่สามารถย้อนกลับได้</p><div class="reset-actions"><button class="go cancel-reset" data-wm="close">ยกเลิก</button><button class="go" data-wm="reset-confirm">ล้างข้อมูล</button></div>`;
  if(st==="intro")return `${WM_ART}<h3>Welcome to Vietnam Trip</h3><p>21–24 ต.ค. · แก๊ง 13 คน<br>ตาราง แผนที่ ร้านเด็ด อยู่ที่นี่หมดแล้ว</p><button class="go" data-wm="next">เริ่มเลย</button>`;
- if(st==="pick")return `${x}<h3>คุณคือใครในทริปนี้</h3><p>เลือกชื่อตัวเอง</p><div class="ppl${pick?" has":""}">${PPL.map(p=>`<button class="pp${pick===p[0]?" on":""}" data-p="${p[0]}" aria-pressed="${pick===p[0]}"><span class="av" style="background:${p[1]}">${ini(p[0])}</span>${p[0]}</button>`).join("")}</div><button class="go" data-wm="me" ${pick?"":"disabled"}>${pick?"ฉันคือ "+pick:"เลือกชื่อก่อน"}</button>`;
- if(st==="hello"){const p=PPL.find(x=>x[0]===ME);return `<div class="big" style="background:${p[1]}">${ini(p[0])}</div><h3 class="nm">ยินดีต้อนรับ ${p[0]}</h3><p>${LINE[p[2]]}</p><button class="go" data-wm="close">Enjoy your trip</button>`}
+ if(st==="pick")return `${x}<h3>คุณคือใครในทริปนี้</h3><p>เลือกชื่อตัวเอง</p><div class="ppl${pick?" has":""}">${PPL.map(p=>`<button class="pp${pick===p[0]?" on":""}" data-p="${p[0]}" aria-pressed="${pick===p[0]}"><span class="av" style="background:${p[1]}${avS(p[0])}">${ini(p[0])}</span>${p[0]}</button>`).join("")}</div><button class="go" data-wm="me" ${pick?"":"disabled"}>${pick?"ฉันคือ "+pick:"เลือกชื่อก่อน"}</button>`;
+ if(st==="hello"){const p=PPL.find(x=>x[0]===ME);return `<div class="bigw"><div class="big" style="background:${p[1]}${avS(p[0])}">${ini(p[0])}</div><button class="avedit" data-wm="avedit" aria-label="แก้ไขรูปโปรไฟล์"><svg width="14" height="14" fill="currentColor" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1 0 32c0 8.8 7.2 16 16 16l32 0zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"/></svg></button></div><h3 class="nm">ยินดีต้อนรับ ${p[0]}</h3><p>${LINE[p[2]]}</p><button class="go" data-wm="close">Enjoy your trip</button>`}
  if(typeof st==="number"){const m=DAYMSG[st];return `<h3>เข้าสู่วันที่ ${st+1} แล้ว${ME?" "+ME:""}!</h3><p>${m[1]}</p><button class="go" data-wm="close">ไปกันเลย</button>`}
 }
 const motionOK=()=>!matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -967,7 +977,7 @@ WM.addEventListener("click",e=>{
  if(wmBusy||WM.classList.contains("closing"))return;
  const a=e.target.closest("[data-wm]"),p=e.target.closest("[data-p]");
  if(p){pick=p.dataset.p;wmRefresh();return}
- if(!a)return;const v=a.dataset.wm;
+ if(!a)return;const v=a.dataset.wm;if(v==="avedit"){avPick();return}
  if(v==="next")wmShow("pick");
  else if(v==="me"&&pick){ME=pick;LS.set("hcmc-me",ME);renderMe();wmClosable=false,wmShow("hello")}
  else if(v==="reset-confirm"&&wmStep==="reset")resetTrip();
@@ -980,14 +990,15 @@ const userMenu=document.getElementById("user-menu"),avatarButton=document.getEle
 function openUserMenu(){
  userMenu.getAnimations().forEach(a=>a.cancel());
  if(userMenu.matches(":popover-open")){userMenu.hidePopover();return}
- document.getElementById("switch-user").textContent=ME?"ฉันไม่ใช่ "+ME:"เลือกว่าคุณเป็นใคร";
+ document.getElementById("switch-user").querySelector("span").textContent=ME?"ฉันไม่ใช่ "+ME:"เลือกว่าคุณเป็นใคร";
  const r=avatarButton.getBoundingClientRect();userMenu.style.left=Math.max(16,Math.min(r.left,innerWidth-246))+"px";userMenu.style.top=(r.bottom+8)+"px";
- userMenu.showPopover();document.getElementById("switch-user").focus({preventScroll:true});
+ document.getElementById("edit-av").hidden=!ME;userMenu.showPopover();document.getElementById("switch-user").focus({preventScroll:true});
  if(motionOK())userMenu.animate([{opacity:0,transform:"translateY(-5px) scale(.97)"},{opacity:1,transform:"none"}],{duration:160,easing:wmEase()});
 }
 userMenu.addEventListener("toggle",()=>{const open=userMenu.matches(":popover-open");avatarButton.setAttribute("aria-expanded",open);if(!open&&!WM.open)avatarButton.focus({preventScroll:true})});
 userMenu.addEventListener("keydown",e=>{const buttons=[...userMenu.querySelectorAll("button")],i=buttons.indexOf(document.activeElement);if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();buttons[(i+(e.key==="ArrowDown"?1:-1)+buttons.length)%buttons.length].focus()}if(e.key==="Home"||e.key==="End"){e.preventDefault();buttons[e.key==="Home"?0:buttons.length-1].focus()}});
 document.getElementById("switch-user").addEventListener("click",()=>{userMenu.hidePopover();pick=null;wmClosable=true;wmShow("pick")});
+document.getElementById("edit-av").addEventListener("click",()=>{userMenu.hidePopover();avPick()});
 document.getElementById("reset-user").addEventListener("click",()=>{userMenu.hidePopover();wmClosable=true;wmShow("reset")});
 let pendingTripReset=false;
 function resetTrip(){if(wmBusy)return;pendingTripReset=true;wmClosable=false;wmShow("intro")}
@@ -1028,6 +1039,15 @@ renderAll(); setInterval(tick,30000);
  document.getElementById("tw-real").addEventListener("click",()=>{try{localStorage.removeItem(K)}catch(e){}location.reload()});
 })();
 
+
+/* avatar upload */
+function avPick(){if(!ME)return;const f=document.getElementById("av-f");f.value="";f.click()}
+document.getElementById("av-f").addEventListener("change",e=>{const f=e.target.files[0];if(!f||!ME)return;const who=ME,img=new Image(),u=URL.createObjectURL(f);
+ img.onload=()=>{const s=Math.min(img.naturalWidth,img.naturalHeight),c=document.createElement("canvas");c.width=c.height=360;c.getContext("2d").drawImage(img,(img.naturalWidth-s)/2,(img.naturalHeight-s)/2,s,s,0,0,360,360);URL.revokeObjectURL(u);
+  const d=c.toDataURL("image/jpeg",.85);AV[who]=d;avRefresh();
+  const fd=new FormData();fd.append("file",d);fd.append("upload_preset","viettrip");fd.append("tags","viettrip");let dev="x";try{dev=localStorage.getItem("hcmc-dev")||"x"}catch(_){}fd.append("context",`avatar=${who}|dev=${dev}`);
+  fetch("https://api.cloudinary.com/v1_1/zhp3tanr/image/upload",{method:"POST",body:fd}).then(r=>r.json()).then(r=>{if(r.secure_url){AV[who]=r.secure_url.replace("/upload/","/upload/c_fill,w_200,h_200,q_auto/");try{localStorage.setItem("hcmc-av",JSON.stringify(AV))}catch(_){}}}).catch(()=>{})};
+ img.onerror=()=>{URL.revokeObjectURL(u);alert("เปิดรูปนี้ไม่ได้ ลองรูปอื่นนะ")};img.src=u});
 /* go-to-now floating pill */
 var GN=document.createElement("button");GN.className="gonow";GN.setAttribute("aria-label","ไปยังกิจกรรมตอนนี้");GN.innerHTML='<i></i>ไปยังกิจกรรมตอนนี้<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';document.body.appendChild(GN);
 function goNowSync(){if(!GN)return;{const g=document.getElementById("gal");GN.classList.toggle("inv",!!g&&g.getBoundingClientRect().top<innerHeight-40)}const n=document.querySelector("#plan .item.now .card");if(!n){GN.classList.remove("on");return}const r=n.getBoundingClientRect(),vh=innerHeight,off=r.bottom<140||r.top>vh-80;GN.classList.toggle("on",off);GN.classList.toggle("up",r.bottom<140)}
@@ -1060,7 +1080,8 @@ if(window.ResizeObserver)new ResizeObserver(()=>railFill()).observe(document.get
   const lm={};j.resources.filter(r=>cx(r).like||cx(r).unlike).sort((a,b)=>(a.created_at||"").localeCompare(b.created_at||"")).forEach(r=>{const c=cx(r),pid=c.like||c.unlike;(lm[pid]=lm[pid]||{})[c.dev||r.public_id]=!!c.like});
   likes={};for(const pid in lm){likes[pid]=new Set(Object.keys(lm[pid]).filter(d=>lm[pid][d]))}
   for(const pid in myLike){likes[pid]=likes[pid]||new Set();myLike[pid]?likes[pid].add(DEV):likes[pid].delete(DEV)}
-  items=[...pending,...j.resources.filter(r=>{const c=cx(r);return !c.del&&!c.like&&!c.unlike&&!gone.has(r.public_id)})];draw()});
+  const avs=j.resources.filter(r=>cx(r).avatar).sort((a,b)=>(a.created_at||"").localeCompare(b.created_at||""));if(avs.length){avs.forEach(r=>{AV[cx(r).avatar]=`${base}/c_fill,w_200,h_200,q_auto/v${r.version}/${r.public_id}.${r.format}`});avRefresh()}
+  items=[...pending,...j.resources.filter(r=>{const c=cx(r);return !c.del&&!c.like&&!c.unlike&&!c.avatar&&!gone.has(r.public_id)})];draw()});
  document.getElementById("gal-f").addEventListener("change",e=>{const fs=[...e.target.files];e.target.value="";
   fs.forEach(async f=>{const it={loading:true,local:URL.createObjectURL(f),localT:f.lastModified||Date.now()};items.unshift(it);draw();
    if(f.size>MAX){it.loading=false;it.err=true;draw();alert(`รูป "${f.name}" ใหญ่เกิน 10MB อัปโหลดไม่ได้`);return}
