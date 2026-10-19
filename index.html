@@ -471,7 +471,18 @@ S.UTC=R.UTC;S.parse=R.parse;window.Date=S;})();</script>
 #tw .row{display:flex;gap:8px;margin-top:16px}#tw .row button{flex:1;height:46px;border-radius:12px;border:0;font:600 14px "IBM Plex Sans Thai";background:#f4f4f6;color:#18181b}#tw .row .pr{background:#18181b;color:#fff}
 @media (prefers-reduced-motion:reduce){#tw .pn{transition:none}}
 </style>
-</head>
+<style>
+#plan .list::after{content:"";position:absolute;left:4px;top:0;width:2px;height:var(--fill,0px);background:#e5232e;transition:height 400ms var(--ease-out)}
+#plan .item.past .t::before{background:#e5232e!important;box-shadow:0 0 0 2px #e5232e!important}
+#plan .item .t::before{z-index:1}
+.gonow{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:40;display:flex;align-items:center;gap:6px;height:44px;padding:0 12px 0 16px;border-radius:999px;border:0;background:#18181b;color:#fff;font:500 14px "IBM Plex Sans Thai";box-shadow:0 6px 20px rgba(24,24,27,.22);cursor:pointer;-webkit-tap-highlight-color:transparent;opacity:0;transform:translateY(12px) scale(.96);pointer-events:none;transition:opacity 200ms ease,transform 260ms var(--ease-out)}
+.gonow.on{opacity:1;transform:none;pointer-events:auto}.gonow:active{transform:scale(.96)}
+.gonow i{width:8px;height:8px;border-radius:50%;background:#e5232e;box-shadow:0 0 0 3px rgba(229,35,46,.3)}
+.gonow svg{transition:transform 200ms var(--ease-out)}.gonow.up svg{transform:rotate(180deg)}
+@keyframes nowFlash{0%,100%{box-shadow:0 0 0 3px var(--accent-soft)}40%{box-shadow:0 0 0 7px rgba(229,35,46,.28)}}
+.item.now.flash .card{animation:nowFlash 700ms var(--ease-out)}
+@media (prefers-reduced-motion:reduce){.gonow{transition:opacity 200ms ease;transform:none}#plan .list::after{transition:none}.item.now.flash .card{animation:none}}
+</style></head>
 <body>
 
 <div class="wrap">
@@ -721,6 +732,10 @@ function progress(){
  document.getElementById("pbar").style.transform=`scaleX(${n/all.length})`;
  document.getElementById("ptxt").innerHTML=`${n}<em>/${all.length}</em>`;
 }
+function railFill(){document.querySelectorAll("#plan .list").forEach(l=>{const r=[...l.querySelectorAll(".item.past,.item.now")].pop();let h=0;
+ if(r){const tt=r.querySelector(".t"),lb=l.getBoundingClientRect(),tb=tt.getBoundingClientRect();h=tb.top-lb.top+parseFloat(getComputedStyle(tt,"::before").top);
+  const lastIt=[...l.querySelectorAll(".item")].pop();if(r===lastIt&&r.classList.contains("past")&&!r.classList.contains("now"))h=l.offsetHeight}
+ l.style.setProperty("--fill",h+"px")});goNowSync()}
 function tick(){
  const p=new Intl.DateTimeFormat("en-GB",{timeZone:"Asia/Ho_Chi_Minh",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date());
  const g=t=>p.find(x=>x.type===t).value, hh=+g("hour")%24, mm=+g("minute"), day=`${g("year")}-${g("month")}-${g("day")}`;
@@ -728,11 +743,15 @@ function tick(){
  const d=D(), trip=new Date(d.date+"T00:00:00+07:00"), days=Math.ceil((trip-Date.now())/864e5);
  document.getElementById("cd").textContent= day===d.date?`วันนี้คือ Day ${d.n}`:days>0?`อีก ${days} วันถึง Day ${d.n}`:"";
  const now=hh*60+mm;
- document.querySelectorAll(".item").forEach(el=>{
-  el.classList.remove("now"); el.querySelector(".now-tag")?.remove();
-  const s=+el.dataset.s,e=+el.dataset.e;
-  if(day===d.date&&el.dataset.s&&now>=s&&now<e){el.classList.add("now");el.querySelector(".what strong").insertAdjacentHTML("beforeend","<span class='now-tag'>NOW</span>")}
+ const its=[...document.querySelectorAll("#plan .item")];let last=-1;
+ its.forEach((el,k)=>{
+  el.classList.remove("now","past"); el.querySelector(".now-tag")?.remove();
+  const s=+el.dataset.s,e=+el.dataset.e,has=el.dataset.s!=="";
+  if(day>d.date)last=k;
+  else if(day===d.date&&has){if(now>=s&&now<e){el.classList.add("now");last=k;el.querySelector(".what strong").insertAdjacentHTML("beforeend","<span class='now-tag'>NOW</span>")}else if(now>=(e||s))last=k}
  });
+ its.forEach((el,k)=>{if(k<last||(k===last&&!el.classList.contains("now")))el.classList.add("past")});
+ railFill();
  progress();
 }
 document.addEventListener("click",e=>{
@@ -936,8 +955,14 @@ renderAll(); setInterval(tick,30000);
  N.addEventListener("cancel",e=>{e.preventDefault();close()});
  document.getElementById("tw-go").addEventListener("click",()=>{const t=new Date(`2026-10-${day}T${fmt(+r.value)}:00+07:00`).getTime();try{localStorage.setItem(K,JSON.stringify({t,at:Date.now()-(window.__SIM?window.__SIM.t-window.__SIM.at:0)}))}catch(e){}location.reload()});
  document.getElementById("tw-real").addEventListener("click",()=>{try{localStorage.removeItem(K)}catch(e){}location.reload()});
- if(window.__SIM){const b=document.createElement("button");b.className="simtag";const p=new Intl.DateTimeFormat("en-GB",{timeZone:"Asia/Ho_Chi_Minh",day:"numeric",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date()),g=k=>p.find(x=>x.type===k).value;
-  b.textContent=`🧪 ${g("day")} ต.ค. · ${g("hour")}:${g("minute")}`;b.addEventListener("click",open);document.body.appendChild(b)}})();
+})();
+
+/* go-to-now floating pill */
+var GN=document.createElement("button");GN.className="gonow";GN.setAttribute("aria-label","ไปยังกิจกรรมตอนนี้");GN.innerHTML='<i></i>ไปยังกิจกรรมตอนนี้<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';document.body.appendChild(GN);
+function goNowSync(){if(!GN)return;const n=document.querySelector("#plan .item.now .card");if(!n){GN.classList.remove("on");return}const r=n.getBoundingClientRect(),vh=innerHeight,off=r.bottom<140||r.top>vh-80;GN.classList.toggle("on",off);GN.classList.toggle("up",r.bottom<140)}
+addEventListener("scroll",goNowSync,{passive:true});addEventListener("resize",railFill);
+GN.addEventListener("click",()=>{const it=document.querySelector("#plan .item.now");if(!it)return;const r=it.getBoundingClientRect();scrollTo({top:scrollY+r.top-innerHeight/2+r.height/2,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});it.classList.remove("flash");setTimeout(()=>{it.classList.add("flash");setTimeout(()=>it.classList.remove("flash"),800)},450)});
+if(window.ResizeObserver)new ResizeObserver(()=>railFill()).observe(document.getElementById("plan"));
 
 /* stamp inventory */
 const SN={"fly": "ทะยานฟ้า", "arr": "เหยียบไซ่ง่อน", "car": "ซิ่งเข้าเมือง", "bag": "แพ็กเก่งตัวท็อป", "pho": "เซียนเฝอ", "merge": "รวมพลังสามแก๊ง", "call": "ผู้ต้อนฝูง", "home": "บ้านอบอุ่น", "pizza": "พิซซ่าเลิฟเวอร์", "coffee": "มือหนึ่งโกปี้", "motly": "ค่ำคืนแรกสุดชิค", "d2wake": "ตื่นทันใจ", "d2manmi": "ขาประจำบั๋นหมี่", "d2dophu": "มุดหลุมหาคาเฟอีน", "d2pla": "ว่ายน้ำกับปลา", "d2indo": "สายอินดัส", "d2bep": "ครัวคุณแม่", "d2art": "ซึมซับศิลป์", "d2nham": "ยัยแน้มก็มา", "d2apt": "ไต่ตึกคาเฟ่", "d2walk": "นักเดินเมือง", "d2home": "กลับรังครบทีม", "d2htk": "นักล่าสตรีทฟู้ด", "d2chin": "ชินชินชนแก้ว", "d2tee": "ราตรีตี๋บาร์", "d2frolic": "เต้นจนเช้า", "d2end": "ปิดจ๊อบวันสอง", "d3banh": "เซียนแหนมเนือง", "d3temple": "สายมูสายบุญ", "d3shop": "นักช้อปตัวตึง", "d3home": "แปลงร่างรอบเย็น", "d3bv": "ตะลุยบุ่ยเวียน", "d3bam": "แบมแบมปาร์ตี้", "d4crab": "ราชาบะหมี่ปู", "d4vin": "กวาดเรียบวินมาร์ท", "d4lunch": "มื้อสุดท้ายในเมือง", "d4shell": "ส่งท้ายด้วยหอย", "d4leave": "ลาก่อนบ้านหลังนี้", "d4air": "ภารกิจสำเร็จ"};
